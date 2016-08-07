@@ -3,6 +3,7 @@ project(dafs.src)
 
 set(SOURCES
     files.cpp
+    operations.cpp
 )
 add_executable(dafs main.cpp ${SOURCES})
 target_link_libraries(dafs
@@ -18,5 +19,6 @@ set_property(TARGET dafs PROPERTY CXX_STANDARD 11)
 set(dafs_DIR ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 
 foreach(source ${SOURCES})
-    set(DAFS_SOURCES ${DAFS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${source} PARENT_SCOPE)
+    set(DAFS_SOURCES ${DAFS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${source})
 endforeach()
+set(DAFS_SOURCES ${DAFS_SOURCES} PARENT_SCOPE)
