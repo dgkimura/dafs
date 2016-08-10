@@ -25,7 +25,9 @@ target_link_libraries(all_unittests
         ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}
         ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}
         ${PLATFORM_LIBRARIES}
+        ${paxos_DEPENDENCIES}
 )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest/include)
 include_directories(${dafs_DIR})
+include_directories(${paxos_HEADERS})
