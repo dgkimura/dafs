@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 project(dafs.src)
 
 set(SOURCES
-    files.cpp
+    filesystem.cpp
     operations.cpp
 )
 add_executable(dafs main.cpp ${SOURCES})
