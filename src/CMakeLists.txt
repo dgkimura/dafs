@@ -4,6 +4,7 @@ project(dafs.src)
 set(SOURCES
     filesystem.cpp
     operations.cpp
+    storage.cpp
 )
 add_executable(dafs main.cpp ${SOURCES})
 target_link_libraries(dafs
