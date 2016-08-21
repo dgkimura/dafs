@@ -1,18 +1,21 @@
 #include "filesystem.hpp"
 
 
-File::File()
+namespace dafs
 {
-}
+    File::File()
+    {
+    }
 
 
-void
-File::Read()
-{
-}
+    void
+    File::Read()
+    {
+    }
 
 
-void
-File::Write(std::string string)
-{
+    void
+    File::Write(std::string string, int offset)
+    {
+    }
 }

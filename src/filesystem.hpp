@@ -2,34 +2,71 @@
 #define __FILESYSTEM_HPP_INCLUDED__
 
 #include <string>
+#include <vector>
 
 
-class Metadata
+namespace dafs
 {
-};
+    class Metadata
+    {
+    };
 
 
-class Block
-{
-};
+    struct Revision
+    {
+        int hash;
+    };
 
 
-class File
-{
-public:
+    struct Owner
+    {
+        std::string address;
+    };
 
-    File();
 
-    void Read();
+    struct Contents
+    {
+        std::string contents;
+    };
 
-    void Write(std::string string);
 
-private:
+    struct Block
+    {
+        Revision revision;
 
-    unsigned int read_pointer;
+        Owner owner;
 
-    unsigned int write_pointer;
-};
+        Contents contents;
+    };
+
+
+    class File
+    {
+    public:
+
+        File();
+
+        void Read();
+
+        void Write(std::string string, int offset);
+
+    private:
+
+        unsigned int read_pointer;
+
+        unsigned int write_pointer;
+    };
+
+
+    class SuperBlock
+    {
+    private:
+
+        std::vector<File> files;
+
+        std::vector<Block> blocks;
+    };
+}
 
 
 #endif

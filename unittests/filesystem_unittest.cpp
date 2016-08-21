@@ -5,5 +5,5 @@
 
 TEST(FilesTest, x)
 {
-    File f;
+    dafs::File f;
 }
