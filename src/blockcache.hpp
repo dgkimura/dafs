@@ -1,0 +1,6 @@
+namespace dafs
+{
+    class BlockCache
+    {
+    };
+}
