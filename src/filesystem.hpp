@@ -7,36 +7,15 @@
 
 namespace dafs
 {
-    class Metadata
-    {
-    };
-
-
-    struct Revision
-    {
-        int hash;
-    };
-
-
-    struct Owner
-    {
-        std::string address;
-    };
-
-
-    struct Contents
-    {
-        std::string contents;
-    };
-
-
     struct Block
     {
-        Revision revision;
+        int id;
 
-        Owner owner;
+        int revision;
 
-        Contents contents;
+        std::string owner;
+
+        std::string contents;
     };
 
 

@@ -12,7 +12,7 @@ namespace dafs
     void
     ReplicatedStorage::Update(Block was, Block is)
     {
-        std::string proposal = Diff(is.contents.contents, was.contents.contents);
+        std::string proposal = Diff(is.contents, was.contents);
         parliament.CreateProposal(proposal);
     }
 }
