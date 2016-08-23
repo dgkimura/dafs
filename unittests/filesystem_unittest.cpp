@@ -5,16 +5,15 @@
 
 TEST(BlockTest, testBlockFieldsAreConstructed)
 {
-    dafs::Block b =
-    {
-        1,
-        0,
-        "the_owner",
-        "the_block_contents"
-    };
+    int id = 1;
+    int revision = 0;
+    std::string owner = "the_owner";
+    std::string contents = "the_block_contents";
 
-    ASSERT_EQ(b.id, 1);
-    ASSERT_EQ(b.revision, 0);
-    ASSERT_EQ(b.owner, "the_owner");
-    ASSERT_EQ(b.contents, "the_block_contents");
+    dafs::Block b(id, revision, owner, contents);
+
+    ASSERT_EQ(id, b.id);
+    ASSERT_EQ(revision, b.revision);
+    ASSERT_EQ(owner, b.owner);
+    ASSERT_EQ(contents, b.contents);
 }

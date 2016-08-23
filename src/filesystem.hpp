@@ -7,6 +7,8 @@
 
 namespace dafs
 {
+    const int BLOCK_SIZE_IN_BYTES = 1048576;
+
     struct Block
     {
         int id;
@@ -15,7 +17,15 @@ namespace dafs
 
         std::string owner;
 
-        std::string contents;
+        char contents[BLOCK_SIZE_IN_BYTES];
+
+        Block(int id_, int revision_, std::string owner_, std::string contents_)
+            : id(id_),
+              revision(revision_),
+              owner(owner_)
+        {
+            contents_.copy(contents, contents_.length());
+        }
     };
 
 
