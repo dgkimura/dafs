@@ -14,6 +14,7 @@ ExternalProject_Add(
 set(SOURCES
     filesystem_unittest.cpp
     operations_unittest.cpp
+    topology_unittest.cpp
 )
 
 add_executable(all_unittests ${SOURCES} ${DAFS_SOURCES})
