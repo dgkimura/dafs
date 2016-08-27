@@ -5,6 +5,7 @@ set(SOURCES
     blockcache.cpp
     filesystem.cpp
     operations.cpp
+    server.cpp
     storage.cpp
     topology.cpp
 )
