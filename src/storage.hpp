@@ -15,6 +15,16 @@ namespace dafs
     public:
 
         virtual void Update(Block was, Block is) = 0;
+
+        virtual void Get(Block block) = 0;
+    };
+
+
+    class Loader
+    {
+    public:
+
+        void Fetch(Block& block);
     };
 
 
@@ -24,9 +34,13 @@ namespace dafs
 
         void Update(Block was, Block is);
 
+        void Get(Block block);
+
     private:
 
         Parliament parliament;
+
+        Loader loader;
     };
 }
 
