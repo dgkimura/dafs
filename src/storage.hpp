@@ -10,37 +10,43 @@
 
 namespace dafs
 {
-    class Storage
-    {
-    public:
-
-        virtual void Update(Block was, Block is) = 0;
-
-        virtual void Get(Block block) = 0;
-    };
-
-
     class Loader
     {
     public:
 
-        void Fetch(Block& block);
+        Block Fetch(Block block);
     };
 
 
-    class ReplicatedStorage : public Storage
+    class Persister
     {
     public:
 
-        void Update(Block was, Block is);
+        Persister(Parliament parliament);
 
-        void Get(Block block);
+        void Update(Block was, Block is);
 
     private:
 
         Parliament parliament;
+    };
+
+
+    class Storage
+    {
+    public:
+
+        Storage(Loader loader, Persister persister);
+
+        void Save(Block block);
+
+        Block Fetch(Block block);
+
+    private:
 
         Loader loader;
+
+        Persister persister;
     };
 }
 

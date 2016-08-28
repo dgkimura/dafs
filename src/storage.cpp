@@ -9,23 +9,45 @@ namespace dafs
     }
 
 
-    void
-    Loader::Fetch(Block& block)
+    Block
+    Loader::Fetch(Block block)
+    {
+        Block b(block.id, block.revision, block.owner, block.contents);
+        return b;
+    }
+
+
+    Persister::Persister(Parliament parliament_)
+        : parliament(parliament_)
     {
     }
 
 
     void
-    ReplicatedStorage::Update(Block was, Block is)
+    Persister::Update(Block was, Block is)
     {
         std::string proposal = Diff(is.contents, was.contents);
         parliament.CreateProposal(proposal);
     }
 
 
-    void
-    ReplicatedStorage::Get(Block block)
+    Storage::Storage(Loader loader_, Persister persister_)
+        : loader(loader_), persister(persister_)
     {
-        loader.Fetch(block);
+    }
+
+
+    void
+    Storage::Save(Block block)
+    {
+        Block was = loader.Fetch(block);
+        persister.Update(was, block);
+    }
+
+
+    Block
+    Storage::Fetch(Block block)
+    {
+        return loader.Fetch(block);
     }
 }
