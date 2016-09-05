@@ -29,6 +29,11 @@ namespace dafs
     };
 
 
+    class MetaFile
+    {
+    };
+
+
     class File
     {
     public:
@@ -44,6 +49,12 @@ namespace dafs
         unsigned int read_pointer;
 
         unsigned int write_pointer;
+
+        MetaFile previous;
+
+        MetaFile current;
+
+        MetaFile next;
     };
 
 
