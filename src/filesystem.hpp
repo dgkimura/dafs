@@ -42,7 +42,9 @@ namespace dafs
 
         void Read();
 
-        void Write(std::string string, int offset);
+        void Write(std::string string);
+
+        void Seek(int offset);
 
     private:
 

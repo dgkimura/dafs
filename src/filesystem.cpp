@@ -15,7 +15,13 @@ namespace dafs
 
 
     void
-    File::Write(std::string string, int offset)
+    File::Write(std::string string)
+    {
+    }
+
+
+    void
+    File::Seek(int offset)
     {
     }
 }
