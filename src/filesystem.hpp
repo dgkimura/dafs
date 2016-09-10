@@ -11,21 +11,12 @@ namespace dafs
 
     struct Block
     {
-        int id;
-
-        int revision;
-
-        std::string owner;
-
-        char contents[BLOCK_SIZE_IN_BYTES];
-
-        Block(int id_, int revision_, std::string owner_, std::string contents_)
-            : id(id_),
-              revision(revision_),
-              owner(owner_)
+        Block(std::string contents_)
         {
             contents_.copy(contents, contents_.length());
         }
+
+        char contents[BLOCK_SIZE_IN_BYTES];
     };
 
 

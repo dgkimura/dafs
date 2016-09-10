@@ -12,7 +12,7 @@ namespace dafs
     Block
     Loader::Fetch(Block block)
     {
-        Block b(block.id, block.revision, block.owner, block.contents);
+        Block b(block.contents);
         return b;
     }
 
