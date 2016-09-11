@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "paxos.hpp"
+#include "paxos/parliament.hpp"
 
 #include "filesystem.hpp"
 
