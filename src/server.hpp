@@ -33,15 +33,13 @@ namespace dafs
                 boost::asio::ip::tcp::socket socket
             );
 
-            void Start();
+            void Start(Storage& storage);
 
         private:
 
             boost::asio::ip::tcp::socket socket_;
 
             enum {max_length = 8192};
-
-            char data_[max_length];
         };
     };
 }

@@ -1,3 +1,4 @@
+#include "serialization.hpp"
 #include "server.hpp"
 
 
@@ -30,7 +31,7 @@ namespace dafs
             {
                 if (!ec_accept)
                 {
-                    std::make_shared<Session>(std::move(socket_))->Start();
+                    std::make_shared<Session>(std::move(socket_))->Start(storage);
                 }
                 do_accept();
             });
@@ -46,15 +47,20 @@ namespace dafs
 
 
     void
-    Server::Session::Start()
+    Server::Session::Start(Storage& storage)
     {
         auto self(shared_from_this());
+
+        char data_[max_length];
+
         socket_.async_read_some(boost::asio::buffer(data_, max_length),
-            [this, self](boost::system::error_code ec, std::size_t length)
+            [self, &data_, &storage](boost::system::error_code ec, std::size_t length)
             {
                 if (!ec)
                 {
                     // 1. Deserialize std::string(data_)
+                    Message m = Deserialize<Message>(data_);
+
                     // 2. Read request
                     // 3. Find block
                     // 4. Return response
