@@ -21,6 +21,20 @@ namespace dafs
         std::string content;
         std::vector<MetaData> metadata;
     };
+
+
+    class MetaDataParser
+    {
+    public:
+
+        MetaDataParser(std::vector<dafs::MetaData>);
+
+        std::string GetValue(std::string key);
+
+    private:
+
+        std::vector<dafs::MetaData> metadata;
+    };
 }
 
 

@@ -1,3 +1,4 @@
+#include "messages.hpp"
 #include "serialization.hpp"
 #include "server.hpp"
 
