@@ -60,9 +60,12 @@ namespace dafs
                 if (!ec)
                 {
                     // 1. Deserialize std::string(data_)
-                    Message m = Deserialize<Message>(data_);
+                    dafs::Message m = Deserialize<Message>(data_);
 
                     // 2. Read request
+                    dafs::MetaDataParser parser(m.metadata);
+                    std::string filename = parser.GetValue(FileNameTag);
+
                     // 3. Find block
                     // 4. Return response
                 }

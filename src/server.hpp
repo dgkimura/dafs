@@ -6,6 +6,8 @@
 
 namespace dafs
 {
+    const std::string FileNameTag = "FileName";
+
     class Server
     {
     public:
