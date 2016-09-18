@@ -13,7 +13,10 @@ namespace dafs
     Block
     Loader::Fetch(BlockInfo info)
     {
-        Block b("");
+        std::ifstream f(info.filename);
+        std::stringstream buffer;
+        buffer << f.rdbuf();
+        Block b(buffer.str());
         return b;
     }
 
