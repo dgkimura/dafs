@@ -20,6 +20,12 @@ namespace dafs
     };
 
 
+    struct BlockInfo
+    {
+        std::string filename;
+    };
+
+
     class MetaFile
     {
     };

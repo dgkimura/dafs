@@ -11,9 +11,9 @@ namespace dafs
 
 
     Block
-    Loader::Fetch(Block block)
+    Loader::Fetch(BlockInfo info)
     {
-        Block b(block.contents);
+        Block b("");
         return b;
     }
 
@@ -39,16 +39,16 @@ namespace dafs
 
 
     void
-    Storage::Save(Block block)
+    Storage::Save(BlockInfo info, Block block)
     {
-        Block was = loader.Fetch(block);
+        Block was = loader.Fetch(info);
         persister.Update(was, block);
     }
 
 
     Block
-    Storage::Fetch(Block block)
+    Storage::Fetch(BlockInfo info)
     {
-        return loader.Fetch(block);
+        return loader.Fetch(info);
     }
 }
