@@ -6,6 +6,11 @@
 
 namespace dafs
 {
+
+    //
+    // Edits to files are represented by delta objects. It contains all the
+    // necessary data to update the file from one version to the next.
+    //
     struct Delta
     {
         std::string filename;
