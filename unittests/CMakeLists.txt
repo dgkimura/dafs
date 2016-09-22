@@ -20,20 +20,27 @@ set(SOURCES
 )
 
 add_executable(all_unittests ${SOURCES} ${DAFS_SOURCES})
-add_dependencies(all_unittests gtest)
 
 set_property(TARGET all_unittests PROPERTY CXX_STANDARD 11)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+if (UNIX AND NOT APPLE)
+    # XXX: GCC link order matters. Ensure that 'rt' links after 'pthread'.
+    set(PLATFORM_LIBRARIES rt)
+endif()
 
 target_link_libraries(all_unittests
     PRIVATE
         ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}
         ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}
+        ${paxos_LIBS}
+        ${diflib_LIB}
+        Threads::Threads
         ${PLATFORM_LIBRARIES}
-        ${paxos_DEPENDENCIES}
-        ${paxos_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}paxos${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${diflib_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}diflib${CMAKE_STATIC_LIBRARY_SUFFIX}
 )
 
+add_dependencies(all_unittests gtest)
 add_dependencies(all_unittests diflib)
 add_dependencies(all_unittests paxos)
 
@@ -41,3 +48,5 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest/include)
 include_directories(${dafs_DIR})
 include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
+
+set(CMAKE_INSTALL_RPATH ${paxos_LIBS} ${diflib_LIB})

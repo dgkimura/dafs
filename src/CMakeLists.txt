@@ -11,10 +11,20 @@ set(SOURCES
     topology.cpp
 )
 add_executable(dafs main.cpp ${SOURCES})
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+if (UNIX AND NOT APPLE)
+    # XXX: GCC link order matters. Ensure that 'rt' links after 'pthread'.
+    set(PLATFORM_LIBRARIES rt)
+endif()
+
 target_link_libraries(dafs
     PRIVATE
-        ${paxos_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}paxos${CMAKE_SHARED_LIBRARY_SUFFIX}
-        ${diflib_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}diflib${CMAKE_STATIC_LIBRARY_SUFFIX}
+        ${paxos_LIBS}
+        ${diflib_LIB}
+        Threads::Threads
+        ${PLATFORM_LIBRARIES}
 )
 
 add_dependencies(dafs diflib)
@@ -31,3 +41,5 @@ foreach(source ${SOURCES})
     set(DAFS_SOURCES ${DAFS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${source})
 endforeach()
 set(DAFS_SOURCES ${DAFS_SOURCES} PARENT_SCOPE)
+
+set(CMAKE_INSTALL_RPATH ${paxos_LIBS} ${diflib_LIB})
