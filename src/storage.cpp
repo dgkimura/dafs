@@ -1,3 +1,5 @@
+#include "diflib.h"
+
 #include "delta.hpp"
 #include "messages.hpp"
 #include "serialization.hpp"

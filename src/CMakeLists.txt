@@ -14,9 +14,13 @@ add_executable(dafs main.cpp ${SOURCES})
 target_link_libraries(dafs
     PRIVATE
         ${paxos_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}paxos${CMAKE_SHARED_LIBRARY_SUFFIX}
+        ${diflib_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}diflib${CMAKE_STATIC_LIBRARY_SUFFIX}
 )
 
+add_dependencies(dafs diflib)
 add_dependencies(dafs paxos)
+
+include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
 
 set_property(TARGET dafs PROPERTY CXX_STANDARD 11)

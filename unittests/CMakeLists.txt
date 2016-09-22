@@ -31,8 +31,13 @@ target_link_libraries(all_unittests
         ${PLATFORM_LIBRARIES}
         ${paxos_DEPENDENCIES}
         ${paxos_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}paxos${CMAKE_SHARED_LIBRARY_SUFFIX}
+        ${diflib_LIB}/${CMAKE_SHARED_LIBRARY_PREFIX}diflib${CMAKE_STATIC_LIBRARY_SUFFIX}
 )
+
+add_dependencies(all_unittests diflib)
+add_dependencies(all_unittests paxos)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest/include)
 include_directories(${dafs_DIR})
+include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
