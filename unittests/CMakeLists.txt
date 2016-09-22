@@ -15,6 +15,7 @@ set(SOURCES
     filesystem_unittest.cpp
     messages_unittest.cpp
     operations_unittest.cpp
+    serialization_unittest.cpp
     topology_unittest.cpp
 )
 
