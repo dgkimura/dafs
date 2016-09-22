@@ -1,4 +1,6 @@
+#include "delta.hpp"
 #include "messages.hpp"
+#include "serialization.hpp"
 #include "storage.hpp"
 
 
@@ -28,9 +30,14 @@ namespace dafs
 
 
     void
-    Persister::Update(Block was, Block is)
+    Persister::Update(BlockInfo info, Block was, Block is)
     {
-        std::string proposal = Diff(is.contents, was.contents);
+        dafs::Delta delta
+        {
+            info.filename,
+            Diff(is.contents, was.contents)
+        };
+        std::string proposal = Serialize<dafs::Delta>(delta);
         parliament.CreateProposal(proposal);
     }
 
@@ -45,7 +52,7 @@ namespace dafs
     Storage::Save(BlockInfo info, Block block)
     {
         Block was = loader.Fetch(info);
-        persister.Update(was, block);
+        persister.Update(info, was, block);
     }
 
 

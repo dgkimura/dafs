@@ -24,7 +24,7 @@ namespace dafs
 
         Persister(Parliament parliament);
 
-        void Update(Block was, Block is);
+        void Update(BlockInfo info, Block was, Block is);
 
     private:
 
