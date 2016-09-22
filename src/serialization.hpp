@@ -7,11 +7,20 @@
 #include "boost/archive/text_iarchive.hpp"
 #include "boost/archive/text_oarchive.hpp"
 
+#include "delta.hpp"
 #include "messages.hpp"
 
 
 namespace dafs
 {
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::Delta& obj, const unsigned int version)
+    {
+        ar & obj.filename;
+        ar & obj.difference;
+    }
+
+
     template <typename Archive>
     void serialize(Archive& ar, dafs::MetaData& obj, const unsigned int version)
     {
