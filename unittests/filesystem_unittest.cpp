@@ -7,7 +7,8 @@ TEST(BlockTest, testBlockFieldsAreConstructed)
 {
     std::string contents = "the_block_contents";
 
-    dafs::Block b(contents);
+    dafs::BlockFormat b;
+    strcpy(b.contents, contents.c_str());
 
     ASSERT_EQ(contents, b.contents);
 }

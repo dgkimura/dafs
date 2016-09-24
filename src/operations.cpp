@@ -4,25 +4,25 @@
 namespace dafs
 {
     void
-    Delete(File f)
+    Delete(FileDescriptor f)
     {
     }
 
 
     void
-    Read(File f)
+    Read(FileDescriptor f)
     {
     }
 
 
     void
-    Update(File f)
+    Update(FileDescriptor f)
     {
     }
 
 
     void
-    Write(File f)
+    Write(FileDescriptor f)
     {
     }
 }

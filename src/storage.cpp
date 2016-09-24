@@ -14,13 +14,12 @@ namespace dafs
     }
 
 
-    Block
+    BlockFormat
     Loader::Fetch(BlockInfo info)
     {
         std::ifstream f(info.filename);
-        std::stringstream buffer;
-        buffer << f.rdbuf();
-        Block b(buffer.str());
+        BlockFormat b;
+        f.read(b.contents, BLOCK_SIZE_IN_BYTES);
         return b;
     }
 
@@ -32,7 +31,7 @@ namespace dafs
 
 
     void
-    Persister::Update(BlockInfo info, Block was, Block is)
+    Persister::Update(BlockInfo info, BlockFormat was, BlockFormat is)
     {
         dafs::Delta delta
         {
@@ -51,14 +50,14 @@ namespace dafs
 
 
     void
-    Storage::Save(BlockInfo info, Block block)
+    Storage::Save(BlockInfo info, BlockFormat block)
     {
-        Block was = loader.Fetch(info);
+        BlockFormat was = loader.Fetch(info);
         persister.Update(info, was, block);
     }
 
 
-    Block
+    BlockFormat
     Storage::Fetch(BlockInfo info)
     {
         return loader.Fetch(info);

@@ -14,7 +14,7 @@ namespace dafs
     {
     public:
 
-        Block Fetch(BlockInfo info);
+        BlockFormat Fetch(BlockInfo info);
     };
 
 
@@ -24,7 +24,7 @@ namespace dafs
 
         Persister(Parliament parliament);
 
-        void Update(BlockInfo info, Block was, Block is);
+        void Update(BlockInfo info, BlockFormat was, BlockFormat is);
 
     private:
 
@@ -38,9 +38,9 @@ namespace dafs
 
         Storage(Loader loader, Persister persister);
 
-        void Save(BlockInfo info, Block block);
+        void Save(BlockInfo info, BlockFormat block);
 
-        Block Fetch(BlockInfo info);
+        BlockFormat Fetch(BlockInfo info);
 
     private:
 

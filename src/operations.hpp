@@ -7,13 +7,13 @@
 
 namespace dafs
 {
-    void Delete(File f);
+    void Delete(FileDescriptor f);
 
-    void Read(File f);
+    void Read(FileDescriptor f);
 
-    void Update(File f);
+    void Update(FileDescriptor f);
 
-    void Write(File f);
+    void Write(FileDescriptor f);
 }
 
 

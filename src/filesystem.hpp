@@ -9,61 +9,52 @@ namespace dafs
 {
     const int BLOCK_SIZE_IN_BYTES = 1048576;
 
-    struct Block
-    {
-        Block(std::string contents_)
-        {
-            contents_.copy(contents, contents_.length());
-        }
-
-        char contents[BLOCK_SIZE_IN_BYTES];
-    };
-
 
     struct BlockInfo
     {
         std::string filename;
+
+        std::string address;
     };
 
 
-    class MetaFile
+    struct BlockFormat
     {
+        char contents[BLOCK_SIZE_IN_BYTES];
     };
 
 
-    class File
+    struct FileInfo
+    {
+        std::string previous;
+
+        std::string next;
+
+        std::string current;
+
+        int identifier;
+    };
+
+
+    struct FileFormat
+    {
+        FileInfo info;
+
+        std::vector<BlockInfo> blocks;
+    };
+
+
+    class FileDescriptor
     {
     public:
 
-        File();
+        FileDescriptor();
 
         void Read();
 
         void Write(std::string string);
 
         void Seek(int offset);
-
-    private:
-
-        unsigned int read_pointer;
-
-        unsigned int write_pointer;
-
-        MetaFile previous;
-
-        MetaFile current;
-
-        MetaFile next;
-    };
-
-
-    class SuperBlock
-    {
-    private:
-
-        std::vector<File> files;
-
-        std::vector<Block> blocks;
     };
 }
 

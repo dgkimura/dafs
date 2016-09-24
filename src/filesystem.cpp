@@ -3,25 +3,25 @@
 
 namespace dafs
 {
-    File::File()
+    FileDescriptor::FileDescriptor()
     {
     }
 
 
     void
-    File::Read()
+    FileDescriptor::Read()
     {
     }
 
 
     void
-    File::Write(std::string string)
+    FileDescriptor::Write(std::string string)
     {
     }
 
 
     void
-    File::Seek(int offset)
+    FileDescriptor::Seek(int offset)
     {
     }
 }
