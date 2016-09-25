@@ -7,7 +7,9 @@
 
 namespace dafs
 {
-    const int BLOCK_SIZE_IN_BYTES = 1048576;
+    const int BLOCK_SIZE_IN_BYTES = 65536;
+
+    const int FILEINFO_SIZE_IN_BLOCKS = 8192;
 
 
     struct BlockInfo
@@ -30,8 +32,6 @@ namespace dafs
 
         std::string next;
 
-        std::string current;
-
         int identifier;
     };
 
@@ -40,7 +40,7 @@ namespace dafs
     {
         FileInfo info;
 
-        std::vector<BlockInfo> blocks;
+        BlockInfo blocks[FILEINFO_SIZE_IN_BLOCKS];
     };
 
 

@@ -8,6 +8,7 @@
 #include "boost/archive/text_oarchive.hpp"
 
 #include "delta.hpp"
+#include "filesystem.hpp"
 #include "messages.hpp"
 
 
@@ -18,6 +19,41 @@ namespace dafs
     {
         ar & obj.filename;
         ar & obj.difference;
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::BlockFormat& obj, const unsigned int version)
+    {
+        ar & obj.contents;
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::BlockInfo& obj, const unsigned int version)
+    {
+        ar & obj.filename;
+        ar & obj.address;
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::FileFormat& obj, const unsigned int version)
+    {
+        ar & obj.info;
+        for (int i=0; i<FILEINFO_SIZE_IN_BLOCKS; i++)
+        {
+            ar & obj.blocks[i];
+        }
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::FileInfo& obj, const unsigned int version)
+    {
+        ar & obj.previous;
+        ar & obj.next;
+        ar & obj.identifier;
     }
 
 
