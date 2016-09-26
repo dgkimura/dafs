@@ -41,7 +41,7 @@ namespace dafs
     void serialize(Archive& ar, dafs::FileFormat& obj, const unsigned int version)
     {
         ar & obj.info;
-        for (int i=0; i<FILEINFO_SIZE_IN_BLOCKS; i++)
+        for (int i=0; i<BLOCKS_IN_FILEINFO; i++)
         {
             ar & obj.blocks[i];
         }
@@ -71,10 +71,33 @@ namespace dafs
         ar & obj.from;
         ar & obj.to;
         ar & obj.content;
-        for (auto m : obj.metadata)
+
+        int size;
+
+        if (Archive::is_loading::value)
         {
-            ar & m.key;
-            ar & m.value;
+            //
+            // deserialize collection object.
+            //
+            ar & size;
+            for (int i=0; i<size; i++)
+            {
+                MetaData md;
+                ar & md;
+                obj.metadata.push_back(md);
+            }
+        }
+        else
+        {
+            //
+            // serialize collection object.
+            //
+            size = obj.metadata.size();
+            ar & size;
+            for (int i=0; i<size; i++)
+            {
+                ar & obj.metadata[i];
+            }
         }
     }
 

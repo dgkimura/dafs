@@ -9,7 +9,7 @@ namespace dafs
 {
     const int BLOCK_SIZE_IN_BYTES = 65536;
 
-    const int FILEINFO_SIZE_IN_BLOCKS = 8192;
+    const int BLOCKS_IN_FILEINFO = 8192;
 
 
     struct BlockInfo
@@ -40,7 +40,7 @@ namespace dafs
     {
         FileInfo info;
 
-        BlockInfo blocks[FILEINFO_SIZE_IN_BLOCKS];
+        BlockInfo blocks[BLOCKS_IN_FILEINFO];
     };
 
 

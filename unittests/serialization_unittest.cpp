@@ -115,3 +115,35 @@ TEST(SerializationUnitTest, testMetaDataIsSerializableAndDeserializable)
     ASSERT_EQ(expected.key, actual.key);
     ASSERT_EQ(expected.value, actual.value);
 }
+
+
+TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
+{
+    dafs::Message expected
+    {
+        "to",
+        "from",
+        "the message content",
+        {
+            {
+                "my-metadata-key",
+                "my-metadata-value"
+            },
+            {
+                "your-metadata-key",
+                "your-metadata-value"
+            }
+        }
+    }, actual;
+
+    std::string string_obj = dafs::Serialize(expected);
+    actual = dafs::Deserialize<dafs::Message>(string_obj);
+
+    ASSERT_EQ(expected.to, actual.to);
+    ASSERT_EQ(expected.from, actual.from);
+    ASSERT_EQ(expected.content, actual.content);
+    ASSERT_EQ(expected.metadata[0].key, actual.metadata[0].key);
+    ASSERT_EQ(expected.metadata[0].value, actual.metadata[0].value);
+    ASSERT_EQ(expected.metadata[1].key, actual.metadata[1].key);
+    ASSERT_EQ(expected.metadata[1].value, actual.metadata[1].value);
+}
