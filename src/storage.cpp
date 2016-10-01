@@ -1,6 +1,3 @@
-#include "diflib.h"
-
-#include "delta.hpp"
 #include "messages.hpp"
 #include "serialization.hpp"
 #include "storage.hpp"
@@ -8,12 +5,6 @@
 
 namespace dafs
 {
-    std::string Diff(std::string a, std::string b)
-    {
-        return "";
-    }
-
-
     BlockFormat
     Loader::Fetch(BlockInfo info)
     {
@@ -31,13 +22,8 @@ namespace dafs
 
 
     void
-    Persister::Update(BlockInfo info, BlockFormat was, BlockFormat is)
+    Persister::Update(BlockInfo info, Delta delta)
     {
-        dafs::Delta delta
-        {
-            info.filename,
-            Diff(is.contents, was.contents)
-        };
         std::string proposal = Serialize<dafs::Delta>(delta);
         parliament.CreateProposal(proposal);
     }
@@ -49,17 +35,34 @@ namespace dafs
     }
 
 
-    void
-    Storage::Save(BlockInfo info, BlockFormat block)
+    BlockFormat
+    Storage::Load(BlockInfo info)
     {
-        BlockFormat was = loader.Fetch(info);
-        persister.Update(info, was, block);
+        return loader.Fetch(info);
     }
 
 
-    BlockFormat
-    Storage::Fetch(BlockInfo info)
+    void
+    Storage::Save(BlockInfo info, BlockFormat is)
     {
-        return loader.Fetch(info);
+        BlockFormat was = loader.Fetch(info);
+        Delta delta = DeltaFactory::Create(info.filename, was.contents, is.contents);
+        persister.Update(info, delta);
+    }
+
+
+    void
+    Storage::Write(BlockInfo info, int offset, std::string data)
+    {
+        // TODO: write to block
+    }
+
+
+    std::string
+    Storage::Read(BlockInfo info, int offset, int bytes)
+    {
+        // TODO: read to block
+        std::string content;
+        return content;
     }
 }

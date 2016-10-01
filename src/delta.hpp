@@ -16,6 +16,14 @@ namespace dafs
         std::string filename;
         std::string difference;
     };
+
+
+    class DeltaFactory
+    {
+    public:
+
+        static Delta Create(std::string filename, std::string was, std::string is);
+    };
 }
 
 #endif

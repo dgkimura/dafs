@@ -3,6 +3,7 @@ project(dafs.src)
 
 set(SOURCES
     blockcache.cpp
+    delta.cpp
     filesystem.cpp
     operations.cpp
     messages.cpp

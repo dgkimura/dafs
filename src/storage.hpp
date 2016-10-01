@@ -5,6 +5,7 @@
 
 #include "paxos/parliament.hpp"
 
+#include "delta.hpp"
 #include "filesystem.hpp"
 
 
@@ -24,7 +25,7 @@ namespace dafs
 
         Persister(Parliament parliament);
 
-        void Update(BlockInfo info, BlockFormat was, BlockFormat is);
+        void Update(BlockInfo info, Delta delta);
 
     private:
 
@@ -38,9 +39,13 @@ namespace dafs
 
         Storage(Loader loader, Persister persister);
 
+        BlockFormat Load(BlockInfo info);
+
         void Save(BlockInfo info, BlockFormat block);
 
-        BlockFormat Fetch(BlockInfo info);
+        std::string Read(BlockInfo info, int offset, int bytes);
+
+        void Write(BlockInfo info, int offset, std::string data);
 
     private:
 
