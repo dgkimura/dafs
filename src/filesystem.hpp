@@ -12,6 +12,9 @@ namespace dafs
     const int BLOCKS_IN_FILEINFO = 8192;
 
 
+    //
+    // Describes the block info.
+    //
     struct BlockInfo
     {
         std::string filename;
@@ -20,12 +23,18 @@ namespace dafs
     };
 
 
+    //
+    // Defines the block structure on disk
+    //
     struct BlockFormat
     {
         char contents[BLOCK_SIZE_IN_BYTES];
     };
 
 
+    //
+    // Describes the file info.
+    //
     struct FileInfo
     {
         std::string previous;
@@ -36,6 +45,9 @@ namespace dafs
     };
 
 
+    //
+    // Defines the file structure on disk
+    //
     struct FileFormat
     {
         FileInfo info;
