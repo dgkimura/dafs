@@ -12,6 +12,7 @@ ExternalProject_Add(
 )
 
 set(SOURCES
+    delta_unittest.cpp
     filesystem_unittest.cpp
     messages_unittest.cpp
     serialization_unittest.cpp
