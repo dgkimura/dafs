@@ -46,7 +46,7 @@ namespace dafs
     Storage::Save(BlockInfo info, BlockFormat is)
     {
         BlockFormat was = loader.Fetch(info);
-        Delta delta = DeltaFactory::Create(info.filename, was.contents, is.contents);
+        Delta delta = CreateDelta(info.filename, was.contents, is.contents);
         persister.Update(info, delta);
     }
 

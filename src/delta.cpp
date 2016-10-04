@@ -7,7 +7,7 @@
 namespace dafs
 {
     Delta
-    DeltaFactory::Create(std::string filename, std::string was, std::string is)
+    CreateDelta(std::string filename, std::string was, std::string is)
     {
         char edit_script[BLOCK_SIZE_IN_BYTES];
         int edit_script_length = BLOCK_SIZE_IN_BYTES;
@@ -26,5 +26,22 @@ namespace dafs
             std::string(edit_script)
         };
         return delta;
+    }
+
+
+    std::string
+    ApplyDelta(Delta delta, std::string original)
+    {
+        char new_string[BLOCK_SIZE_IN_BYTES];
+        int new_string_length = BLOCK_SIZE_IN_BYTES;
+        int error = ApplyEditScript(
+            &original[0],
+            original.length(),
+            &delta.difference[0],
+            delta.difference.length(),
+            new_string,
+            new_string_length
+        );
+        return std::string(new_string);
     }
 }

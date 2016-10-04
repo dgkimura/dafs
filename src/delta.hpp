@@ -18,12 +18,9 @@ namespace dafs
     };
 
 
-    class DeltaFactory
-    {
-    public:
+    Delta CreateDelta(std::string filename, std::string was, std::string is);
 
-        static Delta Create(std::string filename, std::string was, std::string is);
-    };
+    std::string ApplyDelta(Delta delta, std::string original);
 }
 
 #endif
