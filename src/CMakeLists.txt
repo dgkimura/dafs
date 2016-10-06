@@ -4,7 +4,6 @@ project(dafs.src)
 set(SOURCES
     blockcache.cpp
     delta.cpp
-    filesystem.cpp
     messages.cpp
     server.cpp
     storage.cpp

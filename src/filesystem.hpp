@@ -63,20 +63,6 @@ namespace dafs
 
         BlockInfo blocks[BLOCKS_IN_FILEINFO];
     };
-
-
-    class FileDescriptor
-    {
-    public:
-
-        FileDescriptor();
-
-        void Read();
-
-        void Write(std::string string);
-
-        void Seek(int offset);
-    };
 }
 
 
