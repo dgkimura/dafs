@@ -24,14 +24,17 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
     dafs::BlockInfo expected
     {
         "the-filename",
-        "the-address"
+        dafs::Location
+        {
+            "the-address"
+        }
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::BlockInfo>(string_obj);
 
     ASSERT_EQ(expected.filename, actual.filename);
-    ASSERT_EQ(expected.address, actual.address);
+    ASSERT_EQ(expected.location.address, actual.location.address);
 }
 
 
@@ -61,8 +64,8 @@ TEST(SerializationUnitTest, testFileInfoIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::FileInfo>(string_obj);
 
-    ASSERT_EQ(expected.previous, actual.previous);
-    ASSERT_EQ(expected.next, actual.next);
+    ASSERT_EQ(expected.previous.address, actual.previous.address);
+    ASSERT_EQ(expected.next.address, actual.next.address);
     ASSERT_EQ(expected.identifier, actual.identifier);
 }
 
@@ -79,11 +82,17 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
         {
             {
                 "the-filename-of-block-1",
-                "the-address"
+                dafs::Location
+                {
+                    "the-address"
+                }
             },
             {
                 "the-filename-of-block-2",
-                "the-address"
+                dafs::Location
+                {
+                    "the-address"
+                }
             }
         }
     }, actual;
@@ -91,13 +100,13 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::FileFormat>(string_obj);
 
-    ASSERT_EQ(expected.info.previous, actual.info.previous);
-    ASSERT_EQ(expected.info.next, actual.info.next);
+    ASSERT_EQ(expected.info.previous.address, actual.info.previous.address);
+    ASSERT_EQ(expected.info.next.address, actual.info.next.address);
     ASSERT_EQ(expected.info.identifier, actual.info.identifier);
     ASSERT_EQ(expected.blocks[0].filename, actual.blocks[0].filename);
-    ASSERT_EQ(expected.blocks[0].address, actual.blocks[0].address);
+    ASSERT_EQ(expected.blocks[0].location.address, actual.blocks[0].location.address);
     ASSERT_EQ(expected.blocks[1].filename, actual.blocks[1].filename);
-    ASSERT_EQ(expected.blocks[1].address, actual.blocks[1].address);
+    ASSERT_EQ(expected.blocks[1].location.address, actual.blocks[1].location.address);
 }
 
 

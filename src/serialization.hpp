@@ -23,6 +23,13 @@ namespace dafs
 
 
     template <typename Archive>
+    void serialize(Archive& ar, dafs::Location& obj, const unsigned int version)
+    {
+        ar & obj.address;
+    }
+
+
+    template <typename Archive>
     void serialize(Archive& ar, dafs::BlockFormat& obj, const unsigned int version)
     {
         ar & obj.contents;
@@ -33,7 +40,7 @@ namespace dafs
     void serialize(Archive& ar, dafs::BlockInfo& obj, const unsigned int version)
     {
         ar & obj.filename;
-        ar & obj.address;
+        ar & obj.location;
     }
 
 

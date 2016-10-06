@@ -13,13 +13,22 @@ namespace dafs
 
 
     //
+    // Describes location.
+    //
+    struct Location
+    {
+        std::string address;
+    };
+
+
+    //
     // Describes the block info.
     //
     struct BlockInfo
     {
         std::string filename;
 
-        std::string address;
+        Location location;
     };
 
 
@@ -37,9 +46,9 @@ namespace dafs
     //
     struct FileInfo
     {
-        std::string previous;
+        Location previous;
 
-        std::string next;
+        Location next;
 
         int identifier;
     };
