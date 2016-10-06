@@ -124,6 +124,7 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
         "to",
         "from",
         "the message content",
+        dafs::MessageType::ReadFile,
         {
             {
                 "my-metadata-key",
@@ -142,6 +143,7 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
     ASSERT_EQ(expected.to, actual.to);
     ASSERT_EQ(expected.from, actual.from);
     ASSERT_EQ(expected.content, actual.content);
+    ASSERT_EQ(expected.type, actual.type);
     ASSERT_EQ(expected.metadata[0].key, actual.metadata[0].key);
     ASSERT_EQ(expected.metadata[0].value, actual.metadata[0].value);
     ASSERT_EQ(expected.metadata[1].key, actual.metadata[1].key);

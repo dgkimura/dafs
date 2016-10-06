@@ -71,6 +71,7 @@ namespace dafs
         ar & obj.from;
         ar & obj.to;
         ar & obj.content;
+        ar & obj.type;
 
         int size;
 

@@ -64,7 +64,7 @@ namespace dafs
 
                     // 2. Read request
                     dafs::MetaDataParser parser(m.metadata);
-                    std::string filename = parser.GetValue(FileNameTag);
+                    std::string filename = parser.GetValue(FileNameKey);
 
                     // 3. Find block
                     // 4. Return response

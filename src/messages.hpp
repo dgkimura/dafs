@@ -7,6 +7,35 @@
 
 namespace dafs
 {
+    enum class MessageType
+    {
+        //
+        // Create a file inside the distributed system.
+        //
+        CreateFile,
+
+        //
+        // Delete a file from the distributed system.
+        //
+        DeleteFile,
+
+        //
+        // Open a file for further operations.
+        //
+        OpenFile,
+
+        //
+        // Read from an opened file.
+        //
+        ReadFile,
+
+        //
+        // Write to an opened file.
+        //
+        WriteFile
+    };
+
+
     struct MetaData
     {
         std::string key;
@@ -14,11 +43,15 @@ namespace dafs
     };
 
 
+    const std::string FileNameKey = "FileName";
+
+
     struct Message
     {
         std::string from;
         std::string to;
         std::string content;
+        MessageType type;
         std::vector<MetaData> metadata;
     };
 
