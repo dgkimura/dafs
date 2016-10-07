@@ -1,5 +1,4 @@
-#ifndef __DAFS_SERIALIZATION_HPP_INCLUDED__
-#define __DAFS_SERIALIZATION_HPP_INCLUDED__
+#pragma once
 
 #include <fstream>
 #include <sstream>
@@ -130,6 +129,3 @@ namespace dafs
         return object;
     }
 }
-
-
-#endif

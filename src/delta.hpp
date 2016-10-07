@@ -1,5 +1,4 @@
-#ifndef __DELTA_HPP_INCLUDED__
-#define __DELTA_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 
@@ -22,5 +21,3 @@ namespace dafs
 
     std::string ApplyDelta(Delta delta, std::string original);
 }
-
-#endif

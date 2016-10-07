@@ -1,5 +1,4 @@
-#ifndef __FILESYSTEM_HPP_INCLUDED__
-#define __FILESYSTEM_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 #include <vector>
@@ -64,6 +63,3 @@ namespace dafs
         BlockInfo blocks[BLOCKS_IN_FILEINFO];
     };
 }
-
-
-#endif

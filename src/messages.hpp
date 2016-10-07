@@ -1,5 +1,4 @@
-#ifndef __DAFS_MESSAGES_HPP_INCLUDED__
-#define __DAFS_MESSAGES_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 #include <vector>
@@ -69,6 +68,3 @@ namespace dafs
         std::vector<dafs::MetaData> metadata;
     };
 }
-
-
-#endif

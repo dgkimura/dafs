@@ -1,5 +1,4 @@
-#ifndef __STORAGE_HPP_INCLUDED__
-#define __STORAGE_HPP_INCLUDED__
+#pragma once
 
 #include <string>
 
@@ -54,6 +53,3 @@ namespace dafs
         Persister persister;
     };
 }
-
-
-#endif

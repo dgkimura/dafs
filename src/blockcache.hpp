@@ -1,5 +1,4 @@
-#ifndef __BLOCKCACHE_HPP_INCLUDED__
-#define __BLOCKCACHE_HPP_INCLUDED__
+#pragma once
 
 namespace dafs
 {
@@ -7,6 +6,3 @@ namespace dafs
     {
     };
 }
-
-
-#endif
