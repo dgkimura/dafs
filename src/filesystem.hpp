@@ -12,6 +12,17 @@ namespace dafs
 
 
     //
+    // Defines segment of bytes. (used to write to blocks)
+    //
+    struct Bytes
+    {
+        char *content;
+
+        unsigned int size;
+    };
+
+
+    //
     // Describes location.
     //
     struct Location

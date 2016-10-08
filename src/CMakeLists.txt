@@ -5,6 +5,7 @@ set(SOURCES
     blockcache.cpp
     delta.cpp
     dispatcher.cpp
+    handler.cpp
     messages.cpp
     server.cpp
     storage.cpp
