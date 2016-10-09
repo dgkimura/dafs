@@ -4,31 +4,58 @@
 namespace dafs
 {
     void
-    HandleCreateFile(dafs::Storage store, dafs::FileInfo info)
+    HandleCreateFile(
+        dafs::Storage store,
+        dafs::FileInfo info)
     {
     }
 
 
     void
-    HandleDeleteFile(dafs::Storage store, dafs::FileInfo info)
+    HandleDeleteFile(
+        dafs::Storage store,
+        dafs::FileInfo info)
     {
     }
 
 
     void
-    HandleOpenFile(dafs::Storage store, dafs::FileInfo info)
+    HandleOpenFile(
+        dafs::Storage store,
+        dafs::FileInfo info)
     {
     }
 
 
     void
-    HandleReadFile(dafs::Storage store, dafs::FileInfo info)
+    HandleReadFile(
+        dafs::Storage store,
+        dafs::FileInfo info)
     {
     }
 
 
     void
-    HandleWriteFile(dafs::Bytes bytes, dafs::Storage store, dafs::FileInfo info)
+    HandleWriteFile(
+        dafs::Bytes bytes,
+        dafs::Storage store,
+        dafs::FileInfo info)
+    {
+    }
+
+
+    void HandleAllocate(
+        dafs::Allocation allocation,
+        dafs::Storage store,
+        dafs::FileInfo info)
+    {
+    }
+
+
+    void HandleAllocated(
+        dafs::Allocation allocation,
+        dafs::Storage store,
+        dafs::FileInfo info)
     {
     }
 }
