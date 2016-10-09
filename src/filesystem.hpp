@@ -60,7 +60,9 @@ namespace dafs
 
         Location next;
 
-        int identifier;
+        int descriptor;
+
+        std::string name;
     };
 
 

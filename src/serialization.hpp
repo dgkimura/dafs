@@ -59,7 +59,8 @@ namespace dafs
     {
         ar & obj.previous;
         ar & obj.next;
-        ar & obj.identifier;
+        ar & obj.descriptor;
+        ar & obj.name;
     }
 
 
