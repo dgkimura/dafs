@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.4)
 project(dafs.src)
 
 set(SOURCES
-    blockcache.cpp
     delta.cpp
     dispatcher.cpp
     handler.cpp
