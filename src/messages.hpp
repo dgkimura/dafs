@@ -31,7 +31,22 @@ namespace dafs
         //
         // Write to an opened file.
         //
-        WriteFile
+        WriteFile,
+
+        //
+        // Allocate resources.
+        //
+        Allocate,
+
+        //
+        // Allocated resources.
+        //
+        Allocated,
+
+        //
+        // Ping to neighbor node.
+        //
+        Ping
     };
 
 
