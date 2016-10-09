@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "metadata.hpp"
+
 
 namespace dafs
 {
@@ -50,16 +52,6 @@ namespace dafs
     };
 
 
-    struct MetaData
-    {
-        std::string key;
-        std::string value;
-    };
-
-
-    const std::string FileNameKey = "FileName";
-
-
     struct Message
     {
         std::string from;
@@ -67,19 +59,5 @@ namespace dafs
         std::string content;
         MessageType type;
         std::vector<MetaData> metadata;
-    };
-
-
-    class MetaDataParser
-    {
-    public:
-
-        MetaDataParser(std::vector<dafs::MetaData>);
-
-        std::string GetValue(std::string key);
-
-    private:
-
-        std::vector<dafs::MetaData> metadata;
     };
 }
