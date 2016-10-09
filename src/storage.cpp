@@ -5,8 +5,14 @@
 
 namespace dafs
 {
+    Persister::Persister(Parliament parliament_)
+        : parliament(parliament_)
+    {
+    }
+
+
     BlockFormat
-    Loader::Fetch(BlockInfo info)
+    Persister::Get(BlockInfo info)
     {
         std::ifstream f(info.filename);
         BlockFormat b;
@@ -15,22 +21,16 @@ namespace dafs
     }
 
 
-    Persister::Persister(Parliament parliament_)
-        : parliament(parliament_)
-    {
-    }
-
-
     void
-    Persister::Update(BlockInfo info, Delta delta)
+    Persister::Set(BlockInfo info, Delta delta)
     {
         std::string proposal = Serialize<dafs::Delta>(delta);
         parliament.CreateProposal(proposal);
     }
 
 
-    Storage::Storage(Loader loader_, Persister persister_)
-        : loader(loader_), persister(persister_)
+    Storage::Storage(Persister persister_)
+        : persister(persister_)
     {
     }
 
@@ -38,16 +38,16 @@ namespace dafs
     BlockFormat
     Storage::Load(BlockInfo info)
     {
-        return loader.Fetch(info);
+        return persister.Get(info);
     }
 
 
     void
     Storage::Save(BlockInfo info, BlockFormat is)
     {
-        BlockFormat was = loader.Fetch(info);
+        BlockFormat was = persister.Get(info);
         Delta delta = CreateDelta(info.filename, was.contents, is.contents);
-        persister.Update(info, delta);
+        persister.Set(info, delta);
     }
 
 

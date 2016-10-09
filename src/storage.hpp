@@ -10,21 +10,15 @@
 
 namespace dafs
 {
-    class Loader
-    {
-    public:
-
-        BlockFormat Fetch(BlockInfo info);
-    };
-
-
     class Persister
     {
     public:
 
         Persister(Parliament parliament);
 
-        void Update(BlockInfo info, Delta delta);
+        BlockFormat Get(BlockInfo info);
+
+        void Set(BlockInfo info, Delta delta);
 
     private:
 
@@ -36,7 +30,7 @@ namespace dafs
     {
     public:
 
-        Storage(Loader loader, Persister persister);
+        Storage(Persister persister);
 
         BlockFormat Load(BlockInfo info);
 
@@ -47,8 +41,6 @@ namespace dafs
         void Write(BlockInfo info, int offset, std::string data);
 
     private:
-
-        Loader loader;
 
         Persister persister;
     };
