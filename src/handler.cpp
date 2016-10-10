@@ -46,16 +46,14 @@ namespace dafs
 
     void HandleAllocate(
         dafs::Allocation allocation,
-        dafs::Storage store,
-        dafs::FileInfo info)
+        dafs::Storage store)
     {
     }
 
 
     void HandleAllocated(
         dafs::Allocation allocation,
-        dafs::Storage store,
-        dafs::FileInfo info)
+        dafs::Storage store)
     {
     }
 }
