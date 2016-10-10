@@ -39,6 +39,8 @@ namespace dafs
         std::string filename;
 
         Location location;
+
+        int offset;
     };
 
 

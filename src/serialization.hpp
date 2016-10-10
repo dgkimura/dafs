@@ -40,6 +40,7 @@ namespace dafs
     {
         ar & obj.filename;
         ar & obj.location;
+        ar & obj.offset;
     }
 
 

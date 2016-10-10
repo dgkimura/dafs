@@ -27,7 +27,8 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
         dafs::Location
         {
             "the-address"
-        }
+        },
+        42 //offset
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
@@ -35,6 +36,7 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
 
     ASSERT_EQ(expected.filename, actual.filename);
     ASSERT_EQ(expected.location.address, actual.location.address);
+    ASSERT_EQ(expected.offset, actual.offset);
 }
 
 
