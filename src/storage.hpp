@@ -18,7 +18,7 @@ namespace dafs
 
         BlockFormat Get(BlockInfo info);
 
-        void Set(BlockInfo info, Delta delta);
+        void Put(BlockInfo info, Delta delta);
 
     private:
 
@@ -32,13 +32,13 @@ namespace dafs
 
         Storage(Persister persister);
 
-        BlockFormat Load(BlockInfo info);
+        void CreateBlock(BlockInfo block);
 
-        void Save(BlockInfo info, BlockFormat block);
+        void DeleteBlock(BlockInfo block);
 
-        std::string Read(BlockInfo info, int offset, int bytes);
+        BlockFormat ReadBlock(BlockInfo block);
 
-        void Write(BlockInfo info, int offset, std::string data);
+        void Write(BlockInfo info, Bytes data);
 
     private:
 

@@ -22,7 +22,7 @@ namespace dafs
 
 
     void
-    Persister::Set(BlockInfo info, Delta delta)
+    Persister::Put(BlockInfo info, Delta delta)
     {
         std::string proposal = Serialize<dafs::Delta>(delta);
         parliament.CreateProposal(proposal);
@@ -36,33 +36,21 @@ namespace dafs
 
 
     BlockFormat
-    Storage::Load(BlockInfo info)
+    Storage::ReadBlock(BlockInfo info)
     {
         return persister.Get(info);
     }
 
 
     void
-    Storage::Save(BlockInfo info, BlockFormat is)
+    Storage::Write(BlockInfo info, Bytes data)
     {
         BlockFormat was = persister.Get(info);
+        BlockFormat is(was);
+
+        std::memmove(is.contents + info.offset, data.content, data.size);
+
         Delta delta = CreateDelta(info.filename, was.contents, is.contents);
-        persister.Set(info, delta);
-    }
-
-
-    void
-    Storage::Write(BlockInfo info, int offset, std::string data)
-    {
-        // TODO: write to block
-    }
-
-
-    std::string
-    Storage::Read(BlockInfo info, int offset, int bytes)
-    {
-        // TODO: read to block
-        std::string content;
-        return content;
+        persister.Put(info, delta);
     }
 }
