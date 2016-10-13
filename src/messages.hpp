@@ -57,7 +57,7 @@ namespace dafs
         std::string from;
         std::string to;
         std::string content;
-        MessageType type;
+        dafs::MessageType type;
         std::vector<MetaData> metadata;
     };
 }
