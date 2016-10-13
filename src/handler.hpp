@@ -1,6 +1,7 @@
 #pragma once
 
 #include "allocator.hpp"
+#include "metadata.hpp"
 #include "storage.hpp"
 
 
@@ -8,36 +9,35 @@ namespace dafs
 {
     void HandleCreateFile(
         dafs::Storage store,
-        dafs::FileInfo info);
+        std::vector<dafs::MetaData> metadata);
 
 
     void HandleDeleteFile(
         dafs::Storage store,
-        dafs::FileInfo info);
+        std::vector<dafs::MetaData> metadata);
 
 
     void HandleOpenFile(
         dafs::Storage store,
-        dafs::FileInfo info);
+        std::vector<dafs::MetaData> metadata);
 
 
     void HandleReadFile(
         dafs::Storage store,
-        dafs::FileInfo info);
+        std::vector<dafs::MetaData> metadata);
 
 
     void HandleWriteFile(
-        dafs::Bytes bytes,
         dafs::Storage store,
-        dafs::FileInfo info);
+        std::vector<dafs::MetaData> metadata);
 
 
     void HandleAllocate(
-        dafs::Allocation allocation,
-        dafs::Storage store);
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata);
 
 
     void HandleAllocated(
-        dafs::Allocation allocation,
-        dafs::Storage store);
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata);
 }

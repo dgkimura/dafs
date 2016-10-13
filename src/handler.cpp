@@ -6,54 +6,61 @@ namespace dafs
     void
     HandleCreateFile(
         dafs::Storage store,
-        dafs::FileInfo info)
+        std::vector<dafs::MetaData> metadata)
     {
+        // dafs::FileInfo info
     }
 
 
     void
     HandleDeleteFile(
         dafs::Storage store,
-        dafs::FileInfo info)
+        std::vector<dafs::MetaData> metadata)
     {
+        // dafs::FileInfo info
     }
 
 
     void
     HandleOpenFile(
         dafs::Storage store,
-        dafs::FileInfo info)
+        std::vector<dafs::MetaData> metadata)
     {
+        // dafs::FileInfo info
     }
 
 
     void
     HandleReadFile(
         dafs::Storage store,
-        dafs::FileInfo info)
+        std::vector<dafs::MetaData> metadata)
     {
+        // dafs::FileInfo info
     }
 
 
     void
     HandleWriteFile(
-        dafs::Bytes bytes,
         dafs::Storage store,
-        dafs::FileInfo info)
+        std::vector<dafs::MetaData> metadata)
     {
+        // dafs::Bytes bytes
+        // dafs::FileInfo info
     }
 
 
     void HandleAllocate(
-        dafs::Allocation allocation,
-        dafs::Storage store)
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata)
     {
+        // dafs::Allocation allocation
     }
 
 
     void HandleAllocated(
-        dafs::Allocation allocation,
-        dafs::Storage store)
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata)
     {
+        // dafs::Allocation allocation
     }
 }
