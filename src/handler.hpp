@@ -32,6 +32,16 @@ namespace dafs
         std::vector<dafs::MetaData> metadata);
 
 
+    void HandleReadBlock(
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata);
+
+
+    void HandleWriteBlock(
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata);
+
+
     void HandleAllocate(
         dafs::Storage store,
         std::vector<dafs::MetaData> metadata);

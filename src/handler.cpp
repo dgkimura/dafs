@@ -49,6 +49,25 @@ namespace dafs
     }
 
 
+    void
+    HandleReadBlock(
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata)
+    {
+        // dafs::BlockInfo info
+    }
+
+
+    void
+    HandleWriteBlock(
+        dafs::Storage store,
+        std::vector<dafs::MetaData> metadata)
+    {
+        // dafs::Bytes bytes
+        // dafs::BlockInfo info
+    }
+
+
     void HandleAllocate(
         dafs::Storage store,
         std::vector<dafs::MetaData> metadata)

@@ -13,8 +13,10 @@ namespace dafs
               { dafs::MessageType::OpenFile, dafs::HandleOpenFile },
               { dafs::MessageType::ReadFile, dafs::HandleReadFile },
               { dafs::MessageType::WriteFile, dafs::HandleWriteFile },
-              { dafs::MessageType::Allocate, dafs::HandleAllocate },
-              { dafs::MessageType::Allocated, dafs::HandleAllocated }
+              { dafs::MessageType::_ReadBlock, dafs::HandleReadBlock },
+              { dafs::MessageType::_WriteBlock, dafs::HandleWriteBlock },
+              { dafs::MessageType::_Allocate, dafs::HandleAllocate },
+              { dafs::MessageType::_Allocated, dafs::HandleAllocated }
           }
     {
     }

@@ -36,19 +36,24 @@ namespace dafs
         WriteFile,
 
         //
-        // Allocate resources.
+        // [Internal] Read from a known block.
         //
-        Allocate,
+        _ReadBlock,
 
         //
-        // Allocated resources.
+        // [Internal] Write to a known block.
         //
-        Allocated,
+        _WriteBlock,
 
         //
-        // Ping to neighbor node.
+        // [Internal] Allocate resources.
         //
-        Ping
+        _Allocate,
+
+        //
+        // [Internal] Allocated resources.
+        //
+        _Allocated,
     };
 
 
