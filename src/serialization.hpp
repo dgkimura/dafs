@@ -66,6 +66,39 @@ namespace dafs
 
 
     template <typename Archive>
+    void serialize(Archive& ar, dafs::Index& obj, const unsigned int version)
+    {
+        int size;
+
+        if (Archive::is_loading::value)
+        {
+            //
+            // deserialize collection object.
+            //
+            ar & size;
+            for (int i=0; i<size; i++)
+            {
+                FileInfo info;
+                ar & info;
+                obj.files.push_back(info);
+            }
+        }
+        else
+        {
+            //
+            // serialize collection object.
+            //
+            size = obj.files.size();
+            ar & size;
+            for (int i=0; i<size; i++)
+            {
+                ar & obj.files[i];
+            }
+        }
+    }
+
+
+    template <typename Archive>
     void serialize(Archive& ar, dafs::MetaData& obj, const unsigned int version)
     {
         ar & obj.key;

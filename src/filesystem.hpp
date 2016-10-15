@@ -45,7 +45,7 @@ namespace dafs
 
 
     //
-    // Defines the block structure on disk
+    // Defines the block structure on disk.
     //
     struct BlockFormat
     {
@@ -69,12 +69,21 @@ namespace dafs
 
 
     //
-    // Defines the file structure on disk
+    // Defines the file structure on disk.
     //
     struct FileFormat
     {
         FileInfo info;
 
         BlockInfo blocks[BLOCKS_IN_FILEINFO];
+    };
+
+
+    //
+    // Defines the index structure on disk.
+    //
+    struct Index
+    {
+        std::vector<FileInfo> files;
     };
 }

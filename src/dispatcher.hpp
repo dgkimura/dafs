@@ -36,7 +36,8 @@ namespace dafs
 
     private:
 
-        std::unordered_map<
+        std::unordered_map
+        <
             dafs::MessageType,
             dafs::MessageHandler,
             dafs::MessageTypeHash

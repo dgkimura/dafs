@@ -78,6 +78,7 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
 {
     dafs::FileFormat expected
     {
+        dafs::FileInfo
         {
             "previous",
             "next",
@@ -112,6 +113,45 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
     ASSERT_EQ(expected.blocks[0].location.address, actual.blocks[0].location.address);
     ASSERT_EQ(expected.blocks[1].filename, actual.blocks[1].filename);
     ASSERT_EQ(expected.blocks[1].location.address, actual.blocks[1].location.address);
+}
+
+
+TEST(SerializationUnitTest, testIndexIsSerializableAndDeserializable)
+{
+    dafs::Index expected
+    {
+        std::vector<dafs::FileInfo>
+        {
+            dafs::FileInfo
+            {
+                "previous",
+                "next",
+                1,
+                "filename"
+            },
+            dafs::FileInfo
+            {
+                "my-previous",
+                "my-next",
+                2,
+                "my-file"
+            },
+            dafs::FileInfo
+            {
+                "your-previous",
+                "your-next",
+                3,
+                "your-file"
+            }
+        }
+    }, actual;
+
+    std::string string_obj = dafs::Serialize(expected);
+    actual = dafs::Deserialize<dafs::Index>(string_obj);
+
+    ASSERT_EQ(expected.files[0].name, actual.files[0].name);
+    ASSERT_EQ(expected.files[1].name, actual.files[1].name);
+    ASSERT_EQ(expected.files[2].name, actual.files[2].name);
 }
 
 
