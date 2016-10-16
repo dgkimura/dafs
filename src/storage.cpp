@@ -35,15 +35,51 @@ namespace dafs
     }
 
 
-    BlockFormat
-    Storage::ReadBlock(BlockInfo info)
+    void
+    Storage::CreateFile(FileInfo info)
     {
-        return persister.Get(info);
     }
 
 
     void
-    Storage::Write(BlockInfo info, Bytes data)
+    Storage::DeleteFile(FileInfo info)
+    {
+    }
+
+
+    void
+    Storage::ReadFile(FileInfo info)
+    {
+    }
+
+
+    void
+    Storage::WriteFile(FileInfo info, Bytes data)
+    {
+    }
+
+
+    void
+    Storage::CreateBlock(BlockInfo info)
+    {
+    }
+
+
+    void
+    Storage::DeleteBlock(BlockInfo info)
+    {
+    }
+
+
+    void
+    Storage::ReadBlock(BlockInfo info)
+    {
+        BlockFormat block = persister.Get(info);
+    }
+
+
+    void
+    Storage::WriteBlock(BlockInfo info, Bytes data)
     {
         BlockFormat was = persister.Get(info);
         BlockFormat is(was);

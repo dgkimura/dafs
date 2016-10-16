@@ -32,13 +32,21 @@ namespace dafs
 
         Storage(Persister persister);
 
+        void CreateFile(FileInfo file);
+
+        void DeleteFile(FileInfo file);
+
+        void ReadFile(FileInfo file);
+
+        void WriteFile(FileInfo info, Bytes data);
+
         void CreateBlock(BlockInfo block);
 
         void DeleteBlock(BlockInfo block);
 
-        BlockFormat ReadBlock(BlockInfo block);
+        void ReadBlock(BlockInfo block);
 
-        void Write(BlockInfo info, Bytes data);
+        void WriteBlock(BlockInfo info, Bytes data);
 
     private:
 
