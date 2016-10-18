@@ -6,7 +6,8 @@ namespace dafs
     void
     HandleCreateFile(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::FileInfo info
     }
@@ -15,7 +16,8 @@ namespace dafs
     void
     HandleDeleteFile(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::FileInfo info
     }
@@ -24,7 +26,8 @@ namespace dafs
     void
     HandleOpenFile(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::FileInfo info
     }
@@ -33,7 +36,8 @@ namespace dafs
     void
     HandleReadFile(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::FileInfo info
     }
@@ -42,7 +46,8 @@ namespace dafs
     void
     HandleWriteFile(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::Bytes bytes
         // dafs::FileInfo info
@@ -52,7 +57,8 @@ namespace dafs
     void
     HandleReadBlock(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::BlockInfo info
     }
@@ -61,7 +67,8 @@ namespace dafs
     void
     HandleWriteBlock(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::Bytes bytes
         // dafs::BlockInfo info
@@ -70,7 +77,8 @@ namespace dafs
 
     void HandleAllocate(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::Allocation allocation
     }
@@ -78,7 +86,8 @@ namespace dafs
 
     void HandleAllocated(
         dafs::Storage store,
-        std::vector<dafs::MetaData> metadata)
+        std::vector<dafs::MetaData> metadata,
+        dafs::Sender& sender)
     {
         // dafs::Allocation allocation
     }

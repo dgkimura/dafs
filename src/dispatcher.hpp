@@ -5,6 +5,7 @@
 
 #include "messages.hpp"
 #include "metadata.hpp"
+#include "sender.hpp"
 #include "storage.hpp"
 
 
@@ -12,7 +13,10 @@ namespace dafs
 {
     using MessageHandler = std::function
     <
-        void (dafs::Storage store, std::vector<dafs::MetaData> metadata)
+        void (
+            dafs::Storage store,
+            std::vector<dafs::MetaData> metadata,
+            dafs::Sender& sender)
     >;
 
 
@@ -44,5 +48,7 @@ namespace dafs
         > registered_map;
 
         dafs::Storage store;
+
+        dafs::NetworkSender sender;
     };
 }
