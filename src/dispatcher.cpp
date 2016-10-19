@@ -23,6 +23,14 @@ namespace dafs
     }
 
 
+    Dispatcher::Dispatcher(Dispatcher& dispatcher)
+        : registered_map(dispatcher.registered_map),
+          store(dispatcher.store),
+          sender(dispatcher.sender)
+    {
+    }
+
+
     void
     Dispatcher::RouteMessage(dafs::Message message)
     {

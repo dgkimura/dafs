@@ -8,11 +8,11 @@ namespace dafs
     using boost::asio::ip::tcp;
 
 
-    Server::Server(Storage storage_, std::string address, short port)
+    Server::Server(Dispatcher dispatcher_, std::string address, short port)
         : io_service_(),
           acceptor_(io_service_, tcp::endpoint(tcp::v4(), port)),
           socket_(io_service_),
-          storage(storage_)
+          dispatcher(dispatcher_)
     {
     }
 
@@ -32,7 +32,7 @@ namespace dafs
             {
                 if (!ec_accept)
                 {
-                    std::make_shared<Session>(std::move(socket_))->Start(storage);
+                    std::make_shared<Session>(std::move(socket_))->Start(dispatcher);
                 }
                 do_accept();
             });
@@ -48,26 +48,22 @@ namespace dafs
 
 
     void
-    Server::Session::Start(Storage& storage)
+    Server::Session::Start(Dispatcher& dispatcher)
     {
         auto self(shared_from_this());
 
         char data_[max_length];
 
         socket_.async_read_some(boost::asio::buffer(data_, max_length),
-            [self, &data_, &storage](boost::system::error_code ec, std::size_t length)
+            [self, &data_, &dispatcher](boost::system::error_code ec, std::size_t length)
             {
                 if (!ec)
                 {
                     // 1. Deserialize std::string(data_)
                     dafs::Message m = Deserialize<Message>(data_);
 
-                    // 2. Read request
-                    dafs::MetaDataParser parser(m.metadata);
-                    std::string filename = parser.GetValue(FileNameKey);
-
-                    // 3. Find block
-                    // 4. Return response
+                    // 2. Route message to dispatcher for handling.
+                    dispatcher.RouteMessage(m);
                 }
             }
         );

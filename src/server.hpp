@@ -1,7 +1,7 @@
 #include <boost/asio.hpp>
 
 #include "filesystem.hpp"
-#include "storage.hpp"
+#include "dispatcher.hpp"
 
 
 namespace dafs
@@ -10,7 +10,7 @@ namespace dafs
     {
     public:
 
-        Server(Storage storage, std::string address, short port);
+        Server(Dispatcher dispather, std::string address, short port);
 
         ~Server();
 
@@ -24,7 +24,7 @@ namespace dafs
 
         boost::asio::ip::tcp::socket socket_;
 
-        Storage storage;
+        Dispatcher dispatcher;
 
         class Session : public std::enable_shared_from_this<Session>
         {
@@ -33,7 +33,7 @@ namespace dafs
                 boost::asio::ip::tcp::socket socket
             );
 
-            void Start(Storage& storage);
+            void Start(Dispatcher& dispatcher);
 
         private:
 

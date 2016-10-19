@@ -10,6 +10,13 @@ namespace dafs
     using boost::asio::ip::tcp;
 
 
+    NetworkSender::NetworkSender(NetworkSender& sender)
+        : io_service_(),
+          socket_(io_service_)
+    {
+    }
+
+
     NetworkSender::NetworkSender()
         : io_service_(),
           socket_(io_service_)

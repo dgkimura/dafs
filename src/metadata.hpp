@@ -13,7 +13,9 @@ namespace dafs
     };
 
 
-    const std::string FileNameKey = "FileName";
+    const std::string FileInfoKey = "FileInfo";
+
+    const std::string BlockInfoKey = "BlockInfo";
 
 
     class MetaDataParser
