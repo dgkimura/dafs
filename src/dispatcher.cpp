@@ -1,5 +1,6 @@
 #include "dispatcher.hpp"
 #include "handler.hpp"
+#include "metadataparser.hpp"
 #include "messages.hpp"
 
 
@@ -34,6 +35,11 @@ namespace dafs
     void
     Dispatcher::RouteMessage(dafs::Message message)
     {
-        registered_map[message.type](store, message.metadata, sender);
+        registered_map[message.type]
+        (
+            store,
+            dafs::MetaDataParser(message.metadata),
+            sender
+        );
     }
 }

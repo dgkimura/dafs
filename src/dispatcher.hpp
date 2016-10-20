@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 #include "messages.hpp"
-#include "metadata.hpp"
+#include "metadataparser.hpp"
 #include "sender.hpp"
 #include "storage.hpp"
 
@@ -15,7 +15,7 @@ namespace dafs
     <
         void (
             dafs::Storage store,
-            std::vector<dafs::MetaData> metadata,
+            dafs::MetaDataParser metadata,
             dafs::Sender& sender)
     >;
 
