@@ -5,7 +5,7 @@ set(SOURCES
     delta.cpp
     dispatcher.cpp
     handler.cpp
-    metadata.cpp
+    metadataparser.cpp
     sender.cpp
     server.cpp
     storage.cpp

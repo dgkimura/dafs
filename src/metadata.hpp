@@ -17,17 +17,4 @@ namespace dafs
 
     const std::string BlockInfoKey = "BlockInfo";
 
-
-    class MetaDataParser
-    {
-    public:
-
-        MetaDataParser(std::vector<dafs::MetaData>);
-
-        std::string GetValue(std::string key);
-
-    private:
-
-        std::vector<dafs::MetaData> metadata;
-    };
 }
