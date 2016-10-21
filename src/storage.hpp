@@ -10,15 +10,25 @@
 
 namespace dafs
 {
-    class Persister
+    class Persistence
     {
     public:
 
-        Persister(Parliament parliament);
+        virtual BlockFormat Get(BlockInfo info) = 0;
 
-        BlockFormat Get(BlockInfo info);
+        virtual void Put(BlockInfo info, Delta delta) = 0;
+    };
 
-        void Put(BlockInfo info, Delta delta);
+
+    class Durable : public Persistence
+    {
+    public:
+
+        Durable(Parliament parliament);
+
+        BlockFormat Get(BlockInfo info) override;
+
+        void Put(BlockInfo info, Delta delta) override;
 
     private:
 
@@ -30,7 +40,7 @@ namespace dafs
     {
     public:
 
-        Storage(Persister persister);
+        Storage(std::shared_ptr<Persistence> persister);
 
         void CreateFile(FileInfo file);
 
@@ -50,6 +60,6 @@ namespace dafs
 
     private:
 
-        Persister persister;
+        std::shared_ptr<Persistence> persister;
     };
 }

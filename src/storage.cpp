@@ -5,14 +5,14 @@
 
 namespace dafs
 {
-    Persister::Persister(Parliament parliament_)
+    Durable::Durable(Parliament parliament_)
         : parliament(parliament_)
     {
     }
 
 
     BlockFormat
-    Persister::Get(BlockInfo info)
+    Durable::Get(BlockInfo info)
     {
         std::ifstream f(info.filename);
         BlockFormat b;
@@ -22,14 +22,14 @@ namespace dafs
 
 
     void
-    Persister::Put(BlockInfo info, Delta delta)
+    Durable::Put(BlockInfo info, Delta delta)
     {
         std::string proposal = Serialize<dafs::Delta>(delta);
         parliament.CreateProposal(proposal);
     }
 
 
-    Storage::Storage(Persister persister_)
+    Storage::Storage(std::shared_ptr<Persistence> persister_)
         : persister(persister_)
     {
     }
@@ -74,19 +74,19 @@ namespace dafs
     void
     Storage::ReadBlock(BlockInfo info)
     {
-        BlockFormat block = persister.Get(info);
+        BlockFormat block = persister->Get(info);
     }
 
 
     void
     Storage::WriteBlock(BlockInfo info, Bytes data)
     {
-        BlockFormat was = persister.Get(info);
+        BlockFormat was = persister->Get(info);
         BlockFormat is(was);
 
         std::memmove(is.contents + info.offset, data.content, data.size);
 
         Delta delta = CreateDelta(info.filename, was.contents, is.contents);
-        persister.Put(info, delta);
+        persister->Put(info, delta);
     }
 }
