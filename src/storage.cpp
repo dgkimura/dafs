@@ -84,7 +84,7 @@ namespace dafs
         BlockFormat was = persister->Get(info);
         BlockFormat is(was);
 
-        std::memmove(is.contents + info.offset, data.content, data.size);
+        std::memmove(is.contents + info.offset, data.contents, BLOCK_SIZE_IN_BYTES);
 
         Delta delta = CreateDelta(info.filename, was.contents, is.contents);
         persister->Put(info, delta);

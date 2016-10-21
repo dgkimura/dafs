@@ -16,9 +16,7 @@ namespace dafs
     //
     struct Bytes
     {
-        char *content;
-
-        unsigned int size;
+        char contents[BLOCK_SIZE_IN_BYTES];
     };
 
 

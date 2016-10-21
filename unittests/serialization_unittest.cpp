@@ -40,6 +40,20 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
 }
 
 
+TEST(SerializationUnitTest, testBytesIsSerializableAndDeserializable)
+{
+    dafs::Bytes expected
+    {
+        "this is the bytes contents"
+    }, actual;
+
+    std::string string_obj = dafs::Serialize(expected);
+    actual = dafs::Deserialize<dafs::Bytes>(string_obj);
+
+    ASSERT_EQ(std::string(expected.contents), std::string(actual.contents));
+}
+
+
 TEST(SerializationUnitTest, testBlockFormatIsSerializableAndDeserializable)
 {
     dafs::BlockFormat expected

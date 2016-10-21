@@ -15,6 +15,9 @@ namespace dafs
 
     const std::string FileInfoKey = "FileInfo";
 
+
     const std::string BlockInfoKey = "BlockInfo";
 
+
+    const std::string BytesKey = "Bytes";
 }

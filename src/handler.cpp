@@ -52,8 +52,9 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        // dafs::Bytes bytes
-        // dafs::FileInfo info
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+        auto bytes = metadata.GetValue<dafs::Bytes>(dafs::BytesKey);
+        store.WriteFile(*fileinfo, *bytes);
     }
 
 
