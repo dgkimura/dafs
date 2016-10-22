@@ -46,6 +46,8 @@ namespace dafs
 
         void DeleteFile(FileInfo file);
 
+        void OpenFile(FileInfo file);
+
         void ReadFile(FileInfo file);
 
         void WriteFile(FileInfo info, Bytes data);

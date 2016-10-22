@@ -42,6 +42,12 @@ namespace dafs
 
 
     void
+    Storage::OpenFile(FileInfo info)
+    {
+    }
+
+
+    void
     Storage::DeleteFile(FileInfo info)
     {
     }

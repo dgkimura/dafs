@@ -31,7 +31,8 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        // dafs::FileInfo info
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+        store.OpenFile(*fileinfo);
     }
 
 
@@ -75,8 +76,9 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        // dafs::Bytes bytes
-        // dafs::BlockInfo info
+        auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
+        auto bytes = metadata.GetValue<dafs::Bytes>(dafs::BytesKey);
+        store.WriteBlock(*blockinfo, *bytes);
     }
 
 
