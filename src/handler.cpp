@@ -9,7 +9,7 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
         store.CreateFile(fileinfo);
     }
 
@@ -20,7 +20,7 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
         store.DeleteFile(fileinfo);
     }
 
@@ -31,7 +31,7 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
         store.OpenFile(fileinfo);
     }
 
@@ -42,7 +42,7 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
         store.ReadFile(fileinfo);
     }
 
@@ -53,8 +53,8 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
-        auto bytes = metadata.GetValue<dafs::Bytes>(dafs::BytesKey);
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
+        auto bytes = metadata.GetValue<dafs::Bytes>();
         store.WriteFile(fileinfo, bytes);
     }
 
@@ -65,7 +65,7 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
+        auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
         store.ReadBlock(blockinfo);
     }
 
@@ -76,8 +76,8 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
-        auto bytes = metadata.GetValue<dafs::Bytes>(dafs::BytesKey);
+        auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
+        auto bytes = metadata.GetValue<dafs::Bytes>();
         store.WriteBlock(blockinfo, bytes);
     }
 
