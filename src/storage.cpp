@@ -1,3 +1,5 @@
+#include <boost/filesystem.hpp>
+
 #include "messages.hpp"
 #include "serialization.hpp"
 #include "storage.hpp"
@@ -5,8 +7,9 @@
 
 namespace dafs
 {
-    Durable::Durable(Parliament parliament_)
-        : parliament(parliament_)
+    Durable::Durable(Parliament parliament_, std::string dirname_)
+        : parliament(parliament_),
+          dirname(dirname_)
     {
     }
 
@@ -14,7 +17,8 @@ namespace dafs
     BlockFormat
     Durable::Get(BlockInfo info)
     {
-        std::ifstream f(info.filename);
+        std::fstream f((fs::path(dirname) / fs::path(info.filename)).string(),
+                        std::ios::out | std::ios::in | std::ios::binary);
         BlockFormat b;
         f.read(b.contents, BLOCK_SIZE_IN_BYTES);
         return b;

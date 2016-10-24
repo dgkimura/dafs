@@ -24,7 +24,7 @@ namespace dafs
     {
     public:
 
-        Durable(Parliament parliament);
+        Durable(Parliament parliament, std::string dirname);
 
         BlockFormat Get(BlockInfo info) override;
 
@@ -33,6 +33,8 @@ namespace dafs
     private:
 
         Parliament parliament;
+
+        std::string dirname;
     };
 
 
