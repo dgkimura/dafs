@@ -15,7 +15,7 @@ namespace dafs
         MetaDataParser(std::vector<dafs::MetaData>);
 
         template<typename T>
-        std::shared_ptr<T> GetValue(std::string key)
+        T GetValue(std::string key)
         {
             std::string value;
             for (auto data : metadata)
@@ -26,7 +26,7 @@ namespace dafs
                     break;
                 }
             }
-            return value.empty() ? nullptr : std::make_shared<T>(dafs::Deserialize<T>(value));
+            return dafs::Deserialize<T>(value);
         }
 
     private:

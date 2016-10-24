@@ -10,7 +10,7 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
-        store.CreateFile(*fileinfo);
+        store.CreateFile(fileinfo);
     }
 
 
@@ -21,7 +21,7 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
-        store.DeleteFile(*fileinfo);
+        store.DeleteFile(fileinfo);
     }
 
 
@@ -32,7 +32,7 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
-        store.OpenFile(*fileinfo);
+        store.OpenFile(fileinfo);
     }
 
 
@@ -43,7 +43,7 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
-        store.ReadFile(*fileinfo);
+        store.ReadFile(fileinfo);
     }
 
 
@@ -55,7 +55,7 @@ namespace dafs
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
         auto bytes = metadata.GetValue<dafs::Bytes>(dafs::BytesKey);
-        store.WriteFile(*fileinfo, *bytes);
+        store.WriteFile(fileinfo, bytes);
     }
 
 
@@ -66,7 +66,7 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
-        store.ReadBlock(*blockinfo);
+        store.ReadBlock(blockinfo);
     }
 
 
@@ -78,7 +78,7 @@ namespace dafs
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto bytes = metadata.GetValue<dafs::Bytes>(dafs::BytesKey);
-        store.WriteBlock(*blockinfo, *bytes);
+        store.WriteBlock(blockinfo, bytes);
     }
 
 
