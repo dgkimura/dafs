@@ -26,10 +26,17 @@ namespace dafs
 
 
     void
-    Durable::Put(BlockInfo info, Delta delta)
+    Durable::Put(BlockInfo info, Bytes data)
     {
-        std::string proposal = Serialize<dafs::Delta>(delta);
-        parliament.CreateProposal(proposal);
+        BlockFormat was = Get(info);
+        BlockFormat is(was);
+
+        std::memmove(is.contents + info.offset, data.contents,
+                     BLOCK_SIZE_IN_BYTES - info.offset);
+
+        Delta delta = CreateDelta(info.filename, was.contents, is.contents);
+
+        parliament.CreateProposal(Serialize<dafs::Delta>(delta));
     }
 
 
@@ -91,12 +98,7 @@ namespace dafs
     void
     Storage::WriteBlock(BlockInfo info, Bytes data)
     {
-        BlockFormat was = persister->Get(info);
-        BlockFormat is(was);
-
-        std::memmove(is.contents + info.offset, data.contents, BLOCK_SIZE_IN_BYTES);
-
-        Delta delta = CreateDelta(info.filename, was.contents, is.contents);
-        persister->Put(info, delta);
+        // TODO: Handle overflows to another block.
+        persister->Put(info, data);
     }
 }

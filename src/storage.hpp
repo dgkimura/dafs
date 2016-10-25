@@ -16,7 +16,7 @@ namespace dafs
 
         virtual BlockFormat Get(BlockInfo info) = 0;
 
-        virtual void Put(BlockInfo info, Delta delta) = 0;
+        virtual void Put(BlockInfo info, Bytes data) = 0;
     };
 
 
@@ -28,7 +28,7 @@ namespace dafs
 
         BlockFormat Get(BlockInfo info) override;
 
-        void Put(BlockInfo info, Delta delta) override;
+        void Put(BlockInfo info, Bytes data) override;
 
     private:
 
