@@ -9,6 +9,7 @@
 #include "delta.hpp"
 #include "filesystem.hpp"
 #include "messages.hpp"
+#include "proposals.hpp"
 
 
 namespace dafs
@@ -148,6 +149,22 @@ namespace dafs
                 ar & obj.metadata[i];
             }
         }
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::Proposal& obj, const unsigned int version)
+    {
+        ar & obj.type;
+        ar & obj.content;
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::BlockEdit& obj, const unsigned int version)
+    {
+        ar & obj.info;
+        ar & obj.item;
     }
 
 

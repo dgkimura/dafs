@@ -1,6 +1,9 @@
+#include <cstring>
+
 #include <boost/filesystem.hpp>
 
 #include "messages.hpp"
+#include "proposals.hpp"
 #include "serialization.hpp"
 #include "storage.hpp"
 
@@ -26,7 +29,7 @@ namespace dafs
 
 
     void
-    Durable::Put(BlockInfo info, Bytes data)
+    Durable::Write(BlockInfo info, Bytes data)
     {
         BlockFormat was = Get(info);
         BlockFormat is(was);
@@ -36,7 +39,40 @@ namespace dafs
 
         Delta delta = CreateDelta(info.filename, was.contents, is.contents);
 
-        parliament.CreateProposal(Serialize<dafs::Delta>(delta));
+        do_write(ProposalType::BlockWriteDelta, info, dafs::Serialize(delta));
+    }
+
+
+    void
+    Durable::Insert(BlockInfo info, FileInfo file)
+    {
+        do_write(ProposalType::SuperBlockInsert, info, dafs::Serialize(file));
+    }
+
+
+    void
+    Durable::Remove(BlockInfo info, FileInfo file)
+    {
+        do_write(ProposalType::SuperBlockRemove, info, dafs::Serialize(file));
+    }
+
+
+    void
+    Durable::do_write(dafs::ProposalType type, BlockInfo info, std::string data)
+    {
+        info.filename = (fs::path(dirname) / fs::path(info.filename)).string();
+        parliament.CreateProposal
+        (
+            dafs::Serialize<dafs::Proposal>
+            (
+                CreateBlockEditProposal
+                (
+                    type,
+                    data,
+                    info
+                )
+            )
+        );
     }
 
 
@@ -49,6 +85,7 @@ namespace dafs
     void
     Storage::CreateFile(FileInfo info)
     {
+        persister->Insert(SuperBlock, info);
     }
 
 
@@ -99,6 +136,6 @@ namespace dafs
     Storage::WriteBlock(BlockInfo info, Bytes data)
     {
         // TODO: Handle overflows to another block.
-        persister->Put(info, data);
+        persister->Write(info, data);
     }
 }
