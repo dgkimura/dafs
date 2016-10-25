@@ -84,4 +84,23 @@ namespace dafs
     {
         std::vector<FileInfo> files;
     };
+
+
+    //
+    // Function to create Bytes
+    //
+    Bytes CreateBytes(const std::string& data);
+
+
+    //
+    // Function to create Location
+    //
+    Location CreateLocation(const std::string& address);
+
+
+    //
+    // Function to create BlockInfo
+    //
+    BlockInfo CreateBlockInfo(const std::string& filename,
+                              const dafs::Location location);
 }

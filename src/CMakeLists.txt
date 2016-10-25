@@ -4,6 +4,7 @@ project(dafs.src)
 set(SOURCES
     delta.cpp
     dispatcher.cpp
+    filesystem.cpp
     handler.cpp
     metadataparser.cpp
     sender.cpp

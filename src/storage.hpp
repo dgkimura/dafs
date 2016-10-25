@@ -38,6 +38,15 @@ namespace dafs
     };
 
 
+    //
+    // Defines the parent block info.
+    //
+    const BlockInfo SuperBlock = dafs::CreateBlockInfo(
+        "blocklist",
+        dafs::CreateLocation("localhost")
+    );
+
+
     class Storage
     {
     public:
