@@ -39,6 +39,10 @@ namespace dafs
         Location location;
 
         int offset;
+
+        int revision;
+
+        std::size_t hash;
     };
 
 

@@ -49,6 +49,8 @@ namespace dafs
         ar & obj.filename;
         ar & obj.location;
         ar & obj.offset;
+        ar & obj.revision;
+        ar & obj.hash;
     }
 
 
