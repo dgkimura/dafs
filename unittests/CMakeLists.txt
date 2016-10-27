@@ -12,6 +12,7 @@ ExternalProject_Add(
 )
 
 set(SOURCES
+    customhash_unittest.cpp
     delta_unittest.cpp
     filesystem_unittest.cpp
     metadataparser_unittest.cpp
