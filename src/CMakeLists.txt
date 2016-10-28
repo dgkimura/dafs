@@ -7,6 +7,7 @@ set(SOURCES
     filesystem.cpp
     handler.cpp
     metadataparser.cpp
+    persistence.cpp
     proposals.cpp
     sender.cpp
     server.cpp
