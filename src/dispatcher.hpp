@@ -14,7 +14,7 @@ namespace dafs
     using MessageHandler = std::function
     <
         void (
-            dafs::Storage store,
+            dafs::Storage& store,
             dafs::MetaDataParser metadata,
             dafs::Sender& sender)
     >;
@@ -34,7 +34,7 @@ namespace dafs
     {
     public:
 
-        Dispatcher(dafs::Storage storage);
+        Dispatcher(dafs::Storage& storage);
 
         Dispatcher(dafs::Dispatcher& dispatcher);
 
@@ -49,7 +49,7 @@ namespace dafs
             dafs::MessageTypeHash
         > registered_map;
 
-        dafs::Storage store;
+        dafs::Storage& store;
 
         dafs::NetworkSender sender;
     };

@@ -2,8 +2,9 @@
 
 #include <string>
 
+#include <paxos/parliament.hpp>
+
 #include "filesystem.hpp"
-#include "persistence.hpp"
 
 
 namespace dafs
@@ -12,28 +13,56 @@ namespace dafs
     {
     public:
 
-        Storage(std::shared_ptr<Persistence> persister);
+        virtual void CreateFile(FileInfo file) = 0;
 
-        void CreateFile(FileInfo file);
+        virtual void DeleteFile(FileInfo file) = 0;
 
-        void DeleteFile(FileInfo file);
+        virtual void OpenFile(FileInfo file) = 0;
 
-        void OpenFile(FileInfo file);
+        virtual FileFormat ReadFile(FileInfo file) = 0;
 
-        void ReadFile(FileInfo file);
+        virtual void WriteFile(FileInfo info, Bytes data) = 0;
 
-        void WriteFile(FileInfo info, Bytes data);
+        virtual void CreateBlock(BlockInfo block) = 0;
 
-        void CreateBlock(BlockInfo block);
+        virtual void DeleteBlock(BlockInfo block) = 0;
 
-        void DeleteBlock(BlockInfo block);
+        virtual BlockFormat ReadBlock(BlockInfo block) = 0;
 
-        void ReadBlock(BlockInfo block);
+        virtual void WriteBlock(BlockInfo info, Bytes data) = 0;
+    };
 
-        void WriteBlock(BlockInfo info, Bytes data);
+
+    class ReplicatedStorage : public Storage
+    {
+    public:
+
+        ReplicatedStorage(Parliament parliament_, std::string dirname_);
+
+        virtual void CreateFile(FileInfo file) override;
+
+        virtual void DeleteFile(FileInfo file) override;
+
+        virtual void OpenFile(FileInfo file) override;
+
+        virtual FileFormat ReadFile(FileInfo file) override;
+
+        virtual void WriteFile(FileInfo info, Bytes data) override;
+
+        virtual void CreateBlock(BlockInfo block) override;
+
+        virtual void DeleteBlock(BlockInfo block) override;
+
+        virtual BlockFormat ReadBlock(BlockInfo block) override;
+
+        virtual void WriteBlock(BlockInfo info, Bytes data) override;
 
     private:
 
-        std::shared_ptr<Persistence> persister;
+        void do_write(dafs::ProposalType type, BlockInfo info, std::string data);
+
+        std::string dirname;
+
+        Parliament parliament;
     };
 }

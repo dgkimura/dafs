@@ -6,7 +6,7 @@
 
 namespace dafs
 {
-    Dispatcher::Dispatcher(Storage store_)
+    Dispatcher::Dispatcher(Storage& store_)
         : registered_map {
               { dafs::MessageType::CreateFile, dafs::HandleCreateFile },
               { dafs::MessageType::DeleteFile, dafs::HandleDeleteFile },

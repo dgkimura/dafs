@@ -5,7 +5,7 @@ namespace dafs
 {
     void
     HandleCreateFile(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -16,7 +16,7 @@ namespace dafs
 
     void
     HandleDeleteFile(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -27,7 +27,7 @@ namespace dafs
 
     void
     HandleOpenFile(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -38,7 +38,7 @@ namespace dafs
 
     void
     HandleReadFile(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -49,7 +49,7 @@ namespace dafs
 
     void
     HandleWriteFile(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -61,7 +61,7 @@ namespace dafs
 
     void
     HandleReadBlock(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -72,7 +72,7 @@ namespace dafs
 
     void
     HandleWriteBlock(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -83,7 +83,7 @@ namespace dafs
 
 
     void HandleAllocate(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -92,7 +92,7 @@ namespace dafs
 
 
     void HandleAllocated(
-        dafs::Storage store,
+        dafs::Storage& store,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
