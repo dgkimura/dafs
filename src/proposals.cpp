@@ -19,9 +19,9 @@ namespace dafs
         EnumHasher
     > ProposalMapHandler =
     {
-        {ProposalType::SuperBlockInsert, HandleSuperBlockInsert},
-        {ProposalType::SuperBlockRemove, HandleSuperBlockRemove},
-        {ProposalType::BlockWriteDelta, HandleWriteDelta}
+        {ProposalType::SuperBlockInsert, ProposeCreateFile},
+        {ProposalType::SuperBlockRemove, ProposeRemoveFile},
+        {ProposalType::BlockWriteDelta, ProposeWriteDelta}
     };
 
 
@@ -51,37 +51,54 @@ namespace dafs
 
 
     void
-    HandleSuperBlockInsert(std::string _edit)
+    ProposeCreateFile(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
         dafs::BlockInfo info = edit.info;
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.item);
 
-        // TODO: check hash
+        // 1: check hash and revision of superblock
+        // 2: add file to superblock with revision 0
     }
 
 
     void
-    HandleSuperBlockRemove(std::string _edit)
+    ProposeRemoveFile(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
         dafs::BlockInfo info = edit.info;
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.item);
 
-        // TODO: check hash
+        // 1: check hash and revision of superblock
+        // 2: delete file from superblock
     }
 
 
     void
-    HandleWriteDelta(std::string _edit)
+    ProposeCreateBlock(std::string _edit)
+    {
+    }
+
+
+    void
+    ProposeRemoveBlock(std::string _edit)
+    {
+    }
+
+
+    void
+    ProposeWriteDelta(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
         dafs::BlockInfo info = edit.info;
         dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.item);
 
-        // TODO: check hash
+        // 1: check hash
+        // 2: update hash
+        // 3: info.revision += 1
+        // 4: write out info
     }
 }

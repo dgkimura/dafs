@@ -50,11 +50,17 @@ namespace dafs
     void HandleProposals(std::string proposal);
 
 
-    void HandleSuperBlockInsert(std::string edit);
+    void ProposeCreateFile(std::string edit);
 
 
-    void HandleSuperBlockRemove(std::string edit);
+    void ProposeRemoveFile(std::string edit);
 
 
-    void HandleWriteDelta(std::string edit);
+    void ProposeCreateBlock(std::string edit);
+
+
+    void ProposeRemoveBlock(std::string edit);
+
+
+    void ProposeWriteDelta(std::string edit);
 }
