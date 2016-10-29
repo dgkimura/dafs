@@ -189,4 +189,14 @@ namespace dafs
         oa >> object;
         return object;
     }
+
+
+    template <typename T>
+    T Deserialize(std::fstream& stream)
+    {
+        T object;
+        boost::archive::text_iarchive oa(stream);
+        oa >> object;
+        return object;
+    }
 }
