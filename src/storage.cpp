@@ -95,7 +95,7 @@ namespace dafs
     {
         info.filename = (fs::path(dirname) / fs::path(info.filename)).string();
         //TODO: info.hash = ...
-        parliament.CreateProposal
+        parliament.SendProposal
         (
             dafs::Serialize<dafs::Proposal>
             (
