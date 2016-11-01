@@ -41,20 +41,37 @@ namespace dafs
         BlockInfo block);
 
 
-    void HandleProposals(std::string proposal);
+    class Proposer
+    {
+    public:
+
+        Proposer(dafs::Storage& store);
+
+        void operator()(std::string proposal);
+
+    private:
+
+        dafs::Storage& store;
+
+        std::unordered_map<
+            dafs::ProposalType,
+            std::function<void(std::string proposal, dafs::Storage& store)>,
+            dafs::ProposalTypeHash
+        > proposal_map;
+    };
 
 
-    void ProposeCreateFile(std::string edit);
+    void ProposeCreateFile(std::string edit, dafs::Storage& store);
 
 
-    void ProposeRemoveFile(std::string edit);
+    void ProposeRemoveFile(std::string edit, dafs::Storage& store);
 
 
-    void ProposeCreateBlock(std::string edit);
+    void ProposeCreateBlock(std::string edit, dafs::Storage& store);
 
 
-    void ProposeRemoveBlock(std::string edit);
+    void ProposeRemoveBlock(std::string edit, dafs::Storage& store);
 
 
-    void ProposeWriteDelta(std::string edit);
+    void ProposeWriteDelta(std::string edit, dafs::Storage& store);
 }

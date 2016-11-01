@@ -33,6 +33,8 @@ namespace dafs
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>();
         store.OpenFile(fileinfo);
+
+        // return fileinfo and version
     }
 
 
@@ -43,7 +45,9 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        store.ReadFile(fileinfo);
+        auto fileformat = store.ReadFile(fileinfo);
+
+        // return fileformat and version
     }
 
 
@@ -66,7 +70,9 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
-        store.ReadBlock(blockinfo);
+        auto blockformat = store.ReadBlock(blockinfo);
+
+        // return blockformat and version
     }
 
 

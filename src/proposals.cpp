@@ -4,27 +4,6 @@
 
 namespace dafs
 {
-    struct EnumHasher
-    {
-        template<typename T>
-        std::size_t operator()(T t) const
-        {
-            return static_cast<std::size_t>(t);
-        }
-    };
-
-
-    const std::unordered_map<
-        ProposalType, std::function<void(std::string proposal)>,
-        EnumHasher
-    > ProposalMapHandler =
-    {
-        {ProposalType::SuperBlockInsert, ProposeCreateFile},
-        {ProposalType::SuperBlockRemove, ProposeRemoveFile},
-        {ProposalType::BlockWriteDelta, ProposeWriteDelta}
-    };
-
-
     Proposal
     CreateBlockEditProposal(
         ProposalType type,
@@ -42,16 +21,27 @@ namespace dafs
     }
 
 
-    void
-    HandleProposals(std::string proposal)
+    Proposer::Proposer(dafs::Storage& store_)
+        : store(store_),
+          proposal_map {
+              {ProposalType::SuperBlockInsert, ProposeCreateFile},
+              {ProposalType::SuperBlockRemove, ProposeRemoveFile},
+              {ProposalType::BlockWriteDelta, ProposeWriteDelta}
+          }
     {
-        Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
-        ProposalMapHandler.at(p.type)(p.content);
     }
 
 
     void
-    ProposeCreateFile(std::string _edit)
+    Proposer::operator()(std::string proposal)
+    {
+        Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
+        proposal_map.at(p.type)(p.content, store);
+    }
+
+
+    void
+    ProposeCreateFile(std::string _edit, dafs::Storage& store)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
@@ -64,7 +54,7 @@ namespace dafs
 
 
     void
-    ProposeRemoveFile(std::string _edit)
+    ProposeRemoveFile(std::string _edit, dafs::Storage& store)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
@@ -77,19 +67,27 @@ namespace dafs
 
 
     void
-    ProposeCreateBlock(std::string _edit)
+    ProposeCreateBlock(std::string _edit, dafs::Storage& store)
     {
+        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
+
+        dafs::BlockInfo info = edit.info;
+        store.CreateBlock(info);
     }
 
 
     void
-    ProposeRemoveBlock(std::string _edit)
+    ProposeRemoveBlock(std::string _edit, dafs::Storage& store)
     {
+        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
+
+        dafs::BlockInfo info = edit.info;
+        store.DeleteBlock(info);
     }
 
 
     void
-    ProposeWriteDelta(std::string _edit)
+    ProposeWriteDelta(std::string _edit, dafs::Storage& store)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
