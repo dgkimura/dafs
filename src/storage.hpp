@@ -5,6 +5,7 @@
 #include <paxos/parliament.hpp>
 
 #include "filesystem.hpp"
+#include "proposaltype.hpp"
 
 
 namespace dafs

@@ -4,18 +4,12 @@
 #include <unordered_map>
 
 #include "filesystem.hpp"
+#include "proposaltype.hpp"
+#include "storage.hpp"
 
 
 namespace dafs
 {
-    enum class ProposalType
-    {
-        SuperBlockInsert,
-        SuperBlockRemove,
-        BlockWriteDelta,
-    };
-
-
     struct Proposal
     {
         //
