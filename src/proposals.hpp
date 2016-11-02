@@ -29,9 +29,9 @@ namespace dafs
     //
     struct BlockEdit
     {
-        dafs::BlockInfo info;
+        std::string filename;
 
-        std::string item;
+        std::string change;
     };
 
 
@@ -41,37 +41,31 @@ namespace dafs
         BlockInfo block);
 
 
-    class Proposer
+    void ProposeCreateFile(std::string edit);
+
+
+    void ProposeRemoveFile(std::string edit);
+
+
+    void ProposeCreateBlock(std::string edit);
+
+
+    void ProposeRemoveBlock(std::string edit);
+
+
+    void ProposeWriteDelta(std::string edit);
+
+
+    const std::unordered_map<
+        dafs::ProposalType,
+        std::function<void(std::string proposal)>,
+        dafs::ProposalTypeHash
+        > proposal_map =
     {
-    public:
-
-        Proposer(dafs::Storage& store);
-
-        void operator()(std::string proposal);
-
-    private:
-
-        dafs::Storage& store;
-
-        std::unordered_map<
-            dafs::ProposalType,
-            std::function<void(std::string proposal, dafs::Storage& store)>,
-            dafs::ProposalTypeHash
-        > proposal_map;
+        {ProposalType::CreateFile, ProposeCreateFile},
+        {ProposalType::RemoveFile, ProposeRemoveFile},
+        {ProposalType::CreateBlock, ProposeCreateBlock},
+        {ProposalType::RemoveBlock, ProposeRemoveBlock},
+        {ProposalType::WriteDelta, ProposeWriteDelta}
     };
-
-
-    void ProposeCreateFile(std::string edit, dafs::Storage& store);
-
-
-    void ProposeRemoveFile(std::string edit, dafs::Storage& store);
-
-
-    void ProposeCreateBlock(std::string edit, dafs::Storage& store);
-
-
-    void ProposeRemoveBlock(std::string edit, dafs::Storage& store);
-
-
-    void ProposeWriteDelta(std::string edit, dafs::Storage& store);
 }

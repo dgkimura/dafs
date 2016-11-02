@@ -11,8 +11,8 @@ namespace dafs
         BlockInfo block)
     {
         BlockEdit edit;
-        edit.info = block;
-        edit.item = item;
+        edit.filename = block.filename;
+        edit.change = item;
 
         Proposal p;
         p.type = type;
@@ -21,34 +21,24 @@ namespace dafs
     }
 
 
-    Proposer::Proposer(dafs::Storage& store_)
-        : store(store_),
-          proposal_map {
-              {ProposalType::CreateFile, ProposeCreateFile},
-              {ProposalType::RemoveFile, ProposeRemoveFile},
-              {ProposalType::CreateBlock, ProposeCreateBlock},
-              {ProposalType::RemoveBlock, ProposeRemoveBlock},
-              {ProposalType::WriteDelta, ProposeWriteDelta}
-          }
-    {
-    }
-
-
     void
-    Proposer::operator()(std::string proposal)
+    GlobalProposalHandler(std::string proposal)
     {
         Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
-        proposal_map.at(p.type)(p.content, store);
+        proposal_map.at(p.type)(p.content);
     }
 
 
     void
-    ProposeCreateFile(std::string _edit, dafs::Storage& store)
+    ProposeCreateFile(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        dafs::BlockInfo info = edit.info;
-        dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.item);
+        dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.change);
+
+        std::fstream s(edit.filename,
+                       std::ios::out | std::ios::in | std::ios::binary);
+        dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
 
         // 1: check hash and revision of block info list
         // 2: add file to block info list with revision 0
@@ -56,12 +46,11 @@ namespace dafs
 
 
     void
-    ProposeRemoveFile(std::string _edit, dafs::Storage& store)
+    ProposeRemoveFile(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        dafs::BlockInfo info = edit.info;
-        dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.item);
+        dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.change);
 
         // 1: check hash and revision of block info list
         // 2: delete file from block info list
@@ -69,32 +58,39 @@ namespace dafs
 
 
     void
-    ProposeCreateBlock(std::string _edit, dafs::Storage& store)
+    ProposeCreateBlock(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        dafs::BlockInfo info = edit.info;
-        store.CreateBlock(info);
+        std::fstream s(edit.filename,
+                       std::ios::out | std::ios::in | std::ios::binary);
+        dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
+
+        // 1. add block
+        // 2. write out file
     }
 
 
     void
-    ProposeRemoveBlock(std::string _edit, dafs::Storage& store)
+    ProposeRemoveBlock(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        dafs::BlockInfo info = edit.info;
-        store.DeleteBlock(info);
+        std::fstream s(edit.filename,
+                       std::ios::out | std::ios::in | std::ios::binary);
+        dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
+
+        // 1. remove block
+        // 2. write out file
     }
 
 
     void
-    ProposeWriteDelta(std::string _edit, dafs::Storage& store)
+    ProposeWriteDelta(std::string _edit)
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        dafs::BlockInfo info = edit.info;
-        dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.item);
+        dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
 
         // 1: check hash
         // 2: update hash

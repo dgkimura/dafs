@@ -198,8 +198,8 @@ namespace dafs
     template <typename Archive>
     void serialize(Archive& ar, dafs::BlockEdit& obj, const unsigned int version)
     {
-        ar & obj.info;
-        ar & obj.item;
+        ar & obj.filename;
+        ar & obj.change;
     }
 
 
