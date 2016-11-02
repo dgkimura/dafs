@@ -107,13 +107,4 @@ namespace dafs
     //
     BlockInfo CreateBlockInfo(const std::string& filename,
                               const dafs::Location location);
-
-
-    //
-    // Defines the parent block info.
-    //
-    const BlockInfo SuperBlock = dafs::CreateBlockInfo(
-        "blocklist",
-        dafs::CreateLocation("localhost")
-    );
 }

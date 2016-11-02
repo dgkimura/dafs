@@ -8,14 +8,20 @@
 
 namespace dafs
 {
-    ReplicatedStorage::ReplicatedStorage(Parliament parliament_, std::string dirname_)
+    ReplicatedStorage::ReplicatedStorage(
+        Parliament parliament,
+        std::string dirname,
+        dafs::BlockInfo superblock)
+      : dirname(dirname),
+        parliament(parliament),
+        superblock(superblock)
     {
     }
 
     void
     ReplicatedStorage::CreateFile(FileInfo info)
     {
-        do_write(ProposalType::SuperBlockInsert, SuperBlock, dafs::Serialize(info));
+        do_write(ProposalType::SuperBlockInsert, superblock, dafs::Serialize(info));
     }
 
 
@@ -28,7 +34,7 @@ namespace dafs
     void
     ReplicatedStorage::DeleteFile(FileInfo info)
     {
-        do_write(ProposalType::SuperBlockRemove, SuperBlock, dafs::Serialize(info));
+        do_write(ProposalType::SuperBlockRemove, superblock, dafs::Serialize(info));
     }
 
 

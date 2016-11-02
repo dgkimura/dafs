@@ -38,7 +38,10 @@ namespace dafs
     {
     public:
 
-        ReplicatedStorage(Parliament parliament_, std::string dirname_);
+        ReplicatedStorage(
+            Parliament parliament,
+            std::string dirname,
+            dafs::BlockInfo superblock);
 
         virtual void CreateFile(FileInfo file) override;
 
@@ -65,5 +68,7 @@ namespace dafs
         std::string dirname;
 
         Parliament parliament;
+
+        dafs::BlockInfo superblock;
     };
 }
