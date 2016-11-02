@@ -11,17 +11,21 @@ namespace dafs
     ReplicatedStorage::ReplicatedStorage(
         Parliament parliament,
         std::string dirname,
-        dafs::BlockInfo superblock)
-      : dirname(dirname),
-        parliament(parliament),
-        superblock(superblock)
+        dafs::BlockInfo file_info_list,
+        dafs::BlockInfo block_info_list):
+    dirname(dirname),
+    parliament(parliament),
+    file_info_list(file_info_list),
+    block_info_list(block_info_list)
     {
     }
 
     void
     ReplicatedStorage::CreateFile(FileInfo info)
     {
-        do_write(ProposalType::SuperBlockInsert, superblock, dafs::Serialize(info));
+        do_write(ProposalType::CreateFile,
+                 file_info_list,
+                 dafs::Serialize(info));
     }
 
 
@@ -34,7 +38,9 @@ namespace dafs
     void
     ReplicatedStorage::DeleteFile(FileInfo info)
     {
-        do_write(ProposalType::SuperBlockRemove, superblock, dafs::Serialize(info));
+        do_write(ProposalType::RemoveFile,
+                 file_info_list,
+                 dafs::Serialize(info));
     }
 
 
@@ -57,12 +63,18 @@ namespace dafs
     void
     ReplicatedStorage::CreateBlock(BlockInfo info)
     {
+        do_write(ProposalType::CreateBlock,
+                 block_info_list,
+                 dafs::Serialize(info));
     }
 
 
     void
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
+        do_write(ProposalType::RemoveBlock,
+                 block_info_list,
+                 dafs::Serialize(info));
     }
 
 
@@ -89,7 +101,7 @@ namespace dafs
 
         Delta delta = CreateDelta(info.filename, was.contents, is.contents);
 
-        do_write(ProposalType::BlockWriteDelta, info, dafs::Serialize(delta));
+        do_write(ProposalType::WriteDelta, info, dafs::Serialize(delta));
     }
 
 

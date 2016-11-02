@@ -24,9 +24,11 @@ namespace dafs
     Proposer::Proposer(dafs::Storage& store_)
         : store(store_),
           proposal_map {
-              {ProposalType::SuperBlockInsert, ProposeCreateFile},
-              {ProposalType::SuperBlockRemove, ProposeRemoveFile},
-              {ProposalType::BlockWriteDelta, ProposeWriteDelta}
+              {ProposalType::CreateFile, ProposeCreateFile},
+              {ProposalType::RemoveFile, ProposeRemoveFile},
+              {ProposalType::CreateBlock, ProposeCreateBlock},
+              {ProposalType::RemoveBlock, ProposeRemoveBlock},
+              {ProposalType::WriteDelta, ProposeWriteDelta}
           }
     {
     }
@@ -48,8 +50,8 @@ namespace dafs
         dafs::BlockInfo info = edit.info;
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.item);
 
-        // 1: check hash and revision of superblock
-        // 2: add file to superblock with revision 0
+        // 1: check hash and revision of block info list
+        // 2: add file to block info list with revision 0
     }
 
 
@@ -61,8 +63,8 @@ namespace dafs
         dafs::BlockInfo info = edit.info;
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.item);
 
-        // 1: check hash and revision of superblock
-        // 2: delete file from superblock
+        // 1: check hash and revision of block info list
+        // 2: delete file from block info list
     }
 
 

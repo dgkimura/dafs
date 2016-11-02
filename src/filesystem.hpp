@@ -82,11 +82,20 @@ namespace dafs
 
 
     //
-    // Defines the index structure on disk.
+    // Defines the file index structure on disk.
     //
-    struct Index
+    struct FileIndex
     {
         std::vector<FileInfo> files;
+    };
+
+
+    //
+    // Defines the block index structure on disk.
+    //
+    struct BlockIndex
+    {
+        std::vector<BlockInfo> blocks;
     };
 
 
