@@ -31,6 +31,8 @@ namespace dafs
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
 
         virtual void WriteBlock(BlockInfo info, Bytes data) = 0;
+
+        virtual void WriteBlock(BlockInfo info, BlockFormat data) = 0;
     };
 
 
@@ -60,6 +62,8 @@ namespace dafs
         virtual BlockFormat ReadBlock(BlockInfo block) override;
 
         virtual void WriteBlock(BlockInfo info, Bytes data) override;
+
+        virtual void WriteBlock(BlockInfo info, BlockFormat data) override;
 
     private:
 

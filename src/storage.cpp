@@ -94,6 +94,12 @@ namespace dafs
 
 
     void
+    ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
+    {
+    }
+
+
+    void
     ReplicatedStorage::do_write(
         dafs::ProposalType type,
         BlockInfo info,
