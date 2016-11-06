@@ -38,10 +38,23 @@ namespace dafs
 
         std::fstream s(edit.filename,
                        std::ios::out | std::ios::in | std::ios::binary);
-        dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
+        dafs::FileIndex index = dafs::Deserialize<dafs::FileIndex>(s);
 
-        // 1: check hash and revision of block info list
-        // 2: add file to block info list with revision 0
+        //
+        // Check hash and revision of block info list.
+        //
+        // TODO: Add hash/revision check
+
+        //
+        // Add file to file info list.
+        //
+        index.files.push_back(file);
+
+        //
+        // Write out updated file info list.
+        //
+        s << dafs::Serialize<dafs::FileIndex>(index);
+        s.flush();
     }
 
 
@@ -52,8 +65,38 @@ namespace dafs
 
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.change);
 
-        // 1: check hash and revision of block info list
-        // 2: delete file from block info list
+        std::fstream s(edit.filename,
+                       std::ios::out | std::ios::in | std::ios::binary);
+        dafs::BlockFormat block = dafs::Deserialize<dafs::BlockFormat>(s);
+
+        //
+        // Check hash and revision of block info list.
+        //
+        // TODO: Add hash/revision check
+
+        //
+        // Delete file info from file info list.
+        //
+        dafs::FileIndex index = dafs::Deserialize<dafs::FileIndex>(block.contents);
+        index.files.erase
+        (
+            std::remove_if
+            (
+                index.files.begin(),
+                index.files.end(),
+                [=](const dafs::FileInfo& f)
+                {
+                    return file.name == f.name;
+                }
+            ),
+            index.files.end()
+        );
+
+        //
+        // Write out updated file info list.
+        //
+        s << dafs::Serialize<dafs::FileIndex>(index);
+        s.flush();
     }
 
 
@@ -66,8 +109,17 @@ namespace dafs
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
 
-        // 1. add block
-        // 2. write out file
+        //
+        // Add block to block info list.
+        //
+        dafs::BlockInfo block = dafs::Deserialize<dafs::BlockInfo>(edit.change);
+        index.blocks.push_back(block);
+
+        //
+        // Write out updated block info list.
+        //
+        s << dafs::Serialize<dafs::BlockIndex>(index);
+        s.flush();
     }
 
 
@@ -80,8 +132,30 @@ namespace dafs
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
 
-        // 1. remove block
-        // 2. write out file
+        dafs::BlockInfo block = dafs::Deserialize<dafs::BlockInfo>(edit.change);
+
+        //
+        // Delete block info from block info list.
+        //
+        index.blocks.erase
+        (
+            std::remove_if
+            (
+                index.blocks.begin(),
+                index.blocks.end(),
+                [=](const dafs::BlockInfo& b)
+                {
+                    return block.filename == b.filename;
+                }
+            ),
+            index.blocks.end()
+        );
+
+        //
+        // Write out updated file info list.
+        //
+        s << dafs::Serialize<dafs::BlockIndex>(index);
+        s.flush();
     }
 
 
