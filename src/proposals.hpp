@@ -29,16 +29,21 @@ namespace dafs
     //
     struct BlockEdit
     {
-        std::string filename;
+        dafs::BlockInfo info;
 
         std::string change;
+
+        std::size_t hash;
+
+        int revision;
     };
 
 
     Proposal CreateBlockEditProposal(
         ProposalType type,
         std::string item,
-        BlockInfo block);
+        BlockInfo block,
+        int revision);
 
 
     void ProposeCreateFile(std::string edit);

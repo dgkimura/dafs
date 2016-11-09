@@ -2,6 +2,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include "customhash.hpp"
 #include "serialization.hpp"
 #include "storage.hpp"
 
@@ -108,6 +109,10 @@ namespace dafs
     void
     ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
     {
+        BlockFormat was = ReadBlock(info);
+        Delta delta = CreateDelta(info.filename, was.contents, data.contents);
+
+        do_write(ProposalType::WriteDelta, info, dafs::Serialize(delta));
     }
 
 
@@ -118,7 +123,6 @@ namespace dafs
         std::string data)
     {
         info.filename = (fs::path(dirname) / fs::path(info.filename)).string();
-        //TODO: info.hash = ...
         parliament.SendProposal
         (
             dafs::Serialize<dafs::Proposal>
@@ -127,7 +131,8 @@ namespace dafs
                 (
                     type,
                     data,
-                    info
+                    info,
+                    info.revision
                 )
             )
         );

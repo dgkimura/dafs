@@ -29,8 +29,7 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
             "the-address"
         },
         12, //offset
-        23, //revision
-        34  //hash
+        23  //revision
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
@@ -185,8 +184,7 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
                     "my-address"
                 },
                 0, // offset
-                0, // revision
-                0  // hash
+                0  // revision
             },
             dafs::BlockInfo
             {
@@ -196,8 +194,7 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
                     "your-address"
                 },
                 1, // offset
-                1, // revision
-                1  // hash
+                1  // revision
             }
         }
     }, actual;

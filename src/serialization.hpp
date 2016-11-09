@@ -50,7 +50,6 @@ namespace dafs
         ar & obj.location;
         ar & obj.offset;
         ar & obj.revision;
-        ar & obj.hash;
     }
 
 
@@ -198,8 +197,10 @@ namespace dafs
     template <typename Archive>
     void serialize(Archive& ar, dafs::BlockEdit& obj, const unsigned int version)
     {
-        ar & obj.filename;
+        ar & obj.info;
         ar & obj.change;
+        ar & obj.hash;
+        ar & obj.revision;
     }
 
 

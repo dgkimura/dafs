@@ -41,8 +41,6 @@ namespace dafs
         int offset;
 
         int revision;
-
-        std::size_t hash;
     };
 
 
