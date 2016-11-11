@@ -9,7 +9,11 @@ namespace dafs
         RemoveFile,
         CreateBlock,
         RemoveBlock,
-        WriteDelta
+        WriteDelta,
+
+        AddNode,
+        RemoveNode,
+        ReplaceNode
     };
 
 

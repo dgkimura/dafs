@@ -24,8 +24,30 @@ namespace dafs
     }
 
 
+    using namespace std::placeholders;
+
+
+    Operator::Operator(Parliament& parliament)
+        : proposal_map
+          {
+              {ProposalType::CreateFile, dafs::Callback(ProposeCreateFile)},
+              {ProposalType::RemoveFile, dafs::Callback(ProposeRemoveFile)},
+              {ProposalType::CreateBlock, dafs::Callback(ProposeCreateBlock)},
+              {ProposalType::RemoveBlock, dafs::Callback(ProposeRemoveBlock)},
+              {ProposalType::WriteDelta, dafs::Callback(ProposeWriteDelta)},
+              {ProposalType::AddNode, dafs::Callback(
+                  std::bind(ProposeAddNode, _1, std::ref(parliament)))},
+              {ProposalType::RemoveNode, dafs::Callback(
+                  std::bind(ProposeRemoveNode, _1, std::ref(parliament)))},
+              {ProposalType::ReplaceNode, dafs::Callback(
+                  std::bind(ProposeReplaceNode, _1, std::ref(parliament)))}
+          }
+    {
+    }
+
+
     void
-    GlobalProposalHandler(std::string proposal)
+    Operator::operator()(std::string proposal)
     {
         Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
         proposal_map.at(p.type)(p.content);
@@ -201,5 +223,29 @@ namespace dafs
             s << dafs::ApplyDelta(delta, block.contents);
             s.flush();
         }
+    }
+
+
+    void
+    ProposeAddNode(
+        std::string _edit,
+        Parliament& parliament)
+    {
+    }
+
+
+    void
+    ProposeRemoveNode(
+        std::string _edit,
+        Parliament& parliament)
+    {
+    }
+
+
+    void
+    ProposeReplaceNode(
+        std::string _edit,
+        Parliament& parliament)
+    {
     }
 }

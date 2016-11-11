@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 project(dafs.src)
 
 set(SOURCES
+    callback.cpp
     delta.cpp
     dispatcher.cpp
     filesystem.cpp

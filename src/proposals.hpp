@@ -1,8 +1,12 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #include <unordered_map>
 
+#include <paxos/parliament.hpp>
+
+#include "callback.hpp"
 #include "filesystem.hpp"
 #include "proposaltype.hpp"
 #include "storage.hpp"
@@ -46,31 +50,55 @@ namespace dafs
         int revision);
 
 
-    void ProposeCreateFile(std::string edit);
-
-
-    void ProposeRemoveFile(std::string edit);
-
-
-    void ProposeCreateBlock(std::string edit);
-
-
-    void ProposeRemoveBlock(std::string edit);
-
-
-    void ProposeWriteDelta(std::string edit);
-
-
-    const std::unordered_map<
-        dafs::ProposalType,
-        std::function<void(std::string proposal)>,
-        dafs::ProposalTypeHash
-        > proposal_map =
+    class Operator
     {
-        {ProposalType::CreateFile, ProposeCreateFile},
-        {ProposalType::RemoveFile, ProposeRemoveFile},
-        {ProposalType::CreateBlock, ProposeCreateBlock},
-        {ProposalType::RemoveBlock, ProposeRemoveBlock},
-        {ProposalType::WriteDelta, ProposeWriteDelta}
+    public:
+
+        Operator(Parliament& parliament);
+
+        void operator()(std::string proposal);
+
+    private:
+
+        std::unordered_map<
+            dafs::ProposalType,
+            dafs::Callback,
+            dafs::ProposalTypeHash
+        > proposal_map;
     };
+
+
+    void ProposeCreateFile(
+        std::string edit);
+
+
+    void ProposeRemoveFile(
+        std::string edit);
+
+
+    void ProposeCreateBlock(
+        std::string edit);
+
+
+    void ProposeRemoveBlock(
+        std::string edit);
+
+
+    void ProposeWriteDelta(
+        std::string edit);
+
+
+    void ProposeAddNode(
+        std::string edit,
+        Parliament& parliament);
+
+
+    void ProposeRemoveNode(
+        std::string edit,
+        Parliament& parliament);
+
+
+    void ProposeReplaceNode(
+        std::string edit,
+        Parliament& parliament);
 }
