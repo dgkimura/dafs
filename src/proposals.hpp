@@ -1,8 +1,8 @@
 #pragma once
 
-#include <functional>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 #include <paxos/parliament.hpp>
 
@@ -40,6 +40,15 @@ namespace dafs
         std::size_t hash;
 
         int revision;
+    };
+
+
+    //
+    // Structure describing nodes in paxos quorum.
+    //
+    struct NodeSet
+    {
+        std::vector<std::string> nodes;
     };
 
 
@@ -94,11 +103,6 @@ namespace dafs
 
 
     void ProposeRemoveNode(
-        std::string edit,
-        Parliament& parliament);
-
-
-    void ProposeReplaceNode(
         std::string edit,
         Parliament& parliament);
 }

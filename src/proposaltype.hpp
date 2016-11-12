@@ -12,8 +12,7 @@ namespace dafs
         WriteDelta,
 
         AddNode,
-        RemoveNode,
-        ReplaceNode
+        RemoveNode
     };
 
 

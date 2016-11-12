@@ -255,3 +255,22 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
     ASSERT_EQ(expected.metadata[1].key, actual.metadata[1].key);
     ASSERT_EQ(expected.metadata[1].value, actual.metadata[1].value);
 }
+
+
+TEST(SerializationUnitTest, testNodeSetIsSerializableAndDeserializable)
+{
+    dafs::NodeSet expected
+    {
+        std::vector<std::string>
+        {
+            { "address-1:80" },
+            { "address-2:80" }
+        }
+    }, actual;
+
+    std::string string_obj = dafs::Serialize(expected);
+    actual = dafs::Deserialize<dafs::NodeSet>(string_obj);
+
+    ASSERT_EQ(expected.nodes[0], actual.nodes[0]);
+    ASSERT_EQ(expected.nodes[1], actual.nodes[1]);
+}

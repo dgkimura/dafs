@@ -1,3 +1,8 @@
+#include <vector>
+
+#include "boost/algorithm/string.hpp"
+#include "boost/lexical_cast.hpp"
+
 #include "customhash.hpp"
 #include "proposals.hpp"
 #include "serialization.hpp"
@@ -38,9 +43,7 @@ namespace dafs
               {ProposalType::AddNode, dafs::Callback(
                   std::bind(ProposeAddNode, _1, std::ref(parliament)))},
               {ProposalType::RemoveNode, dafs::Callback(
-                  std::bind(ProposeRemoveNode, _1, std::ref(parliament)))},
-              {ProposalType::ReplaceNode, dafs::Callback(
-                  std::bind(ProposeReplaceNode, _1, std::ref(parliament)))}
+                  std::bind(ProposeRemoveNode, _1, std::ref(parliament)))}
           }
     {
     }
@@ -231,6 +234,33 @@ namespace dafs
         std::string _edit,
         Parliament& parliament)
     {
+        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
+
+        //
+        // Check hash and revision of block info list.
+        //
+        // TODO: Add revision check
+        if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
+        {
+            std::fstream s(edit.info.filename,
+                           std::ios::out | std::ios::in | std::ios::binary);
+            dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);
+            set.nodes.push_back(edit.change);
+
+            //
+            // Write out updated node set.
+            //
+            s << dafs::Serialize<dafs::NodeSet>(set);
+            s.flush();
+
+            //
+            // Update running node set.
+            //
+            std::vector<std::string> hostport;
+            split(hostport, edit.change, boost::is_any_of(":"));
+            parliament.AddLegislator(hostport[0],
+                                     boost::lexical_cast<short>(hostport[1]));
+        }
     }
 
 
@@ -239,13 +269,44 @@ namespace dafs
         std::string _edit,
         Parliament& parliament)
     {
-    }
+        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
+        //
+        // Check hash and revision of block info list.
+        //
+        // TODO: Add revision check
+        if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
+        {
+            std::vector<std::string> remove;
+            split(remove, edit.change, boost::is_any_of(":"));
 
-    void
-    ProposeReplaceNode(
-        std::string _edit,
-        Parliament& parliament)
-    {
+            std::fstream s(edit.info.filename,
+                           std::ios::out | std::ios::in | std::ios::binary);
+
+            dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);
+            set.nodes.erase
+            (
+                std::remove_if
+                (
+                    set.nodes.begin(),
+                    set.nodes.end(),
+                    [=](const std::string& n)
+                    {
+                        std::vector<std::string> current;
+                        split(current, n, boost::is_any_of(":"));
+                        return remove[0] == current[0] && remove[1] == current[1];
+                    }
+                ),
+                set.nodes.end()
+            );
+
+            //
+            // Update running node set.
+            //
+            std::vector<std::string> hostport;
+            split(hostport, edit.change, boost::is_any_of(":"));
+            parliament.RemoveLegislator(hostport[0],
+                                        boost::lexical_cast<short>(hostport[1]));
+        }
     }
 }

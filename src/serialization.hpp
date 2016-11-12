@@ -204,6 +204,39 @@ namespace dafs
     }
 
 
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::NodeSet& obj, const unsigned int version)
+    {
+        int size;
+
+        if (Archive::is_loading::value)
+        {
+            //
+            // deserialize collection object.
+            //
+            ar & size;
+            for (int i=0; i<size; i++)
+            {
+                std::string node;
+                ar & node;
+                obj.nodes.push_back(node);
+            }
+        }
+        else
+        {
+            //
+            // serialize collection object.
+            //
+            size = obj.nodes.size();
+            ar & size;
+            for (int i=0; i<size; i++)
+            {
+                ar & obj.nodes[i];
+            }
+        }
+    }
+
+
     template <typename T>
     std::string Serialize(T object)
     {
