@@ -42,7 +42,6 @@ namespace dafs
 
         ReplicatedStorage(
             Parliament parliament,
-            std::string dirname,
             dafs::BlockInfo file_info_list,
             dafs::BlockInfo block_info_list);
 
@@ -69,8 +68,6 @@ namespace dafs
     private:
 
         void do_write(dafs::ProposalType type, BlockInfo info, std::string data);
-
-        std::string dirname;
 
         Parliament parliament;
 

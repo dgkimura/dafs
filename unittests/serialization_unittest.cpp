@@ -23,7 +23,7 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
 {
     dafs::BlockInfo expected
     {
-        "the-filename",
+        "the-path",
         dafs::Location
         {
             "the-address"
@@ -35,7 +35,7 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::BlockInfo>(string_obj);
 
-    ASSERT_EQ(expected.filename, actual.filename);
+    ASSERT_EQ(expected.path, actual.path);
     ASSERT_EQ(expected.location.address, actual.location.address);
     ASSERT_EQ(expected.offset, actual.offset);
 }
@@ -85,7 +85,7 @@ TEST(SerializationUnitTest, testFileInfoIsSerializableAndDeserializable)
     ASSERT_EQ(expected.previous.address, actual.previous.address);
     ASSERT_EQ(expected.next.address, actual.next.address);
     ASSERT_EQ(expected.descriptor, actual.descriptor);
-    ASSERT_EQ(expected.name, actual.name);
+    ASSERT_EQ(expected.path, actual.path);
 }
 
 
@@ -101,14 +101,14 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
         },
         {
             {
-                "the-filename-of-block-1",
+                "the-path-of-block-1",
                 dafs::Location
                 {
                     "the-address"
                 }
             },
             {
-                "the-filename-of-block-2",
+                "the-path-of-block-2",
                 dafs::Location
                 {
                     "the-address"
@@ -123,10 +123,10 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
     ASSERT_EQ(expected.info.previous.address, actual.info.previous.address);
     ASSERT_EQ(expected.info.next.address, actual.info.next.address);
     ASSERT_EQ(expected.info.descriptor, actual.info.descriptor);
-    ASSERT_EQ(expected.info.name, actual.info.name);
-    ASSERT_EQ(expected.blocks[0].filename, actual.blocks[0].filename);
+    ASSERT_EQ(expected.info.path, actual.info.path);
+    ASSERT_EQ(expected.blocks[0].path, actual.blocks[0].path);
     ASSERT_EQ(expected.blocks[0].location.address, actual.blocks[0].location.address);
-    ASSERT_EQ(expected.blocks[1].filename, actual.blocks[1].filename);
+    ASSERT_EQ(expected.blocks[1].path, actual.blocks[1].path);
     ASSERT_EQ(expected.blocks[1].location.address, actual.blocks[1].location.address);
 }
 
@@ -164,9 +164,9 @@ TEST(SerializationUnitTest, testFileIndexIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::FileIndex>(string_obj);
 
-    ASSERT_EQ(expected.files[0].name, actual.files[0].name);
-    ASSERT_EQ(expected.files[1].name, actual.files[1].name);
-    ASSERT_EQ(expected.files[2].name, actual.files[2].name);
+    ASSERT_EQ(expected.files[0].path, actual.files[0].path);
+    ASSERT_EQ(expected.files[1].path, actual.files[1].path);
+    ASSERT_EQ(expected.files[2].path, actual.files[2].path);
 }
 
 
@@ -202,7 +202,7 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::BlockIndex>(string_obj);
 
-    ASSERT_EQ(expected.blocks[0].filename, actual.blocks[0].filename);
+    ASSERT_EQ(expected.blocks[0].path, actual.blocks[0].path);
     ASSERT_EQ(expected.blocks[1].location.address, actual.blocks[1].location.address);
 }
 

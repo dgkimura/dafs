@@ -64,7 +64,7 @@ namespace dafs
 
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.change);
 
-        std::fstream s(edit.info.filename,
+        std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::FileIndex index = dafs::Deserialize<dafs::FileIndex>(s);
 
@@ -95,7 +95,7 @@ namespace dafs
 
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.change);
 
-        std::fstream s(edit.info.filename,
+        std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::BlockFormat block = dafs::Deserialize<dafs::BlockFormat>(s);
 
@@ -118,7 +118,7 @@ namespace dafs
                     index.files.end(),
                     [=](const dafs::FileInfo& f)
                     {
-                        return file.name == f.name;
+                        return file.path == f.path;
                     }
                 ),
                 index.files.end()
@@ -138,7 +138,7 @@ namespace dafs
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        std::fstream s(edit.info.filename,
+        std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
 
@@ -168,7 +168,7 @@ namespace dafs
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        std::fstream s(edit.info.filename,
+        std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
 
@@ -191,7 +191,7 @@ namespace dafs
                     index.blocks.end(),
                     [=](const dafs::BlockInfo& b)
                     {
-                        return block.filename == b.filename;
+                        return block.path == b.path;
                     }
                 ),
                 index.blocks.end()
@@ -211,7 +211,7 @@ namespace dafs
     {
         dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
 
-        std::fstream s(edit.info.filename,
+        std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
 
@@ -242,7 +242,7 @@ namespace dafs
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            std::fstream s(edit.info.filename,
+            std::fstream s(edit.info.path,
                            std::ios::out | std::ios::in | std::ios::binary);
             dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);
             set.nodes.push_back(edit.change);
@@ -280,7 +280,7 @@ namespace dafs
             std::vector<std::string> remove;
             split(remove, edit.change, boost::is_any_of(":"));
 
-            std::fstream s(edit.info.filename,
+            std::fstream s(edit.info.path,
                            std::ios::out | std::ios::in | std::ios::binary);
 
             dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);

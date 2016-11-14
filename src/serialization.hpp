@@ -46,7 +46,7 @@ namespace dafs
     template <typename Archive>
     void serialize(Archive& ar, dafs::BlockInfo& obj, const unsigned int version)
     {
-        ar & obj.filename;
+        ar & obj.path;
         ar & obj.location;
         ar & obj.offset;
         ar & obj.revision;
@@ -70,7 +70,7 @@ namespace dafs
         ar & obj.previous;
         ar & obj.next;
         ar & obj.descriptor;
-        ar & obj.name;
+        ar & obj.path;
     }
 
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/filesystem.hpp>
+
 #include <string>
 #include <vector>
 
@@ -34,7 +36,7 @@ namespace dafs
     //
     struct BlockInfo
     {
-        std::string filename;
+        std::string path;
 
         Location location;
 
@@ -64,7 +66,7 @@ namespace dafs
 
         int descriptor;
 
-        std::string name;
+        std::string path;
     };
 
 
@@ -112,6 +114,6 @@ namespace dafs
     //
     // Function to create BlockInfo
     //
-    BlockInfo CreateBlockInfo(const std::string& filename,
+    BlockInfo CreateBlockInfo(const std::string& path,
                               const dafs::Location location);
 }

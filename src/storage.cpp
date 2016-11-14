@@ -11,10 +11,8 @@ namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(
         Parliament parliament,
-        std::string dirname,
         dafs::BlockInfo file_info_list,
         dafs::BlockInfo block_info_list):
-    dirname(dirname),
     parliament(parliament),
     file_info_list(file_info_list),
     block_info_list(block_info_list)
@@ -48,7 +46,7 @@ namespace dafs
     FileFormat
     ReplicatedStorage::ReadFile(FileInfo info)
     {
-        std::fstream s((fs::path(dirname) / fs::path(info.name)).string(),
+        std::fstream s(fs::path(info.path).string(),
                         std::ios::out | std::ios::in | std::ios::binary);
         FileFormat f = dafs::Deserialize<FileFormat>(s);
         return f;
@@ -82,7 +80,7 @@ namespace dafs
     BlockFormat
     ReplicatedStorage::ReadBlock(BlockInfo info)
     {
-        std::fstream f((fs::path(dirname) / fs::path(info.filename)).string(),
+        std::fstream f(fs::path(info.path).string(),
                         std::ios::out | std::ios::in | std::ios::binary);
         BlockFormat b;
         f.read(b.contents, BLOCK_SIZE_IN_BYTES);
@@ -100,7 +98,7 @@ namespace dafs
         std::memmove(is.contents + info.offset, data.contents,
                      BLOCK_SIZE_IN_BYTES - info.offset);
 
-        Delta delta = CreateDelta(info.filename, was.contents, is.contents);
+        Delta delta = CreateDelta(info.path, was.contents, is.contents);
 
         do_write(ProposalType::WriteDelta, info, dafs::Serialize(delta));
     }
@@ -110,7 +108,7 @@ namespace dafs
     ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
     {
         BlockFormat was = ReadBlock(info);
-        Delta delta = CreateDelta(info.filename, was.contents, data.contents);
+        Delta delta = CreateDelta(info.path, was.contents, data.contents);
 
         do_write(ProposalType::WriteDelta, info, dafs::Serialize(delta));
     }
@@ -122,7 +120,7 @@ namespace dafs
         BlockInfo info,
         std::string data)
     {
-        info.filename = (fs::path(dirname) / fs::path(info.filename)).string();
+        info.path = fs::path(info.path).string();
         parliament.SendProposal
         (
             dafs::Serialize<dafs::Proposal>

@@ -36,12 +36,12 @@ TEST(FileSystemTest, testLocationFieldsAreConstructed)
 
 TEST(FileSystemTest, testsBlockInfoFieldsAreConstructed)
 {
-    std::string filename = "myfile";
+    std::string path = "myfile";
     dafs::Location location = dafs::CreateLocation("localhost");
 
-    dafs::BlockInfo b = dafs::CreateBlockInfo(filename, location);
+    dafs::BlockInfo b = dafs::CreateBlockInfo(path, location);
 
-    ASSERT_EQ(filename, b.filename);
+    ASSERT_EQ(path, b.path);
     ASSERT_EQ(location.address, b.location.address);
     ASSERT_EQ(0, b.offset);
 }

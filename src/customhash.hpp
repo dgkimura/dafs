@@ -25,7 +25,7 @@ namespace std
     {
         std::size_t operator()(dafs::BlockInfo const& b) const
         {
-            std::fstream f(b.filename,
+            std::fstream f(b.path,
                             std::ios::out | std::ios::in | std::ios::binary);
             dafs::BlockFormat rawblock;
             f.read(rawblock.contents, dafs::BLOCK_SIZE_IN_BYTES);

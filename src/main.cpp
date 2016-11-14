@@ -10,7 +10,6 @@ CreateServer(std::string dirname)
     Parliament p(dirname);
     dafs::ReplicatedStorage store(
         p,
-        dirname,
         dafs::CreateBlockInfo(
             "filelist",
             dafs::CreateLocation("localhost")

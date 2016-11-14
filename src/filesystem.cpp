@@ -24,10 +24,10 @@ namespace dafs
 
 
     BlockInfo
-    CreateBlockInfo(const std::string& filename, const dafs::Location location)
+    CreateBlockInfo(const std::string& path, const dafs::Location location)
     {
         BlockInfo blockinfo;
-        blockinfo.filename = filename;
+        blockinfo.path = path;
         blockinfo.location = location;
         blockinfo.offset = 0;
         return blockinfo;
