@@ -1,6 +1,5 @@
 #pragma once
 
-#include "allocator.hpp"
 #include "metadataparser.hpp"
 #include "sender.hpp"
 #include "storage.hpp"

@@ -20,11 +20,11 @@ namespace dafs
 
         void do_accept();
 
-        boost::asio::io_service io_service_;
+        boost::asio::io_service io_service;
 
-        boost::asio::ip::tcp::acceptor acceptor_;
+        boost::asio::ip::tcp::acceptor acceptor;
 
-        boost::asio::ip::tcp::socket socket_;
+        boost::asio::ip::tcp::socket socket;
 
         Dispatcher dispatcher;
 
@@ -39,7 +39,7 @@ namespace dafs
 
         private:
 
-            boost::asio::ip::tcp::socket socket_;
+            boost::asio::ip::tcp::socket socket;
 
             enum {max_length = 8192};
         };

@@ -23,7 +23,7 @@ namespace dafs
 
         NetworkSender();
 
-        NetworkSender(NetworkSender& sender);
+        NetworkSender(const NetworkSender& sender);
 
         ~NetworkSender();
 
@@ -31,9 +31,9 @@ namespace dafs
 
     private:
 
-        boost::asio::io_service io_service_;
+        boost::asio::io_service io_service;
 
-        boost::asio::ip::tcp::socket socket_;
+        boost::asio::ip::tcp::socket socket;
 
         std::mutex mutex;
     };

@@ -36,8 +36,6 @@ namespace dafs
 
         Dispatcher(dafs::Storage& storage);
 
-        Dispatcher(dafs::Dispatcher& dispatcher);
-
         void RouteMessage(dafs::Message);
 
     private:

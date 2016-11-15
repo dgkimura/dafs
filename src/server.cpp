@@ -8,31 +8,31 @@ namespace dafs
     using boost::asio::ip::tcp;
 
 
-    Server::Server(Dispatcher dispatcher_, std::string address, short port)
-        : io_service_(),
-          acceptor_(io_service_, tcp::endpoint(tcp::v4(), port)),
-          socket_(io_service_),
-          dispatcher(dispatcher_)
+    Server::Server(Dispatcher dispatcher, std::string address, short port)
+        : io_service(),
+          acceptor(io_service, tcp::endpoint(tcp::v4(), port)),
+          socket(io_service),
+          dispatcher(dispatcher)
     {
     }
 
 
     Server::~Server()
     {
-        io_service_.stop();
-        acceptor_.close();
+        io_service.stop();
+        acceptor.close();
     }
 
 
     void
     Server::do_accept()
     {
-        acceptor_.async_accept(socket_,
+        acceptor.async_accept(socket,
             [this](boost::system::error_code ec_accept)
             {
                 if (!ec_accept)
                 {
-                    std::make_shared<Session>(std::move(socket_))->Start(dispatcher);
+                    std::make_shared<Session>(std::move(socket))->Start(dispatcher);
                 }
                 do_accept();
             });
@@ -42,7 +42,7 @@ namespace dafs
     Server::Session::Session(
         boost::asio::ip::tcp::socket socket
     )
-        : socket_(std::move(socket))
+        : socket(std::move(socket))
     {
     }
 
@@ -54,7 +54,7 @@ namespace dafs
 
         char data_[max_length];
 
-        socket_.async_read_some(boost::asio::buffer(data_, max_length),
+        socket.async_read_some(boost::asio::buffer(data_, max_length),
             [self, &data_, &dispatcher](boost::system::error_code ec, std::size_t length)
             {
                 if (!ec)
