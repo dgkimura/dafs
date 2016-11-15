@@ -9,14 +9,17 @@
 
 namespace dafs
 {
-    ReplicatedStorage::ReplicatedStorage(
-        Parliament parliament,
-        dafs::BlockInfo file_info_list,
-        dafs::BlockInfo block_info_list):
-    parliament(parliament),
-    file_info_list(file_info_list),
-    block_info_list(block_info_list)
+    ReplicatedStorage::ReplicatedStorage(std::string directory)
+        : parliament(directory)
     {
+        file_info_list = dafs::CreateBlockInfo(
+            (fs::path(directory) / fs::path("filelist")).string(),
+            dafs::CreateLocation("localhost")
+        );
+        block_info_list = dafs::CreateBlockInfo(
+            (fs::path(directory) / fs::path("blocklist")).string(),
+            dafs::CreateLocation("localhost")
+        );
     }
 
     void

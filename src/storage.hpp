@@ -40,10 +40,7 @@ namespace dafs
     {
     public:
 
-        ReplicatedStorage(
-            Parliament parliament,
-            dafs::BlockInfo file_info_list,
-            dafs::BlockInfo block_info_list);
+        ReplicatedStorage(std::string directory);
 
         virtual void CreateFile(FileInfo file) override;
 
