@@ -33,6 +33,7 @@ namespace dafs
     void serialize(Archive& ar, dafs::Location& obj, const unsigned int version)
     {
         ar & obj.address;
+        ar & obj.port;
     }
 
 

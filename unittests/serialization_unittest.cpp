@@ -26,7 +26,8 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
         "the-path",
         dafs::Location
         {
-            "the-address"
+            "the-address",
+            80
         },
         12, //offset
         23  //revision
@@ -73,8 +74,16 @@ TEST(SerializationUnitTest, testFileInfoIsSerializableAndDeserializable)
 {
     dafs::FileInfo expected
     {
-        "previous",
-        "next",
+        dafs::Location
+        {
+            "previous",
+            80
+        },
+        dafs::Location
+        {
+            "next",
+            80
+        },
         1,
         "filename"
     }, actual;
@@ -95,23 +104,35 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
     {
         dafs::FileInfo
         {
-            "previous",
-            "next",
+            dafs::Location
+            {
+                "previous",
+                80
+            },
+            dafs::Location
+            {
+                "next",
+                80
+            },
             1
         },
         {
+            dafs::BlockInfo
             {
                 "the-path-of-block-1",
                 dafs::Location
                 {
-                    "the-address"
+                    "the-address",
+                    80
                 }
             },
+            dafs::BlockInfo
             {
                 "the-path-of-block-2",
                 dafs::Location
                 {
-                    "the-address"
+                    "the-address",
+                    80
                 }
             }
         }
@@ -139,22 +160,46 @@ TEST(SerializationUnitTest, testFileIndexIsSerializableAndDeserializable)
         {
             dafs::FileInfo
             {
-                "previous",
-                "next",
+                dafs::Location
+                {
+                    "previous",
+                    80
+                },
+                dafs::Location
+                {
+                    "next",
+                    80
+                },
                 1,
                 "filename"
             },
             dafs::FileInfo
             {
-                "my-previous",
-                "my-next",
+                dafs::Location
+                {
+                    "my-previous",
+                    80
+                },
+                dafs::Location
+                {
+                    "my-next",
+                    80
+                },
                 2,
                 "my-file"
             },
             dafs::FileInfo
             {
-                "your-previous",
-                "your-next",
+                dafs::Location
+                {
+                    "your-previous",
+                    80
+                },
+                dafs::Location
+                {
+                    "your-next",
+                    80
+                },
                 3,
                 "your-file"
             }
@@ -181,7 +226,8 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
                 "my-block",
                 dafs::Location
                 {
-                    "my-address"
+                    "my-address",
+                    80
                 },
                 0, // offset
                 0  // revision
@@ -191,7 +237,8 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
                 "your-block",
                 dafs::Location
                 {
-                    "your-address"
+                    "your-address",
+                    80
                 },
                 1, // offset
                 1  // revision

@@ -28,6 +28,8 @@ namespace dafs
     struct Location
     {
         std::string address;
+
+        short port;
     };
 
 
