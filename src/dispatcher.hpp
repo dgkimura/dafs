@@ -34,9 +34,9 @@ namespace dafs
     {
     public:
 
-        Dispatcher(dafs::Storage& storage);
+        Dispatcher();
 
-        void RouteMessage(dafs::Message);
+        MessageHandler GetRoutine(dafs::Message);
 
     private:
 
@@ -46,9 +46,5 @@ namespace dafs
             dafs::MessageHandler,
             dafs::MessageTypeHash
         > registered_map;
-
-        dafs::Storage& store;
-
-        dafs::NetworkSender sender;
     };
 }

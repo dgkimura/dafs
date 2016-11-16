@@ -55,7 +55,8 @@ namespace dafs
         char data_[max_length];
 
         socket.async_read_some(boost::asio::buffer(data_, max_length),
-            [self, &data_, &dispatcher](boost::system::error_code ec, std::size_t length)
+            [self, &data_, &dispatcher](boost::system::error_code ec,
+                                        std::size_t length)
             {
                 if (!ec)
                 {
@@ -63,7 +64,7 @@ namespace dafs
                     dafs::Message m = Deserialize<Message>(data_);
 
                     // 2. Route message to dispatcher for handling.
-                    dispatcher.RouteMessage(m);
+                    auto routine = dispatcher.GetRoutine(m);
                 }
             }
         );
