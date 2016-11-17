@@ -245,7 +245,7 @@ namespace dafs
             std::fstream s(edit.info.path,
                            std::ios::out | std::ios::in | std::ios::binary);
             dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);
-            set.nodes.push_back(edit.change);
+            set.endpoints.push_back(edit.change);
 
             //
             // Write out updated node set.
@@ -284,12 +284,12 @@ namespace dafs
                            std::ios::out | std::ios::in | std::ios::binary);
 
             dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);
-            set.nodes.erase
+            set.endpoints.erase
             (
                 std::remove_if
                 (
-                    set.nodes.begin(),
-                    set.nodes.end(),
+                    set.endpoints.begin(),
+                    set.endpoints.end(),
                     [=](const std::string& n)
                     {
                         std::vector<std::string> current;
@@ -297,7 +297,7 @@ namespace dafs
                         return remove[0] == current[0] && remove[1] == current[1];
                     }
                 ),
-                set.nodes.end()
+                set.endpoints.end()
             );
 
             //

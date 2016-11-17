@@ -220,7 +220,7 @@ namespace dafs
             {
                 std::string node;
                 ar & node;
-                obj.nodes.push_back(node);
+                obj.endpoints.push_back(node);
             }
         }
         else
@@ -228,11 +228,11 @@ namespace dafs
             //
             // serialize collection object.
             //
-            size = obj.nodes.size();
+            size = obj.endpoints.size();
             ar & size;
             for (int i=0; i<size; i++)
             {
-                ar & obj.nodes[i];
+                ar & obj.endpoints[i];
             }
         }
     }

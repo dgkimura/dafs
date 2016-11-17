@@ -318,6 +318,6 @@ TEST(SerializationUnitTest, testNodeSetIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::NodeSet>(string_obj);
 
-    ASSERT_EQ(expected.nodes[0], actual.nodes[0]);
-    ASSERT_EQ(expected.nodes[1], actual.nodes[1]);
+    ASSERT_EQ(expected.endpoints[0], actual.endpoints[0]);
+    ASSERT_EQ(expected.endpoints[1], actual.endpoints[1]);
 }

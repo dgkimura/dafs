@@ -38,7 +38,7 @@ namespace dafs
 
     struct NodeSet
     {
-        std::vector<std::string> nodes;
+        std::vector<std::string> endpoints;
     };
 
 

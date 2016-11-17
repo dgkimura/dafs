@@ -153,7 +153,7 @@ namespace dafs
         {
             std::fstream s(fs::path(directory / fs::path("nodeset")).string(),
                            std::ios::in | std::ios::binary);
-            for (auto node_string : dafs::Deserialize<NodeSet>(s).nodes)
+            for (auto node_string : dafs::Deserialize<NodeSet>(s).endpoints)
             {
                 std::vector<std::string> hostport;
                 split(hostport, node_string, boost::is_any_of(":"));
