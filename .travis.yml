@@ -22,5 +22,5 @@ addons:
    - gcc-4.8
    - g++-4.8
 script:
-  - make
+  - make -j 8
   - ./unittests/all_unittests
