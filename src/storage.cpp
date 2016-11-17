@@ -1,6 +1,8 @@
 #include <cstring>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "customhash.hpp"
 #include "serialization.hpp"
@@ -10,7 +12,8 @@
 namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(std::string directory)
-        : parliament(directory)
+        : directory(directory),
+          parliament(directory)
     {
         file_info_list = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path("filelist")).string(),
@@ -20,6 +23,8 @@ namespace dafs
             (fs::path(directory) / fs::path("blocklist")).string(),
             dafs::CreateLocation("localhost")
         );
+
+        load_nodes();
     }
 
     void
@@ -137,5 +142,25 @@ namespace dafs
                 )
             )
         );
+    }
+
+
+    void
+    ReplicatedStorage::load_nodes()
+    {
+        if (boost::filesystem::exists(
+            fs::path(directory / fs::path("nodeset"))))
+        {
+            std::fstream s(fs::path(directory / fs::path("nodeset")).string(),
+                           std::ios::in | std::ios::binary);
+            for (auto node_string : dafs::Deserialize<NodeSet>(s).nodes)
+            {
+                std::vector<std::string> hostport;
+                split(hostport, node_string, boost::is_any_of(":"));
+                parliament.AddLegislator(
+                    hostport[0],
+                    boost::lexical_cast<short>(hostport[1]));
+            }
+        }
     }
 }

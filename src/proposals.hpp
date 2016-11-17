@@ -43,15 +43,6 @@ namespace dafs
     };
 
 
-    //
-    // Structure describing nodes in paxos quorum.
-    //
-    struct NodeSet
-    {
-        std::vector<std::string> nodes;
-    };
-
-
     Proposal CreateBlockEditProposal(
         ProposalType type,
         std::string item,

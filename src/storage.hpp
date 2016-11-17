@@ -36,6 +36,12 @@ namespace dafs
     };
 
 
+    struct NodeSet
+    {
+        std::vector<std::string> nodes;
+    };
+
+
     class ReplicatedStorage : public Storage
     {
     public:
@@ -65,6 +71,10 @@ namespace dafs
     private:
 
         void do_write(dafs::ProposalType type, BlockInfo info, std::string data);
+
+        void load_nodes();
+
+        std::string directory;
 
         Parliament parliament;
 
