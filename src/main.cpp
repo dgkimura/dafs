@@ -1,9 +1,8 @@
-#include "dispatcher.hpp"
-#include "filesystem.hpp"
 #include "main.hpp"
+#include "storage.hpp"
 
 
 int main(void)
 {
-    dafs::Node node;
+    dafs::ReplicatedStorage(".");
 }

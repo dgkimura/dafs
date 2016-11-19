@@ -5,6 +5,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "customhash.hpp"
+#include "proposals.hpp"
 #include "serialization.hpp"
 #include "storage.hpp"
 
@@ -12,8 +13,7 @@
 namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(std::string directory)
-        : directory(directory),
-          parliament(directory)
+        : parliament(directory, Action(parliament))
     {
         file_info_list = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path("filelist")).string(),
@@ -21,6 +21,14 @@ namespace dafs
         );
         block_info_list = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path("blocklist")).string(),
+            dafs::CreateLocation("localhost")
+        );
+        nodeset_file = dafs::CreateBlockInfo(
+            (fs::path(directory) / fs::path("nodeset")).string(),
+            dafs::CreateLocation("localhost")
+        );
+        identity_file = dafs::CreateBlockInfo(
+            (fs::path(directory) / fs::path("identity")).string(),
             dafs::CreateLocation("localhost")
         );
 
@@ -148,12 +156,12 @@ namespace dafs
     void
     ReplicatedStorage::load_nodes()
     {
-        if (boost::filesystem::exists(
-            fs::path(directory / fs::path("nodeset"))))
+        if (boost::filesystem::exists(nodeset_file.path))
         {
-            std::fstream s(fs::path(directory / fs::path("nodeset")).string(),
+            std::fstream f(fs::path(nodeset_file.path).string(),
                            std::ios::in | std::ios::binary);
-            for (auto node_string : dafs::Deserialize<NodeSet>(s).endpoints)
+
+            for (auto node_string : dafs::Deserialize<NodeSet>(f).endpoints)
             {
                 std::vector<std::string> hostport;
                 split(hostport, node_string, boost::is_any_of(":"));

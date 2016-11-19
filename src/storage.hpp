@@ -74,12 +74,14 @@ namespace dafs
 
         void load_nodes();
 
-        std::string directory;
-
         Parliament parliament;
 
         dafs::BlockInfo file_info_list;
 
         dafs::BlockInfo block_info_list;
+
+        dafs::BlockInfo nodeset_file;
+
+        dafs::BlockInfo identity_file;
     };
 }

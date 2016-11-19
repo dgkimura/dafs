@@ -9,7 +9,6 @@
 #include "callback.hpp"
 #include "filesystem.hpp"
 #include "proposaltype.hpp"
-#include "storage.hpp"
 
 
 namespace dafs
@@ -50,11 +49,11 @@ namespace dafs
         int revision);
 
 
-    class Operator
+    class Action
     {
     public:
 
-        Operator(Parliament& parliament);
+        Action(Parliament& parliament);
 
         void operator()(std::string proposal);
 

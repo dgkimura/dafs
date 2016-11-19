@@ -10,6 +10,7 @@
 #include "filesystem.hpp"
 #include "messages.hpp"
 #include "proposals.hpp"
+#include "storage.hpp"
 
 
 namespace dafs

@@ -32,7 +32,7 @@ namespace dafs
     using namespace std::placeholders;
 
 
-    Operator::Operator(Parliament& parliament)
+    Action::Action(Parliament& parliament)
         : proposal_map
           {
               {ProposalType::CreateFile, dafs::Callback(ProposeCreateFile)},
@@ -50,7 +50,7 @@ namespace dafs
 
 
     void
-    Operator::operator()(std::string proposal)
+    Action::operator()(std::string proposal)
     {
         Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
         proposal_map.at(p.type)(p.content);
@@ -277,9 +277,6 @@ namespace dafs
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            std::vector<std::string> remove;
-            split(remove, edit.change, boost::is_any_of(":"));
-
             std::fstream s(edit.info.path,
                            std::ios::out | std::ios::in | std::ios::binary);
 
@@ -290,11 +287,9 @@ namespace dafs
                 (
                     set.endpoints.begin(),
                     set.endpoints.end(),
-                    [=](const std::string& n)
+                    [=](const std::string& current)
                     {
-                        std::vector<std::string> current;
-                        split(current, n, boost::is_any_of(":"));
-                        return remove[0] == current[0] && remove[1] == current[1];
+                        return edit.change == current;
                     }
                 ),
                 set.endpoints.end()
