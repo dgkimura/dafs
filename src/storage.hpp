@@ -76,12 +76,12 @@ namespace dafs
 
         Parliament parliament;
 
-        dafs::BlockInfo file_info_list;
+        dafs::BlockInfo files_info;
 
-        dafs::BlockInfo block_info_list;
+        dafs::BlockInfo blocks_info;
 
-        dafs::BlockInfo nodeset_file;
+        dafs::BlockInfo nodeset_info;
 
-        dafs::BlockInfo identity_file;
+        dafs::BlockInfo identity_info;
     };
 }

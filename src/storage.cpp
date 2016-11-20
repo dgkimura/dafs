@@ -15,19 +15,19 @@ namespace dafs
     ReplicatedStorage::ReplicatedStorage(std::string directory)
         : parliament(directory, Action(parliament))
     {
-        file_info_list = dafs::CreateBlockInfo(
+        files_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path("filelist")).string(),
             dafs::CreateLocation("localhost")
         );
-        block_info_list = dafs::CreateBlockInfo(
+        blocks_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path("blocklist")).string(),
             dafs::CreateLocation("localhost")
         );
-        nodeset_file = dafs::CreateBlockInfo(
+        nodeset_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path("nodeset")).string(),
             dafs::CreateLocation("localhost")
         );
-        identity_file = dafs::CreateBlockInfo(
+        identity_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path("identity")).string(),
             dafs::CreateLocation("localhost")
         );
@@ -39,7 +39,7 @@ namespace dafs
     ReplicatedStorage::CreateFile(FileInfo info)
     {
         do_write(ProposalType::CreateFile,
-                 file_info_list,
+                 files_info,
                  dafs::Serialize(info));
     }
 
@@ -54,7 +54,7 @@ namespace dafs
     ReplicatedStorage::DeleteFile(FileInfo info)
     {
         do_write(ProposalType::RemoveFile,
-                 file_info_list,
+                 files_info,
                  dafs::Serialize(info));
     }
 
@@ -79,7 +79,7 @@ namespace dafs
     ReplicatedStorage::CreateBlock(BlockInfo info)
     {
         do_write(ProposalType::CreateBlock,
-                 block_info_list,
+                 blocks_info,
                  dafs::Serialize(info));
     }
 
@@ -88,7 +88,7 @@ namespace dafs
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
         do_write(ProposalType::RemoveBlock,
-                 block_info_list,
+                 blocks_info,
                  dafs::Serialize(info));
     }
 
@@ -156,9 +156,9 @@ namespace dafs
     void
     ReplicatedStorage::load_nodes()
     {
-        if (boost::filesystem::exists(nodeset_file.path))
+        if (boost::filesystem::exists(nodeset_info.path))
         {
-            std::fstream f(fs::path(nodeset_file.path).string(),
+            std::fstream f(fs::path(nodeset_info.path).string(),
                            std::ios::in | std::ios::binary);
 
             for (auto node_string : dafs::Deserialize<NodeSet>(f).endpoints)
