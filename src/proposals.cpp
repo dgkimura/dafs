@@ -11,13 +11,13 @@
 namespace dafs
 {
     Proposal
-    CreateBlockEditProposal(
+    CreateProposal(
         ProposalType type,
         std::string item,
         BlockInfo info,
         int revision)
     {
-        BlockEdit edit;
+        ProposalContent edit;
         edit.info = info;
         edit.change = item;
         edit.hash = std::hash<dafs::BlockInfo>{}(info);
@@ -33,18 +33,7 @@ namespace dafs
 
 
     Action::Action(Parliament& parliament)
-        : proposal_map
-          {
-              {ProposalType::CreateFile, dafs::Callback(ProposeCreateFile)},
-              {ProposalType::RemoveFile, dafs::Callback(ProposeRemoveFile)},
-              {ProposalType::CreateBlock, dafs::Callback(ProposeCreateBlock)},
-              {ProposalType::RemoveBlock, dafs::Callback(ProposeRemoveBlock)},
-              {ProposalType::WriteDelta, dafs::Callback(ProposeWriteDelta)},
-              {ProposalType::AddNode, dafs::Callback(
-                  std::bind(ProposeAddNode, _1, std::ref(parliament)))},
-              {ProposalType::RemoveNode, dafs::Callback(
-                  std::bind(ProposeRemoveNode, _1, std::ref(parliament)))}
-          }
+        : parliament(parliament)
     {
     }
 
@@ -53,15 +42,45 @@ namespace dafs
     Action::operator()(std::string proposal)
     {
         Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
-        proposal_map.at(p.type)(p.content);
+        dafs::ProposalContent edit = dafs::Deserialize<dafs::ProposalContent>(p.content);
+
+        if (p.type == ProposalType::CreateFile)
+        {
+            CreateFile(edit);
+        }
+        else if (p.type == ProposalType::RemoveFile)
+        {
+            RemoveFile(edit);
+        }
+        else if (p.type == ProposalType::CreateBlock)
+        {
+            CreateBlock(edit);
+        }
+        else if (p.type == ProposalType::RemoveBlock)
+        {
+            RemoveBlock(edit);
+        }
+        else if (p.type == ProposalType::WriteDelta)
+        {
+            WriteDelta(edit);
+        }
+        else if (p.type == ProposalType::AddNode)
+        {
+            WriteDelta(edit);
+            AddNode(edit, parliament);
+        }
+        else if (p.type == ProposalType::RemoveNode)
+        {
+            WriteDelta(edit);
+            RemoveNode(edit, parliament);
+        }
     }
 
 
     void
-    ProposeCreateFile(std::string _edit)
+    CreateFile(
+        dafs::ProposalContent& edit)
     {
-        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
-
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.change);
 
         std::fstream s(edit.info.path,
@@ -89,10 +108,9 @@ namespace dafs
 
 
     void
-    ProposeRemoveFile(std::string _edit)
+    RemoveFile(
+        dafs::ProposalContent& edit)
     {
-        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
-
         dafs::FileInfo file = dafs::Deserialize<dafs::FileInfo>(edit.change);
 
         std::fstream s(edit.info.path,
@@ -134,10 +152,9 @@ namespace dafs
 
 
     void
-    ProposeCreateBlock(std::string _edit)
+    CreateBlock(
+        dafs::ProposalContent& edit)
     {
-        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
-
         std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
@@ -164,10 +181,9 @@ namespace dafs
 
 
     void
-    ProposeRemoveBlock(std::string _edit)
+    RemoveBlock(
+        dafs::ProposalContent& edit)
     {
-        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
-
         std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::BlockIndex index = dafs::Deserialize<dafs::BlockIndex>(s);
@@ -207,10 +223,9 @@ namespace dafs
 
 
     void
-    ProposeWriteDelta(std::string _edit)
+    WriteDelta(
+        dafs::ProposalContent& edit)
     {
-        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
-
         std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
         dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
@@ -230,28 +245,17 @@ namespace dafs
 
 
     void
-    ProposeAddNode(
-        std::string _edit,
+    AddNode(
+        dafs::ProposalContent& edit,
         Parliament& parliament)
     {
-        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
-
         //
         // Check hash and revision of block info list.
         //
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            std::fstream s(edit.info.path,
-                           std::ios::out | std::ios::in | std::ios::binary);
-            dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);
-            set.endpoints.push_back(edit.change);
-
-            //
-            // Write out updated node set.
-            //
-            s << dafs::Serialize<dafs::NodeSet>(set);
-            s.flush();
+            // TODO: Parse delta to find node added
 
             //
             // Update running node set.
@@ -265,35 +269,17 @@ namespace dafs
 
 
     void
-    ProposeRemoveNode(
-        std::string _edit,
+    RemoveNode(
+        dafs::ProposalContent& edit,
         Parliament& parliament)
     {
-        dafs::BlockEdit edit = dafs::Deserialize<dafs::BlockEdit>(_edit);
-
         //
         // Check hash and revision of block info list.
         //
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            std::fstream s(edit.info.path,
-                           std::ios::out | std::ios::in | std::ios::binary);
-
-            dafs::NodeSet set = dafs::Deserialize<dafs::NodeSet>(s);
-            set.endpoints.erase
-            (
-                std::remove_if
-                (
-                    set.endpoints.begin(),
-                    set.endpoints.end(),
-                    [=](const std::string& current)
-                    {
-                        return edit.change == current;
-                    }
-                ),
-                set.endpoints.end()
-            );
+            // TODO: Parse delta to find node removed
 
             //
             // Update running node set.

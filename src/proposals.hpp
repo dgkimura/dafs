@@ -30,7 +30,7 @@ namespace dafs
     //
     // Structure to handle adding or removing an item in block.
     //
-    struct BlockEdit
+    struct ProposalContent
     {
         dafs::BlockInfo info;
 
@@ -42,7 +42,7 @@ namespace dafs
     };
 
 
-    Proposal CreateBlockEditProposal(
+    Proposal CreateProposal(
         ProposalType type,
         std::string item,
         BlockInfo block,
@@ -59,40 +59,36 @@ namespace dafs
 
     private:
 
-        std::unordered_map<
-            dafs::ProposalType,
-            dafs::Callback,
-            dafs::ProposalTypeHash
-        > proposal_map;
+        Parliament& parliament;
     };
 
 
-    void ProposeCreateFile(
-        std::string edit);
+    void CreateFile(
+        ProposalContent& content);
 
 
-    void ProposeRemoveFile(
-        std::string edit);
+    void RemoveFile(
+        ProposalContent& content);
 
 
-    void ProposeCreateBlock(
-        std::string edit);
+    void CreateBlock(
+        ProposalContent& content);
 
 
-    void ProposeRemoveBlock(
-        std::string edit);
+    void RemoveBlock(
+        ProposalContent& content);
 
 
-    void ProposeWriteDelta(
-        std::string edit);
+    void WriteDelta(
+        ProposalContent& content);
 
 
-    void ProposeAddNode(
-        std::string edit,
+    void AddNode(
+        ProposalContent& content,
         Parliament& parliament);
 
 
-    void ProposeRemoveNode(
-        std::string edit,
+    void RemoveNode(
+        ProposalContent& content,
         Parliament& parliament);
 }

@@ -197,7 +197,7 @@ namespace dafs
 
 
     template <typename Archive>
-    void serialize(Archive& ar, dafs::BlockEdit& obj, const unsigned int version)
+    void serialize(Archive& ar, dafs::ProposalContent& obj, const unsigned int version)
     {
         ar & obj.info;
         ar & obj.change;

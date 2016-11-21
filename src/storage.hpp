@@ -68,9 +68,16 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo info, BlockFormat data) override;
 
+        void AddNode(std::string address, short port);
+
+        void RemoveNode(std::string address, short port);
+
     private:
 
-        void do_write(dafs::ProposalType type, BlockInfo info, std::string data);
+        void do_write(
+            dafs::ProposalType type,
+            BlockInfo info,
+            std::string data);
 
         void load_nodes();
 

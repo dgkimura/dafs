@@ -116,7 +116,9 @@ namespace dafs
 
         Delta delta = CreateDelta(info.path, was.contents, is.contents);
 
-        do_write(ProposalType::WriteDelta, info, dafs::Serialize(delta));
+        do_write(ProposalType::WriteDelta,
+                 info,
+                 dafs::Serialize(delta));
     }
 
 
@@ -126,7 +128,61 @@ namespace dafs
         BlockFormat was = ReadBlock(info);
         Delta delta = CreateDelta(info.path, was.contents, data.contents);
 
-        do_write(ProposalType::WriteDelta, info, dafs::Serialize(delta));
+        do_write(ProposalType::WriteDelta,
+                 info,
+                 dafs::Serialize(delta));
+    }
+
+
+    void
+    ReplicatedStorage::AddNode(std::string address, short port)
+    {
+        BlockFormat was = ReadBlock(nodeset_info);
+        BlockFormat is(was);
+
+        auto nodeset = dafs::Deserialize<NodeSet>(was.contents);
+        nodeset.endpoints.push_back(address + std::to_string(port));
+        std::memmove(is.contents, dafs::Serialize(nodeset).c_str(),
+                     BLOCK_SIZE_IN_BYTES);
+
+        Delta delta = CreateDelta(nodeset_info.path, was.contents,
+                                  is.contents);
+
+        do_write(ProposalType::WriteDelta,
+                 nodeset_info,
+                 dafs::Serialize(delta));
+    }
+
+
+    void
+    ReplicatedStorage::RemoveNode(std::string address, short port)
+    {
+        BlockFormat was = ReadBlock(nodeset_info);
+        BlockFormat is(was);
+
+        auto nodeset = dafs::Deserialize<NodeSet>(was.contents);
+        std::memmove(is.contents, dafs::Serialize(nodeset).c_str(),
+                     BLOCK_SIZE_IN_BYTES);
+        nodeset.endpoints.erase
+        (
+            std::remove_if
+            (
+                nodeset.endpoints.begin(),
+                nodeset.endpoints.end(),
+                [=](const std::string& current)
+                {
+                    return current == address + std::to_string(port);
+                }
+            ),
+            nodeset.endpoints.end()
+        );
+
+        Delta delta = CreateDelta(nodeset_info.path, was.contents,
+                                  is.contents);
+
+        do_write(ProposalType::WriteDelta,
+                 nodeset_info,
+                 dafs::Serialize(delta));
     }
 
 
@@ -141,7 +197,7 @@ namespace dafs
         (
             dafs::Serialize<dafs::Proposal>
             (
-                CreateBlockEditProposal
+                CreateProposal
                 (
                     type,
                     data,
