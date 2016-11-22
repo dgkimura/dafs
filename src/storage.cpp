@@ -148,7 +148,7 @@ namespace dafs
         Delta delta = CreateDelta(nodeset_info.path, was.contents,
                                   is.contents);
 
-        do_write(ProposalType::WriteDelta,
+        do_write(ProposalType::AddNode,
                  nodeset_info,
                  dafs::Serialize(delta));
     }
@@ -180,7 +180,7 @@ namespace dafs
         Delta delta = CreateDelta(nodeset_info.path, was.contents,
                                   is.contents);
 
-        do_write(ProposalType::WriteDelta,
+        do_write(ProposalType::RemoveNode,
                  nodeset_info,
                  dafs::Serialize(delta));
     }

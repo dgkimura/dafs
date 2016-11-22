@@ -59,7 +59,11 @@ namespace dafs
 
     private:
 
-        Parliament& parliament;
+        std::unordered_map<
+            dafs::ProposalType,
+            dafs::Callback<ProposalContent&>,
+            dafs::ProposalTypeHash
+        > proposal_map;
     };
 
 

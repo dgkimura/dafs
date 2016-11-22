@@ -33,7 +33,81 @@ namespace dafs
 
 
     Action::Action(Parliament& parliament)
-        : parliament(parliament)
+        : proposal_map
+          {
+              {
+                   ProposalType::CreateFile,
+                   dafs::Callback<ProposalContent&>
+                   (
+                       [](ProposalContent& context)
+                       {
+                           CreateFile(context);
+                       }
+                   )
+              },
+              {
+                   ProposalType::RemoveFile,
+                   dafs::Callback<ProposalContent&>
+                   (
+                       [](ProposalContent& context)
+                       {
+                           RemoveFile(context);
+                       }
+                   )
+              },
+              {
+                   ProposalType::CreateBlock,
+                   dafs::Callback<ProposalContent&>
+                   (
+                       [](ProposalContent& context)
+                       {
+                           CreateBlock(context);
+                       }
+                   )
+              },
+              {
+                   ProposalType::RemoveBlock,
+                   dafs::Callback<ProposalContent&>
+                   (
+                       [](ProposalContent& context)
+                       {
+                           RemoveBlock(context);
+                       }
+                   )
+              },
+              {
+                   ProposalType::WriteDelta,
+                   dafs::Callback<ProposalContent&>
+                   (
+                       [](ProposalContent& context)
+                       {
+                           WriteDelta(context);
+                       }
+                   )
+              },
+              {
+                   ProposalType::AddNode,
+                   dafs::Callback<ProposalContent&>
+                   (
+                       [&parliament](ProposalContent& context)
+                       {
+                           WriteDelta(context);
+                           AddNode(context, parliament);
+                       }
+                   )
+              },
+              {
+                   ProposalType::RemoveNode,
+                   dafs::Callback<ProposalContent&>
+                   (
+                       [&parliament](ProposalContent& context)
+                       {
+                           WriteDelta(context);
+                           RemoveNode(context, parliament);
+                       }
+                   )
+              }
+          }
     {
     }
 
@@ -44,36 +118,7 @@ namespace dafs
         Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
         dafs::ProposalContent edit = dafs::Deserialize<dafs::ProposalContent>(p.content);
 
-        if (p.type == ProposalType::CreateFile)
-        {
-            CreateFile(edit);
-        }
-        else if (p.type == ProposalType::RemoveFile)
-        {
-            RemoveFile(edit);
-        }
-        else if (p.type == ProposalType::CreateBlock)
-        {
-            CreateBlock(edit);
-        }
-        else if (p.type == ProposalType::RemoveBlock)
-        {
-            RemoveBlock(edit);
-        }
-        else if (p.type == ProposalType::WriteDelta)
-        {
-            WriteDelta(edit);
-        }
-        else if (p.type == ProposalType::AddNode)
-        {
-            WriteDelta(edit);
-            AddNode(edit, parliament);
-        }
-        else if (p.type == ProposalType::RemoveNode)
-        {
-            WriteDelta(edit);
-            RemoveNode(edit, parliament);
-        }
+        proposal_map[p.type](edit);
     }
 
 

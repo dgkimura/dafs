@@ -6,18 +6,26 @@
 
 namespace dafs
 {
-    using ProposalHandler = std::function<void(std::string proposal)>;
-
+    template <typename... Ts>
     class Callback
     {
+
+    using Handler = std::function<void(Ts... args)>;
+
     public:
 
-        Callback(ProposalHandler proposal_handler);
+        Callback(Handler handler=[](Ts... args){})
+            : handler(handler)
+        {
+        }
 
-        void operator()(std::string proposal);
+        void operator()(Ts... args)
+        {
+            handler(args...);
+        }
 
     private:
 
-        ProposalHandler proposal_handler;
+        Handler handler;
     };
 }
