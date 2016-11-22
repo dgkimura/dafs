@@ -12,27 +12,41 @@
 
 namespace dafs
 {
-    ReplicatedStorage::ReplicatedStorage(std::string directory)
-        : parliament(directory, Action(parliament))
+    ReplicatedStorage::ReplicatedStorage(
+        std::string directory,
+        int identity)
+    : parliament(directory, Action(parliament))
     {
         files_info = dafs::CreateBlockInfo(
-            (fs::path(directory) / fs::path("filelist")).string(),
+            (fs::path(directory) / fs::path(Constant::FileListName)).string(),
             dafs::CreateLocation("localhost")
         );
         blocks_info = dafs::CreateBlockInfo(
-            (fs::path(directory) / fs::path("blocklist")).string(),
+            (fs::path(directory) / fs::path(Constant::BlockListName)).string(),
             dafs::CreateLocation("localhost")
         );
         nodeset_info = dafs::CreateBlockInfo(
-            (fs::path(directory) / fs::path("nodeset")).string(),
+            (fs::path(directory) / fs::path(Constant::NodeSetName)).string(),
             dafs::CreateLocation("localhost")
         );
         identity_info = dafs::CreateBlockInfo(
-            (fs::path(directory) / fs::path("identity")).string(),
+            (fs::path(directory) / fs::path(Constant::IdentityName)).string(),
             dafs::CreateLocation("localhost")
         );
 
+        set_identity(identity);
         load_nodes();
+    }
+
+
+    int
+    ReplicatedStorage::GetIdentity()
+    {
+        int identity;
+        std::fstream s(fs::path(identity_info.path).string(),
+                       std::ios::in | std::ios::binary);
+        s >> identity;
+        return identity;
     }
 
     void
@@ -63,7 +77,7 @@ namespace dafs
     ReplicatedStorage::ReadFile(FileInfo info)
     {
         std::fstream s(fs::path(info.path).string(),
-                        std::ios::out | std::ios::in | std::ios::binary);
+                       std::ios::out | std::ios::binary);
         FileFormat f = dafs::Deserialize<FileFormat>(s);
         return f;
     }
@@ -97,7 +111,7 @@ namespace dafs
     ReplicatedStorage::ReadBlock(BlockInfo info)
     {
         std::fstream f(fs::path(info.path).string(),
-                        std::ios::out | std::ios::in | std::ios::binary);
+                       std::ios::out | std::ios::binary);
         BlockFormat b;
         f.read(b.contents, BLOCK_SIZE_IN_BYTES);
         return b;
@@ -226,5 +240,14 @@ namespace dafs
                     boost::lexical_cast<short>(hostport[1]));
             }
         }
+    }
+
+    void
+    ReplicatedStorage::set_identity(int id)
+    {
+        std::fstream s(fs::path(identity_info.path).string(),
+                       std::ios::out | std::ios::binary);
+        s << id;
+        s.flush();
     }
 }

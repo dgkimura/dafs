@@ -8,11 +8,30 @@
 #include "proposaltype.hpp"
 
 
+namespace
+{
+    struct Constant
+    {
+        static constexpr const char * FileListName = "filelist";
+
+        static constexpr const char * BlockListName = "blocklist";
+
+        static constexpr const char * NodeSetName = "nodeset";
+
+        static constexpr const char * IdentityName = "identity";
+
+        static constexpr const int UnknownId = -1;
+    };
+};
+
+
 namespace dafs
 {
     class Storage
     {
     public:
+
+        virtual int GetIdentity() = 0;
 
         virtual void CreateFile(FileInfo file) = 0;
 
@@ -46,7 +65,11 @@ namespace dafs
     {
     public:
 
-        ReplicatedStorage(std::string directory);
+        ReplicatedStorage(
+            std::string directory,
+            int identity=Constant::UnknownId);
+
+        virtual int GetIdentity() override;
 
         virtual void CreateFile(FileInfo file) override;
 
@@ -80,6 +103,8 @@ namespace dafs
             std::string data);
 
         void load_nodes();
+
+        void set_identity(int id);
 
         Parliament parliament;
 

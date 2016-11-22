@@ -29,9 +29,6 @@ namespace dafs
     }
 
 
-    using namespace std::placeholders;
-
-
     Action::Action(Parliament& parliament)
         : proposal_map
           {
