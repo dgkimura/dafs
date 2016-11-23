@@ -67,6 +67,7 @@ namespace dafs
 
         ReplicatedStorage(
             std::string directory,
+            std::string hostport,
             int identity=Constant::UnknownId);
 
         virtual int GetIdentity() override;
@@ -102,7 +103,7 @@ namespace dafs
             BlockInfo info,
             std::string data);
 
-        void load_nodes();
+        void load_nodes(std::string hostport);
 
         void set_identity(int id);
 

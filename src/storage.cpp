@@ -14,28 +14,29 @@ namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(
         std::string directory,
+        std::string hostport,
         int identity)
     : parliament(directory, Action(parliament))
     {
         files_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path(Constant::FileListName)).string(),
-            dafs::CreateLocation("localhost")
+            dafs::CreateLocation(hostport)
         );
         blocks_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path(Constant::BlockListName)).string(),
-            dafs::CreateLocation("localhost")
+            dafs::CreateLocation(hostport)
         );
         nodeset_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path(Constant::NodeSetName)).string(),
-            dafs::CreateLocation("localhost")
+            dafs::CreateLocation(hostport)
         );
         identity_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path(Constant::IdentityName)).string(),
-            dafs::CreateLocation("localhost")
+            dafs::CreateLocation(hostport)
         );
 
         set_identity(identity);
-        load_nodes();
+        load_nodes(hostport);
     }
 
 
@@ -224,7 +225,8 @@ namespace dafs
 
 
     void
-    ReplicatedStorage::load_nodes()
+    ReplicatedStorage::load_nodes(
+        std::string hostport)
     {
         if (boost::filesystem::exists(nodeset_info.path))
         {
@@ -239,6 +241,16 @@ namespace dafs
                     hostport[0],
                     boost::lexical_cast<short>(hostport[1]));
             }
+        }
+        else
+        {
+            NodeSet nodeset;
+            nodeset.endpoints.push_back(hostport);
+
+            std::fstream f(fs::path(nodeset_info.path).string(),
+                           std::ios::out | std::ios::binary);
+            f << dafs::Serialize(nodeset);
+            f.flush();
         }
     }
 
