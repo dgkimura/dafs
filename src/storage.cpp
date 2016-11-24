@@ -78,7 +78,7 @@ namespace dafs
     ReplicatedStorage::ReadFile(FileInfo info)
     {
         std::fstream s(fs::path(info.path).string(),
-                       std::ios::out | std::ios::binary);
+                       std::ios::in | std::ios::binary);
         FileFormat f = dafs::Deserialize<FileFormat>(s);
         return f;
     }
@@ -112,7 +112,7 @@ namespace dafs
     ReplicatedStorage::ReadBlock(BlockInfo info)
     {
         std::fstream f(fs::path(info.path).string(),
-                       std::ios::out | std::ios::binary);
+                       std::ios::in | std::ios::binary);
         BlockFormat b;
         f.read(b.contents, BLOCK_SIZE_IN_BYTES);
         return b;
