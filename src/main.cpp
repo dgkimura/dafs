@@ -12,5 +12,8 @@ int main(void)
     }
 
 
-    auto store = dafs::ReplicatedStorage("node-1", "localhost:8080", 42);
+    auto store = dafs::ReplicatedStorage("node-1", "127.0.0.1:8080", 42);
+    store.AddNode("127.0.0.1", 8081);
+
+    for (;;);
 }

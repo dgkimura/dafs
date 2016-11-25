@@ -156,7 +156,7 @@ namespace dafs
         BlockFormat is(was);
 
         auto nodeset = dafs::Deserialize<NodeSet>(was.contents);
-        nodeset.endpoints.push_back(address + std::to_string(port));
+        nodeset.endpoints.push_back(address + ":" + std::to_string(port));
         std::memmove(is.contents, dafs::Serialize(nodeset).c_str(),
                      BLOCK_SIZE_IN_BYTES);
 
@@ -186,7 +186,7 @@ namespace dafs
                 nodeset.endpoints.end(),
                 [=](const std::string& current)
                 {
-                    return current == address + std::to_string(port);
+                    return current == address + ":" + std::to_string(port);
                 }
             ),
             nodeset.endpoints.end()
