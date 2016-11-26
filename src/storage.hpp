@@ -105,6 +105,8 @@ namespace dafs
 
         void load_nodes(std::string hostport);
 
+        void set_blocks(std::vector<BlockInfo> blocks);
+
         void set_identity(int id);
 
         Parliament parliament;

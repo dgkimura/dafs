@@ -36,6 +36,7 @@ namespace dafs
         );
 
         set_identity(identity);
+        set_blocks({files_info, blocks_info, nodeset_info, identity_info});
         load_nodes(hostport);
     }
 
@@ -253,6 +254,23 @@ namespace dafs
             f.flush();
         }
     }
+
+
+    void
+    ReplicatedStorage::set_blocks(std::vector<dafs::BlockInfo> blocks)
+    {
+        if (!boost::filesystem::exists(blocks_info.path))
+        {
+            std::fstream f(fs::path(blocks_info.path).string(),
+                           std::ios::out | std::ios::binary);
+
+            dafs::BlockIndex index;
+            index.blocks = blocks;
+            f << dafs::Serialize(index);
+            f.flush();
+        }
+    }
+
 
     void
     ReplicatedStorage::set_identity(int id)
