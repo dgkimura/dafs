@@ -11,7 +11,6 @@ set(SOURCES
     sender.cpp
     server.cpp
     storage.cpp
-    topology.cpp
 )
 add_executable(dafs main.cpp ${SOURCES})
 
