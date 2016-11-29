@@ -145,7 +145,7 @@ namespace dafs
             // Write out updated file info list.
             //
             s << dafs::Serialize<dafs::FileIndex>(index);
-            s.flush();
+            s.close();
         }
     }
 
@@ -189,7 +189,7 @@ namespace dafs
             // Write out updated file info list.
             //
             s << dafs::Serialize<dafs::FileIndex>(index);
-            s.flush();
+            s.close();
         }
     }
 
@@ -218,7 +218,7 @@ namespace dafs
             // Write out updated block info list.
             //
             s << dafs::Serialize<dafs::BlockIndex>(index);
-            s.flush();
+            s.close();
         }
     }
 
@@ -260,7 +260,7 @@ namespace dafs
             // Write out updated file info list.
             //
             s << dafs::Serialize<dafs::BlockIndex>(index);
-            s.flush();
+            s.close();
         }
     }
 
@@ -282,7 +282,7 @@ namespace dafs
         {
             // write out info
             s << dafs::ApplyDelta(delta, s);
-            s.flush();
+            s.close();
         }
     }
 

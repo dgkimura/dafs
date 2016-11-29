@@ -117,6 +117,7 @@ namespace dafs
                        std::ios::in | std::ios::binary);
         f.seekg(0, std::ios::beg);
         BlockFormat b = dafs::Deserialize<BlockFormat>(f);
+        f.close();
         return b;
     }
 
@@ -171,27 +172,27 @@ namespace dafs
     void
     ReplicatedStorage::RemoveNode(std::string address, short port)
     {
-        BlockFormat was = ReadBlock(nodeset_info);
-        BlockFormat is(was);
+        BlockFormat block = ReadBlock(nodeset_info);
 
-        auto nodeset = dafs::Deserialize<NodeSet>(was.contents);
-        is.contents = dafs::Serialize(nodeset);
-        nodeset.endpoints.erase
+        auto oldset = dafs::Deserialize<NodeSet>(block.contents);
+        auto newset = dafs::Deserialize<NodeSet>(block.contents);
+        newset.endpoints.erase
         (
             std::remove_if
             (
-                nodeset.endpoints.begin(),
-                nodeset.endpoints.end(),
+                newset.endpoints.begin(),
+                newset.endpoints.end(),
                 [=](const std::string& current)
                 {
                     return current == address + ":" + std::to_string(port);
                 }
             ),
-            nodeset.endpoints.end()
+            newset.endpoints.end()
         );
 
-        Delta delta = CreateDelta(nodeset_info.path, was.contents,
-                                  is.contents);
+        Delta delta = CreateDelta(nodeset_info.path,
+                                  dafs::SerializeIntoBlockFormat(oldset),
+                                  dafs::SerializeIntoBlockFormat(newset));
 
         do_write(ProposalType::RemoveNode,
                  nodeset_info,
