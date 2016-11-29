@@ -12,7 +12,7 @@ namespace dafs
         char edit_script[BLOCK_SIZE_IN_BYTES];
         int edit_script_length = BLOCK_SIZE_IN_BYTES;
 
-        int error = ComputeEditScript(
+        size_t length = ComputeEditScript(
             &was[0],
             was.length(),
             &is[0],
@@ -23,25 +23,50 @@ namespace dafs
         Delta delta
         {
             filename,
-            std::string(edit_script)
+            std::string(edit_script),
+            length
         };
         return delta;
     }
 
 
     std::string
-    ApplyDelta(Delta delta, std::string original)
+    ApplyDelta(Delta& delta, std::string original)
     {
         char new_string[BLOCK_SIZE_IN_BYTES];
         int new_string_length = BLOCK_SIZE_IN_BYTES;
-        int error = ApplyEditScript(
+
+        int length = ApplyEditScript(
             &original[0],
             original.length(),
             &delta.difference[0],
-            delta.difference.length(),
+            delta.length,
             new_string,
             new_string_length
         );
+        return std::string(new_string);
+    }
+
+
+    std::string
+    ApplyDelta(Delta& delta, std::fstream& stream)
+    {
+        stream.seekg(0, std::ios::beg);
+        std::string original((std::istreambuf_iterator<char>(stream)),
+                             (std::istreambuf_iterator<char>()));
+        char new_string[BLOCK_SIZE_IN_BYTES];
+        int new_string_length = BLOCK_SIZE_IN_BYTES;
+
+        int length = ApplyEditScript(
+            &original[0],
+            original.length(),
+            &delta.difference[0],
+            delta.length,
+            new_string,
+            new_string_length
+        );
+
+        stream.seekp(0, std::ios::beg);
         return std::string(new_string);
     }
 }

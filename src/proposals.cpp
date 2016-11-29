@@ -1,3 +1,4 @@
+#include <fstream>
 #include <vector>
 
 #include "boost/algorithm/string.hpp"
@@ -270,6 +271,7 @@ namespace dafs
     {
         std::fstream s(edit.info.path,
                        std::ios::out | std::ios::in | std::ios::binary);
+        s.seekg(0, std::ios::beg);
         dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
 
         //
@@ -279,8 +281,7 @@ namespace dafs
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
             // write out info
-            dafs::BlockFormat block = dafs::Deserialize<dafs::BlockFormat>(s);
-            s << dafs::ApplyDelta(delta, block.contents);
+            s << dafs::ApplyDelta(delta, s);
             s.flush();
         }
     }

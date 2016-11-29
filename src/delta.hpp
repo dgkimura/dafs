@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <string>
 
 
@@ -14,10 +15,13 @@ namespace dafs
     {
         std::string filename;
         std::string difference;
+        size_t length;
     };
 
 
     Delta CreateDelta(std::string filename, std::string was, std::string is);
 
-    std::string ApplyDelta(Delta delta, std::string original);
+    std::string ApplyDelta(Delta& delta, std::string original);
+
+    std::string ApplyDelta(Delta& delta, std::fstream& stream);
 }

@@ -250,6 +250,15 @@ namespace dafs
 
 
     template <typename T>
+    std::string SerializeIntoBlockFormat(T object)
+    {
+        dafs::BlockFormat b;
+        b.contents = Serialize(object);
+        return Serialize(b);
+    }
+
+
+    template <typename T>
     T Deserialize(std::string string_obj)
     {
         T object;
@@ -267,5 +276,13 @@ namespace dafs
         boost::archive::text_iarchive oa(stream);
         oa >> object;
         return object;
+    }
+
+
+    template <typename T>
+    T DeserializeFromBlockFormat(std::fstream& stream)
+    {
+        dafs::BlockFormat b = Deserialize<dafs::BlockFormat>(stream);
+        return Deserialize<T>(b.contents);
     }
 }

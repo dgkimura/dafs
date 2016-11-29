@@ -53,7 +53,7 @@ namespace dafs
     //
     struct BlockFormat
     {
-        char contents[BLOCK_SIZE_IN_BYTES];
+        std::string contents;
     };
 
 
