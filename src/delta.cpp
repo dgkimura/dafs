@@ -12,7 +12,7 @@ namespace dafs
         char edit_script[BLOCK_SIZE_IN_BYTES];
         int edit_script_length = BLOCK_SIZE_IN_BYTES;
 
-        size_t length = ComputeEditScript(
+        int length = ComputeEditScript(
             &was[0],
             was.length(),
             &is[0],
@@ -23,8 +23,7 @@ namespace dafs
         Delta delta
         {
             filename,
-            std::string(edit_script),
-            length
+            std::string(edit_script).erase(length)
         };
         return delta;
     }
@@ -40,7 +39,7 @@ namespace dafs
             &original[0],
             original.length(),
             &delta.difference[0],
-            delta.length,
+            delta.difference.length(),
             new_string,
             new_string_length
         );
@@ -61,7 +60,7 @@ namespace dafs
             &original[0],
             original.length(),
             &delta.difference[0],
-            delta.length,
+            delta.difference.length(),
             new_string,
             new_string_length
         );

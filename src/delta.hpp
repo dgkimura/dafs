@@ -15,7 +15,6 @@ namespace dafs
     {
         std::string filename;
         std::string difference;
-        size_t length;
     };
 
 
