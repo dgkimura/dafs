@@ -30,16 +30,17 @@ namespace dafs
     }
 
 
-    Action::Action(Parliament& parliament)
+    Action::Action(Parliament& parliament, dafs::Signal& condition)
         : proposal_map
           {
               {
                    ProposalType::CreateFile,
                    dafs::Callback<ProposalContent&>
                    (
-                       [](ProposalContent& context)
+                       [&condition](ProposalContent& context)
                        {
                            CreateFile(context);
+                           condition.Set();
                        }
                    )
               },
@@ -47,9 +48,10 @@ namespace dafs
                    ProposalType::RemoveFile,
                    dafs::Callback<ProposalContent&>
                    (
-                       [](ProposalContent& context)
+                       [&condition](ProposalContent& context)
                        {
                            RemoveFile(context);
+                           condition.Set();
                        }
                    )
               },
@@ -57,9 +59,10 @@ namespace dafs
                    ProposalType::CreateBlock,
                    dafs::Callback<ProposalContent&>
                    (
-                       [](ProposalContent& context)
+                       [&condition](ProposalContent& context)
                        {
                            CreateBlock(context);
+                           condition.Set();
                        }
                    )
               },
@@ -67,9 +70,10 @@ namespace dafs
                    ProposalType::RemoveBlock,
                    dafs::Callback<ProposalContent&>
                    (
-                       [](ProposalContent& context)
+                       [&condition](ProposalContent& context)
                        {
                            RemoveBlock(context);
+                           condition.Set();
                        }
                    )
               },
@@ -77,9 +81,10 @@ namespace dafs
                    ProposalType::WriteDelta,
                    dafs::Callback<ProposalContent&>
                    (
-                       [](ProposalContent& context)
+                       [&condition](ProposalContent& context)
                        {
                            WriteDelta(context);
+                           condition.Set();
                        }
                    )
               },
@@ -87,10 +92,11 @@ namespace dafs
                    ProposalType::AddNode,
                    dafs::Callback<ProposalContent&>
                    (
-                       [&parliament](ProposalContent& context)
+                       [&parliament, &condition](ProposalContent& context)
                        {
                            WriteDelta(context);
                            AddNode(context, parliament);
+                           condition.Set();
                        }
                    )
               },
@@ -98,10 +104,11 @@ namespace dafs
                    ProposalType::RemoveNode,
                    dafs::Callback<ProposalContent&>
                    (
-                       [&parliament](ProposalContent& context)
+                       [&parliament, &condition](ProposalContent& context)
                        {
                            WriteDelta(context);
                            RemoveNode(context, parliament);
+                           condition.Set();
                        }
                    )
               }

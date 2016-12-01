@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -9,6 +8,7 @@
 #include "callback.hpp"
 #include "filesystem.hpp"
 #include "proposaltype.hpp"
+#include "signal.hpp"
 
 
 namespace dafs
@@ -53,7 +53,7 @@ namespace dafs
     {
     public:
 
-        Action(Parliament& parliament);
+        Action(Parliament& parliament, dafs::Signal& condition);
 
         void operator()(std::string proposal);
 

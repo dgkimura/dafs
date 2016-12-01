@@ -10,6 +10,7 @@ set(SOURCES
     proposals.cpp
     sender.cpp
     server.cpp
+    signal.cpp
     storage.cpp
 )
 add_executable(dafs main.cpp ${SOURCES})

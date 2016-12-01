@@ -13,7 +13,8 @@ int main(void)
 
 
     auto store = dafs::ReplicatedStorage("node-1", "127.0.0.1:8080", 42);
-    store.AddNode("127.0.0.1", 8081);
+    store.AddNode("2.2.2.2", 8081);
+    store.RemoveNode("2.2.2.2", 8081);
 
     for (;;);
 }

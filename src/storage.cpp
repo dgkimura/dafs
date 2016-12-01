@@ -17,7 +17,8 @@ namespace dafs
         std::string directory,
         std::string hostport,
         int identity)
-    : parliament(directory, Action(parliament))
+    : parliament(directory, Action(parliament, in_progress)),
+      in_progress()
     {
         files_info = dafs::CreateBlockInfo(
             (fs::path(directory) / fs::path(Constant::FileListName)).string(),
@@ -39,6 +40,13 @@ namespace dafs
         set_identity(identity);
         set_blocks({files_info, blocks_info, nodeset_info, identity_info});
         load_nodes(hostport);
+    }
+
+
+    ReplicatedStorage::ReplicatedStorage(
+        const ReplicatedStorage& other)
+    : in_progress()
+    {
     }
 
 
@@ -115,7 +123,6 @@ namespace dafs
     {
         std::fstream f(fs::path(info.path).string(),
                        std::ios::in | std::ios::binary);
-        f.seekg(0, std::ios::beg);
         BlockFormat b = dafs::Deserialize<BlockFormat>(f);
         f.close();
         return b;
@@ -207,6 +214,7 @@ namespace dafs
         std::string data)
     {
         info.path = fs::path(info.path).string();
+
         parliament.SendProposal
         (
             dafs::Serialize<dafs::Proposal>
@@ -220,6 +228,7 @@ namespace dafs
                 )
             )
         );
+        in_progress.Wait();
     }
 
 

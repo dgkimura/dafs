@@ -6,6 +6,7 @@
 
 #include "filesystem.hpp"
 #include "proposaltype.hpp"
+#include "signal.hpp"
 
 
 namespace
@@ -70,6 +71,9 @@ namespace dafs
             std::string hostport,
             int identity=Constant::UnknownId);
 
+        ReplicatedStorage(
+            const ReplicatedStorage& other);
+
         virtual int GetIdentity() override;
 
         virtual void CreateFile(FileInfo file) override;
@@ -118,5 +122,7 @@ namespace dafs
         dafs::BlockInfo nodeset_info;
 
         dafs::BlockInfo identity_info;
+
+        Signal in_progress;
     };
 }
