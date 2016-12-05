@@ -21,21 +21,6 @@ namespace dafs
         DeleteFile,
 
         //
-        // Open a file for further operations.
-        //
-        OpenFile,
-
-        //
-        // Read from an opened file.
-        //
-        ReadFile,
-
-        //
-        // Write to an opened file.
-        //
-        WriteFile,
-
-        //
         // [Internal] Read from a known block.
         //
         _ReadBlock,

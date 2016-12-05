@@ -26,44 +26,6 @@ namespace dafs
 
 
     void
-    HandleOpenFile(
-        dafs::Storage& store,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
-    {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        store.OpenFile(fileinfo);
-
-        // return fileinfo and version
-    }
-
-
-    void
-    HandleReadFile(
-        dafs::Storage& store,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
-    {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        auto fileformat = store.ReadFile(fileinfo);
-
-        // return fileformat and version
-    }
-
-
-    void
-    HandleWriteFile(
-        dafs::Storage& store,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
-    {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        auto bytes = metadata.GetValue<dafs::Bytes>();
-        store.WriteFile(fileinfo, bytes);
-    }
-
-
-    void
     HandleReadBlock(
         dafs::Storage& store,
         dafs::MetaDataParser metadata,

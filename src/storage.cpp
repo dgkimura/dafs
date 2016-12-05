@@ -70,33 +70,11 @@ namespace dafs
 
 
     void
-    ReplicatedStorage::OpenFile(FileInfo info)
-    {
-    }
-
-
-    void
     ReplicatedStorage::DeleteFile(FileInfo info)
     {
         do_write(ProposalType::RemoveFile,
                  files_info,
                  dafs::Serialize(info));
-    }
-
-
-    FileFormat
-    ReplicatedStorage::ReadFile(FileInfo info)
-    {
-        std::fstream s(fs::path(info.path).string(),
-                       std::ios::in | std::ios::binary);
-        FileFormat f = dafs::Deserialize<FileFormat>(s);
-        return f;
-    }
-
-
-    void
-    ReplicatedStorage::WriteFile(FileInfo info, Bytes data)
-    {
     }
 
 

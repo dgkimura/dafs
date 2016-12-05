@@ -277,7 +277,7 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
         "to",
         "from",
         "the message content",
-        dafs::MessageType::ReadFile,
+        dafs::MessageType::CreateFile,
         {
             {
                 "my-metadata-key",

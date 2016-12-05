@@ -38,12 +38,6 @@ namespace dafs
 
         virtual void DeleteFile(FileInfo file) = 0;
 
-        virtual void OpenFile(FileInfo file) = 0;
-
-        virtual FileFormat ReadFile(FileInfo file) = 0;
-
-        virtual void WriteFile(FileInfo info, Bytes data) = 0;
-
         virtual void CreateBlock(BlockInfo block) = 0;
 
         virtual void DeleteBlock(BlockInfo block) = 0;
@@ -79,12 +73,6 @@ namespace dafs
         virtual void CreateFile(FileInfo file) override;
 
         virtual void DeleteFile(FileInfo file) override;
-
-        virtual void OpenFile(FileInfo file) override;
-
-        virtual FileFormat ReadFile(FileInfo file) override;
-
-        virtual void WriteFile(FileInfo info, Bytes data) override;
 
         virtual void CreateBlock(BlockInfo block) override;
 
