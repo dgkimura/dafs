@@ -42,8 +42,6 @@ namespace dafs
 
         Location location;
 
-        int offset;
-
         int revision;
     };
 

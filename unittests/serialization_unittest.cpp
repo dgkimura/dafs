@@ -29,7 +29,6 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
             "the-address",
             80
         },
-        12, //offset
         23  //revision
     }, actual;
 
@@ -38,7 +37,6 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
 
     ASSERT_EQ(expected.path, actual.path);
     ASSERT_EQ(expected.location.address, actual.location.address);
-    ASSERT_EQ(expected.offset, actual.offset);
 }
 
 
@@ -229,7 +227,6 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
                     "my-address",
                     80
                 },
-                0, // offset
                 0  // revision
             },
             dafs::BlockInfo
@@ -240,7 +237,6 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
                     "your-address",
                     80
                 },
-                1, // offset
                 1  // revision
             }
         }

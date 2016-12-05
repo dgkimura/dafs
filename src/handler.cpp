@@ -45,8 +45,8 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
-        auto bytes = metadata.GetValue<dafs::Bytes>();
-        store.WriteBlock(blockinfo, bytes);
+        auto block = metadata.GetValue<dafs::BlockFormat>();
+        store.WriteBlock(blockinfo, block);
     }
 
 

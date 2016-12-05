@@ -108,23 +108,6 @@ namespace dafs
 
 
     void
-    ReplicatedStorage::WriteBlock(BlockInfo info, Bytes data)
-    {
-        // TODO: Handle overflows to another block.
-        BlockFormat was = ReadBlock(info);
-        BlockFormat is(was);
-
-        is.contents.insert(info.offset, data.contents);
-
-        Delta delta = CreateDelta(info.path, was.contents, is.contents);
-
-        do_write(ProposalType::WriteDelta,
-                 info,
-                 dafs::Serialize(delta));
-    }
-
-
-    void
     ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
     {
         BlockFormat was = ReadBlock(info);

@@ -21,14 +21,14 @@ namespace dafs
         DeleteFile,
 
         //
-        // [Internal] Read from a known block.
+        // Read from a known block.
         //
-        _ReadBlock,
+        ReadBlock,
 
         //
-        // [Internal] Write to a known block.
+        // Write to a known block.
         //
-        _WriteBlock,
+        WriteBlock,
 
         //
         // [Internal] Allocate resources.

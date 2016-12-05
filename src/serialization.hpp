@@ -50,7 +50,6 @@ namespace dafs
     {
         ar & obj.path;
         ar & obj.location;
-        ar & obj.offset;
         ar & obj.revision;
     }
 

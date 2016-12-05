@@ -29,7 +29,6 @@ namespace dafs
         BlockInfo blockinfo;
         blockinfo.path = path;
         blockinfo.location = location;
-        blockinfo.offset = 0;
         return blockinfo;
     }
 }

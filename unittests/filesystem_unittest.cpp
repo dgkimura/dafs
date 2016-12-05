@@ -43,5 +43,4 @@ TEST(FileSystemTest, testsBlockInfoFieldsAreConstructed)
 
     ASSERT_EQ(path, b.path);
     ASSERT_EQ(location.address, b.location.address);
-    ASSERT_EQ(0, b.offset);
 }
