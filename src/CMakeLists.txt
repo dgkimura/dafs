@@ -13,7 +13,8 @@ set(SOURCES
     signal.cpp
     storage.cpp
 )
-add_executable(dafs main.cpp ${SOURCES})
+add_executable(dafs-server main.cpp ${SOURCES})
+add_executable(dafs-cli prompt.cpp)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -22,7 +23,7 @@ if (UNIX AND NOT APPLE)
     set(PLATFORM_LIBRARIES rt)
 endif()
 
-target_link_libraries(dafs
+target_link_libraries(dafs-server
     PRIVATE
         ${paxos_LIBS}
         ${diflib_LIB}
@@ -30,13 +31,13 @@ target_link_libraries(dafs
         ${PLATFORM_LIBRARIES}
 )
 
-add_dependencies(dafs diflib)
-add_dependencies(dafs paxos)
+add_dependencies(dafs-server diflib)
+add_dependencies(dafs-server paxos)
 
 include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
 
-set_property(TARGET dafs PROPERTY CXX_STANDARD 11)
+set_property(TARGET dafs-server PROPERTY CXX_STANDARD 11)
 
 set(dafs_DIR ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 
