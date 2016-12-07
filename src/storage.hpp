@@ -86,7 +86,7 @@ namespace dafs
 
     private:
 
-        void do_write(
+        virtual void do_write(
             dafs::ProposalType type,
             BlockInfo info,
             std::string data);

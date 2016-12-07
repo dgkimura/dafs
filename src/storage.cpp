@@ -81,6 +81,15 @@ namespace dafs
     void
     ReplicatedStorage::CreateBlock(BlockInfo info)
     {
+        BlockFormat block = ReadBlock(blocks_info);
+
+        auto oldindex = dafs::Deserialize<BlockIndex>(block.contents);
+        auto newindex = dafs::Deserialize<BlockIndex>(block.contents);
+        newindex.blocks.push_back(info);
+
+        Delta delta = CreateDelta(blocks_info.path,
+                                  dafs::SerializeIntoBlockFormat(oldindex),
+                                  dafs::SerializeIntoBlockFormat(newindex));
         do_write(ProposalType::CreateBlock,
                  blocks_info,
                  dafs::Serialize(info));
@@ -90,6 +99,28 @@ namespace dafs
     void
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
+        BlockFormat block = ReadBlock(blocks_info);
+
+        auto oldindex = dafs::Deserialize<BlockIndex>(block.contents);
+        auto newindex = dafs::Deserialize<BlockIndex>(block.contents);
+        newindex.blocks.erase
+        (
+            std::remove_if
+            (
+                newindex.blocks.begin(),
+                newindex.blocks.end(),
+                [=](const BlockInfo& current)
+                {
+                    return current.path == info.path &&
+                           current.revision == info.revision;
+                }
+            ),
+            newindex.blocks.end()
+        );
+
+        Delta delta = CreateDelta(blocks_info.path,
+                                  dafs::SerializeIntoBlockFormat(oldindex),
+                                  dafs::SerializeIntoBlockFormat(newindex));
         do_write(ProposalType::RemoveBlock,
                  blocks_info,
                  dafs::Serialize(info));
