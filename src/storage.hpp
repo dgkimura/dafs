@@ -4,9 +4,11 @@
 
 #include <paxos/parliament.hpp>
 
+#include "delta.hpp"
 #include "filesystem.hpp"
 #include "proposaltype.hpp"
 #include "signal.hpp"
+#include "serialization.hpp"
 
 
 namespace
@@ -85,6 +87,46 @@ namespace dafs
         void RemoveNode(std::string address, short port);
 
     private:
+
+        template <typename T>
+        dafs::Delta Add(BlockInfo info, T item)
+        {
+            dafs::BlockFormat block = ReadBlock(info);
+
+            auto oldset = dafs::Deserialize<Index<T>>(block.contents);
+            auto newset = dafs::Deserialize<Index<T>>(block.contents);
+            newset.items.push_back(item);
+            dafs::Delta delta = CreateDelta(info.path,
+                                            dafs::SerializeIntoBlockFormat(oldset),
+                                            dafs::SerializeIntoBlockFormat(newset));
+            return delta;
+        }
+
+        template <typename T>
+        dafs::Delta Remove(BlockInfo info, T item)
+        {
+            dafs::BlockFormat block = ReadBlock(info);
+
+            auto oldset = dafs::Deserialize<Index<T>>(block.contents);
+            auto newset = dafs::Deserialize<Index<T>>(block.contents);
+            newset.items.erase
+            (
+                std::remove_if
+                (
+                    newset.items.begin(),
+                    newset.items.end(),
+                    [=](const T& current)
+                    {
+                        return current == item;
+                    }
+                ),
+                newset.items.end()
+            );
+            dafs::Delta delta = CreateDelta(info.path,
+                                            dafs::SerializeIntoBlockFormat(oldset),
+                                            dafs::SerializeIntoBlockFormat(newset));
+            return delta;
+        }
 
         virtual void do_write(
             dafs::ProposalType type,

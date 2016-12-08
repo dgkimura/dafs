@@ -152,7 +152,7 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
 
 TEST(SerializationUnitTest, testFileIndexIsSerializableAndDeserializable)
 {
-    dafs::FileIndex expected
+    dafs::Index<dafs::FileInfo> expected
     {
         std::vector<dafs::FileInfo>
         {
@@ -205,17 +205,17 @@ TEST(SerializationUnitTest, testFileIndexIsSerializableAndDeserializable)
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
-    actual = dafs::Deserialize<dafs::FileIndex>(string_obj);
+    actual = dafs::Deserialize<dafs::Index<dafs::FileInfo>>(string_obj);
 
-    ASSERT_EQ(expected.files[0].path, actual.files[0].path);
-    ASSERT_EQ(expected.files[1].path, actual.files[1].path);
-    ASSERT_EQ(expected.files[2].path, actual.files[2].path);
+    ASSERT_EQ(expected.items[0].path, actual.items[0].path);
+    ASSERT_EQ(expected.items[1].path, actual.items[1].path);
+    ASSERT_EQ(expected.items[2].path, actual.items[2].path);
 }
 
 
 TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
 {
-    dafs::BlockIndex expected
+    dafs::Index<dafs::BlockInfo> expected
     {
         std::vector<dafs::BlockInfo>
         {
@@ -243,10 +243,10 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
-    actual = dafs::Deserialize<dafs::BlockIndex>(string_obj);
+    actual = dafs::Deserialize<dafs::Index<dafs::BlockInfo>>(string_obj);
 
-    ASSERT_EQ(expected.blocks[0].path, actual.blocks[0].path);
-    ASSERT_EQ(expected.blocks[1].location.address, actual.blocks[1].location.address);
+    ASSERT_EQ(expected.items[0].path, actual.items[0].path);
+    ASSERT_EQ(expected.items[1].location.address, actual.items[1].location.address);
 }
 
 
@@ -302,7 +302,7 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
 
 TEST(SerializationUnitTest, testNodeSetIsSerializableAndDeserializable)
 {
-    dafs::NodeSet expected
+    dafs::Index<std::string> expected
     {
         std::vector<std::string>
         {
@@ -312,8 +312,8 @@ TEST(SerializationUnitTest, testNodeSetIsSerializableAndDeserializable)
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
-    actual = dafs::Deserialize<dafs::NodeSet>(string_obj);
+    actual = dafs::Deserialize<dafs::Index<std::string>>(string_obj);
 
-    ASSERT_EQ(expected.endpoints[0], actual.endpoints[0]);
-    ASSERT_EQ(expected.endpoints[1], actual.endpoints[1]);
+    ASSERT_EQ(expected.items[0], actual.items[0]);
+    ASSERT_EQ(expected.items[1], actual.items[1]);
 }

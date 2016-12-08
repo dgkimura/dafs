@@ -63,6 +63,7 @@ namespace dafs
     void
     ReplicatedStorage::CreateFile(FileInfo info)
     {
+        Delta delta = Add(files_info, info);
         do_write(ProposalType::CreateFile,
                  files_info,
                  dafs::Serialize(info));
@@ -81,15 +82,7 @@ namespace dafs
     void
     ReplicatedStorage::CreateBlock(BlockInfo info)
     {
-        BlockFormat block = ReadBlock(blocks_info);
-
-        auto oldindex = dafs::Deserialize<BlockIndex>(block.contents);
-        auto newindex = dafs::Deserialize<BlockIndex>(block.contents);
-        newindex.blocks.push_back(info);
-
-        Delta delta = CreateDelta(blocks_info.path,
-                                  dafs::SerializeIntoBlockFormat(oldindex),
-                                  dafs::SerializeIntoBlockFormat(newindex));
+        Delta delta = Add(blocks_info, info);
         do_write(ProposalType::CreateBlock,
                  blocks_info,
                  dafs::Serialize(info));
@@ -99,28 +92,7 @@ namespace dafs
     void
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
-        BlockFormat block = ReadBlock(blocks_info);
-
-        auto oldindex = dafs::Deserialize<BlockIndex>(block.contents);
-        auto newindex = dafs::Deserialize<BlockIndex>(block.contents);
-        newindex.blocks.erase
-        (
-            std::remove_if
-            (
-                newindex.blocks.begin(),
-                newindex.blocks.end(),
-                [=](const BlockInfo& current)
-                {
-                    return current.path == info.path &&
-                           current.revision == info.revision;
-                }
-            ),
-            newindex.blocks.end()
-        );
-
-        Delta delta = CreateDelta(blocks_info.path,
-                                  dafs::SerializeIntoBlockFormat(oldindex),
-                                  dafs::SerializeIntoBlockFormat(newindex));
+        Delta delta = Remove(nodeset_info, info);
         do_write(ProposalType::RemoveBlock,
                  blocks_info,
                  dafs::Serialize(info));
@@ -153,15 +125,9 @@ namespace dafs
     void
     ReplicatedStorage::AddNode(std::string address, short port)
     {
-        BlockFormat block = ReadBlock(nodeset_info);
+        std::string item(address + ":" + std::to_string(port));
+        Delta delta = Add(nodeset_info, item);
 
-        auto oldset = dafs::Deserialize<NodeSet>(block.contents);
-        auto newset = dafs::Deserialize<NodeSet>(block.contents);
-        newset.endpoints.push_back(address + ":" + std::to_string(port));
-
-        Delta delta = CreateDelta(nodeset_info.path,
-                                  dafs::SerializeIntoBlockFormat(oldset),
-                                  dafs::SerializeIntoBlockFormat(newset));
         do_write(ProposalType::AddNode,
                  nodeset_info,
                  dafs::Serialize(delta));
@@ -171,27 +137,8 @@ namespace dafs
     void
     ReplicatedStorage::RemoveNode(std::string address, short port)
     {
-        BlockFormat block = ReadBlock(nodeset_info);
-
-        auto oldset = dafs::Deserialize<NodeSet>(block.contents);
-        auto newset = dafs::Deserialize<NodeSet>(block.contents);
-        newset.endpoints.erase
-        (
-            std::remove_if
-            (
-                newset.endpoints.begin(),
-                newset.endpoints.end(),
-                [=](const std::string& current)
-                {
-                    return current == address + ":" + std::to_string(port);
-                }
-            ),
-            newset.endpoints.end()
-        );
-
-        Delta delta = CreateDelta(nodeset_info.path,
-                                  dafs::SerializeIntoBlockFormat(oldset),
-                                  dafs::SerializeIntoBlockFormat(newset));
+        std::string item(address + ":" + std::to_string(port));
+        Delta delta = Remove(nodeset_info, item);
 
         do_write(ProposalType::RemoveNode,
                  nodeset_info,
@@ -233,7 +180,7 @@ namespace dafs
             std::fstream f(fs::path(nodeset_info.path).string(),
                            std::ios::in | std::ios::binary);
 
-            for (auto node_string : dafs::DeserializeFromBlockFormat<NodeSet>(f).endpoints)
+            for (auto node_string : dafs::DeserializeFromBlockFormat<Index<std::string>>(f).items)
             {
                 std::vector<std::string> hostport_;
                 split(hostport_, node_string, boost::is_any_of(":"));
@@ -244,8 +191,8 @@ namespace dafs
         }
         else
         {
-            NodeSet nodeset;
-            nodeset.endpoints.push_back(hostport);
+            Index<std::string> nodeset;
+            nodeset.items.push_back(hostport);
 
             std::fstream f(fs::path(nodeset_info.path).string(),
                            std::ios::out | std::ios::binary);
@@ -263,8 +210,8 @@ namespace dafs
             std::fstream f(fs::path(blocks_info.path).string(),
                            std::ios::out | std::ios::binary);
 
-            dafs::BlockIndex index;
-            index.blocks = blocks;
+            dafs::Index<dafs::BlockInfo> index;
+            index.items = blocks;
             f << dafs::Serialize(index);
             f.flush();
         }

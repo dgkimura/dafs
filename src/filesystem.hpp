@@ -43,6 +43,12 @@ namespace dafs
         Location location;
 
         int revision;
+
+        bool
+        operator==(const BlockInfo& rhs) const
+        {
+            return path == rhs.path && revision == rhs.revision;
+        }
     };
 
 
@@ -81,22 +87,17 @@ namespace dafs
     };
 
 
-    //
-    // Defines the file index structure on disk.
-    //
-    struct FileIndex
+    template<typename T>
+    struct Index
     {
-        std::vector<FileInfo> files;
+        std::vector<T> items;
     };
 
 
-    //
-    // Defines the block index structure on disk.
-    //
-    struct BlockIndex
-    {
-        std::vector<BlockInfo> blocks;
-    };
+    using FileIndex = Index<FileInfo>;
+
+
+    using BlockIndex = Index<BlockInfo>;
 
 
     //

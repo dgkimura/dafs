@@ -146,7 +146,7 @@ namespace dafs
             //
             // Add file to file info list.
             //
-            index.files.push_back(file);
+            index.items.push_back(file);
 
             //
             // Write out updated file info list.
@@ -178,18 +178,18 @@ namespace dafs
             //
             dafs::FileIndex index = dafs::Deserialize<dafs::FileIndex>(
                                         block.contents);
-            index.files.erase
+            index.items.erase
             (
                 std::remove_if
                 (
-                    index.files.begin(),
-                    index.files.end(),
+                    index.items.begin(),
+                    index.items.end(),
                     [=](const dafs::FileInfo& f)
                     {
                         return file.path == f.path;
                     }
                 ),
-                index.files.end()
+                index.items.end()
             );
 
             //
@@ -219,7 +219,7 @@ namespace dafs
             // Add block to block info list.
             //
             dafs::BlockInfo block = dafs::Deserialize<dafs::BlockInfo>(edit.change);
-            index.blocks.push_back(block);
+            index.items.push_back(block);
 
             //
             // Write out updated block info list.
@@ -249,18 +249,18 @@ namespace dafs
             //
             // Delete block info from block info list.
             //
-            index.blocks.erase
+            index.items.erase
             (
                 std::remove_if
                 (
-                    index.blocks.begin(),
-                    index.blocks.end(),
+                    index.items.begin(),
+                    index.items.end(),
                     [=](const dafs::BlockInfo& b)
                     {
                         return block.path == b.path;
                     }
                 ),
-                index.blocks.end()
+                index.items.end()
             );
 
             //

@@ -18,7 +18,7 @@ public:
     virtual dafs::BlockFormat ReadBlock(dafs::BlockInfo info)
     {
         dafs::BlockFormat b;
-        dafs::BlockIndex index;
+        dafs::Index<dafs::BlockInfo> index;
         b.contents = dafs::Serialize(index);
         return b;
     }
@@ -89,8 +89,8 @@ TEST(ReplicatedStorageTest, testCreateBlock)
     TestableReplicatedStorage store;
     store.CreateBlock(a_block);
 
-    dafs::BlockIndex index;
-    index.blocks.push_back(a_block);
+    dafs::Index<dafs::BlockInfo> index;
+    index.items.push_back(a_block);
 
     ASSERT_TRUE(
         store.assert_write_called(

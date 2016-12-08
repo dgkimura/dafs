@@ -10,7 +10,6 @@
 #include "filesystem.hpp"
 #include "messages.hpp"
 #include "proposals.hpp"
-#include "storage.hpp"
 
 
 namespace dafs
@@ -75,8 +74,8 @@ namespace dafs
     }
 
 
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::FileIndex& obj, const unsigned int version)
+    template <typename Archive, typename T>
+    void serialize(Archive& ar, dafs::Index<T>& obj, const unsigned int version)
     {
         int size;
 
@@ -88,9 +87,9 @@ namespace dafs
             ar & size;
             for (int i=0; i<size; i++)
             {
-                FileInfo info;
+                T info;
                 ar & info;
-                obj.files.push_back(info);
+                obj.items.push_back(info);
             }
         }
         else
@@ -98,44 +97,11 @@ namespace dafs
             //
             // serialize collection object.
             //
-            size = obj.files.size();
+            size = obj.items.size();
             ar & size;
             for (int i=0; i<size; i++)
             {
-                ar & obj.files[i];
-            }
-        }
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::BlockIndex& obj, const unsigned int version)
-    {
-        int size;
-
-        if (Archive::is_loading::value)
-        {
-            //
-            // deserialize collection object.
-            //
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                BlockInfo info;
-                ar & info;
-                obj.blocks.push_back(info);
-            }
-        }
-        else
-        {
-            //
-            // serialize collection object.
-            //
-            size = obj.blocks.size();
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                ar & obj.blocks[i];
+                ar & obj.items[i];
             }
         }
     }
@@ -202,39 +168,6 @@ namespace dafs
         ar & obj.change;
         ar & obj.hash;
         ar & obj.revision;
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::NodeSet& obj, const unsigned int version)
-    {
-        int size;
-
-        if (Archive::is_loading::value)
-        {
-            //
-            // deserialize collection object.
-            //
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                std::string node;
-                ar & node;
-                obj.endpoints.push_back(node);
-            }
-        }
-        else
-        {
-            //
-            // serialize collection object.
-            //
-            size = obj.endpoints.size();
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                ar & obj.endpoints[i];
-            }
-        }
     }
 
 
