@@ -63,7 +63,7 @@ namespace dafs
     void
     ReplicatedStorage::CreateFile(FileInfo info)
     {
-        Delta delta = Add(files_info, info);
+        Delta delta = IndexAdd(files_info, info);
         do_write(ProposalType::CreateFile,
                  files_info,
                  dafs::Serialize(info));
@@ -82,7 +82,7 @@ namespace dafs
     void
     ReplicatedStorage::CreateBlock(BlockInfo info)
     {
-        Delta delta = Add(blocks_info, info);
+        Delta delta = IndexAdd(blocks_info, info);
         do_write(ProposalType::CreateBlock,
                  blocks_info,
                  dafs::Serialize(info));
@@ -92,7 +92,7 @@ namespace dafs
     void
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
-        Delta delta = Remove(nodeset_info, info);
+        Delta delta = IndexRemove(nodeset_info, info);
         do_write(ProposalType::RemoveBlock,
                  blocks_info,
                  dafs::Serialize(info));
@@ -102,11 +102,7 @@ namespace dafs
     BlockFormat
     ReplicatedStorage::ReadBlock(BlockInfo info)
     {
-        std::fstream f(fs::path(info.path).string(),
-                       std::ios::in | std::ios::binary);
-        BlockFormat b = dafs::Deserialize<BlockFormat>(f);
-        f.close();
-        return b;
+        return ReadBlock(info);
     }
 
 
@@ -126,7 +122,7 @@ namespace dafs
     ReplicatedStorage::AddNode(std::string address, short port)
     {
         std::string item(address + ":" + std::to_string(port));
-        Delta delta = Add(nodeset_info, item);
+        Delta delta = IndexAdd(nodeset_info, item);
 
         do_write(ProposalType::AddNode,
                  nodeset_info,
@@ -138,7 +134,7 @@ namespace dafs
     ReplicatedStorage::RemoveNode(std::string address, short port)
     {
         std::string item(address + ":" + std::to_string(port));
-        Delta delta = Remove(nodeset_info, item);
+        Delta delta = IndexRemove(nodeset_info, item);
 
         do_write(ProposalType::RemoveNode,
                  nodeset_info,

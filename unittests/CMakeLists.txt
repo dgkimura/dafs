@@ -17,7 +17,7 @@ set(SOURCES
     filesystem_unittest.cpp
     metadataparser_unittest.cpp
     serialization_unittest.cpp
-    storage_unittest.cpp
+    disk_unittest.cpp
 )
 
 add_executable(all_unittests ${SOURCES} ${DAFS_SOURCES})

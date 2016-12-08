@@ -3,6 +3,7 @@ project(dafs.src)
 
 set(SOURCES
     delta.cpp
+    disk.cpp
     dispatcher.cpp
     filesystem.cpp
     handler.cpp
