@@ -7,7 +7,7 @@
 #include "delta.hpp"
 #include "disk.hpp"
 #include "filesystem.hpp"
-#include "proposaltype.hpp"
+#include "propose.hpp"
 #include "signal.hpp"
 #include "serialization.hpp"
 
@@ -90,7 +90,6 @@ namespace dafs
     private:
 
         virtual void do_write(
-            dafs::ProposalType type,
             BlockInfo info,
             std::string data);
 

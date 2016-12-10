@@ -9,7 +9,7 @@
 #include "delta.hpp"
 #include "filesystem.hpp"
 #include "messages.hpp"
-#include "proposals.hpp"
+#include "propose.hpp"
 
 
 namespace dafs

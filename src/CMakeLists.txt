@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 3.4)
 project(dafs.src)
 
 set(SOURCES
+    commit.cpp
     delta.cpp
     disk.cpp
     dispatcher.cpp
     filesystem.cpp
     handler.cpp
     metadataparser.cpp
-    proposals.cpp
+    propose.cpp
     loader.cpp
     sender.cpp
     server.cpp

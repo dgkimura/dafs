@@ -4,8 +4,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "commit.hpp"
 #include "customhash.hpp"
-#include "proposals.hpp"
 #include "serialization.hpp"
 #include "serialization.hpp"
 #include "storage.hpp"
@@ -17,7 +17,7 @@ namespace dafs
         std::string directory,
         std::string hostport,
         int identity)
-    : parliament(directory, Action(parliament, in_progress)),
+    : parliament(directory, dafs::Commit(parliament, in_progress)),
       in_progress()
     {
         files_info = dafs::CreateBlockInfo(
@@ -64,18 +64,14 @@ namespace dafs
     ReplicatedStorage::CreateFile(FileInfo info)
     {
         Delta delta = IndexAdd(files_info, info);
-        do_write(ProposalType::CreateFile,
-                 files_info,
-                 dafs::Serialize(info));
+        do_write(files_info, dafs::Serialize(info));
     }
 
 
     void
     ReplicatedStorage::DeleteFile(FileInfo info)
     {
-        do_write(ProposalType::RemoveFile,
-                 files_info,
-                 dafs::Serialize(info));
+        do_write(files_info, dafs::Serialize(info));
     }
 
 
@@ -83,9 +79,7 @@ namespace dafs
     ReplicatedStorage::CreateBlock(BlockInfo info)
     {
         Delta delta = IndexAdd(blocks_info, info);
-        do_write(ProposalType::CreateBlock,
-                 blocks_info,
-                 dafs::Serialize(info));
+        do_write(blocks_info, dafs::Serialize(info));
     }
 
 
@@ -93,9 +87,7 @@ namespace dafs
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
         Delta delta = IndexRemove(nodeset_info, info);
-        do_write(ProposalType::RemoveBlock,
-                 blocks_info,
-                 dafs::Serialize(info));
+        do_write(blocks_info, dafs::Serialize(info));
     }
 
 
@@ -112,9 +104,7 @@ namespace dafs
         BlockFormat was = ReadBlock(info);
         Delta delta = CreateDelta(info.path, was.contents, data.contents);
 
-        do_write(ProposalType::WriteDelta,
-                 info,
-                 dafs::Serialize(delta));
+        do_write(info, dafs::Serialize(delta));
     }
 
 
@@ -124,9 +114,7 @@ namespace dafs
         std::string item(address + ":" + std::to_string(port));
         Delta delta = IndexAdd(nodeset_info, item);
 
-        do_write(ProposalType::AddNode,
-                 nodeset_info,
-                 dafs::Serialize(delta));
+        do_write(nodeset_info, dafs::Serialize(delta));
     }
 
 
@@ -136,15 +124,12 @@ namespace dafs
         std::string item(address + ":" + std::to_string(port));
         Delta delta = IndexRemove(nodeset_info, item);
 
-        do_write(ProposalType::RemoveNode,
-                 nodeset_info,
-                 dafs::Serialize(delta));
+        do_write(nodeset_info, dafs::Serialize(delta));
     }
 
 
     void
     ReplicatedStorage::do_write(
-        dafs::ProposalType type,
         BlockInfo info,
         std::string data)
     {
@@ -156,7 +141,7 @@ namespace dafs
             (
                 CreateProposal
                 (
-                    type,
+                    dafs::ProposalType::WriteBlock,
                     data,
                     info,
                     info.revision
