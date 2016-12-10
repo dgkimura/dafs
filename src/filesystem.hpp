@@ -100,6 +100,9 @@ namespace dafs
     using BlockIndex = Index<BlockInfo>;
 
 
+    using LocationIndex = Index<Location>;
+
+
     //
     // Function to create Bytes
     //

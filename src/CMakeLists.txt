@@ -9,6 +9,7 @@ set(SOURCES
     handler.cpp
     metadataparser.cpp
     proposals.cpp
+    loader.cpp
     sender.cpp
     server.cpp
     signal.cpp
