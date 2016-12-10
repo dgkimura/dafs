@@ -11,6 +11,10 @@ namespace dafs
     ReadBlock(dafs::BlockInfo info);
 
 
+    void
+    WriteBlock(dafs::BlockInfo info, dafs::Delta delta);
+
+
     template <typename T>
     dafs::Delta IndexAdd(
         dafs::BlockInfo info,

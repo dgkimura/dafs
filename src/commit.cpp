@@ -1,5 +1,3 @@
-
-#include <fstream>
 #include <vector>
 
 #include "boost/algorithm/string.hpp"
@@ -7,6 +5,7 @@
 
 #include "commit.hpp"
 #include "customhash.hpp"
+#include "disk.hpp"
 #include "propose.hpp"
 #include "serialization.hpp"
 
@@ -70,20 +69,14 @@ namespace dafs
     WriteBlock(
         dafs::ProposalContent& edit)
     {
-        std::fstream s(edit.info.path,
-                       std::ios::out | std::ios::in | std::ios::binary);
-        s.seekg(0, std::ios::beg);
-        dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
-
         //
         // Check hash and revision of block info list.
         //
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            // write out info
-            s << dafs::ApplyDelta(delta, s);
-            s.close();
+            dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
+            dafs::WriteBlock(edit.info, delta);
         }
     }
 
