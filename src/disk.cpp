@@ -23,7 +23,7 @@ namespace dafs
 
 
     void
-    WriteBlock(dafs::BlockInfo info, dafs::Delta delta)
+    Write(dafs::BlockInfo info, dafs::Delta delta)
     {
         std::fstream s(info.path,
                        std::ios::in | std::ios::out | std::ios::binary);

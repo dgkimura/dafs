@@ -50,7 +50,7 @@ TEST(DiskTest, testAddBlockInEmptyBlockFormat)
         return b;
     };
 
-    dafs::Delta delta = IndexAdd(the_blocklist, a_block, get_empty_block);
+    dafs::Delta delta = Insert(the_blocklist, a_block, get_empty_block);
     ASSERT_EQ(
         delta.difference,
         "\xE0@7\xC0\x80\xE1" "A1 \xC0" "d 0 7 a_block 0 0 10 an_address 8080 0"
@@ -74,7 +74,7 @@ TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
         return block;
     };
 
-    dafs::Delta delta = IndexAdd(the_blocklist, another_block, get_block);
+    dafs::Delta delta = Insert(the_blocklist, another_block, get_block);
     ASSERT_EQ(
         delta.difference,
         "\xE0\x81" "B111\xE1\x80@2\xE6" "e 13 another_block 10 an_address 8080 0"
@@ -98,7 +98,7 @@ TEST(DiskTest, testRemoveBlockInNonemptyBlockFormat)
         return block;
     };
 
-    dafs::Delta delta = IndexRemove(the_blocklist, a_block, get_block);
+    dafs::Delta delta = Remove(the_blocklist, a_block, get_block);
     ASSERT_EQ(
         delta.difference,
         "\xE0\x80\xC0@4\xE1\x81\xC0\xA4"

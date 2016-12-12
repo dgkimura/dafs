@@ -12,11 +12,11 @@ namespace dafs
 
 
     void
-    WriteBlock(dafs::BlockInfo info, dafs::Delta delta);
+    Write(dafs::BlockInfo info, dafs::Delta delta);
 
 
     template <typename T>
-    dafs::Delta IndexAdd(
+    dafs::Delta Insert(
         dafs::BlockInfo info,
         T item,
         std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock)
@@ -40,7 +40,7 @@ namespace dafs
 
 
     template <typename T>
-    dafs::Delta IndexRemove(
+    dafs::Delta Remove(
         dafs::BlockInfo info,
         T item,
         std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock)

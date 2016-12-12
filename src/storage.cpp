@@ -63,7 +63,7 @@ namespace dafs
     void
     ReplicatedStorage::CreateFile(FileInfo info)
     {
-        Delta delta = IndexAdd(files_info, info);
+        Delta delta = Insert(files_info, info);
         do_write(files_info, dafs::Serialize(info));
     }
 
@@ -78,7 +78,7 @@ namespace dafs
     void
     ReplicatedStorage::CreateBlock(BlockInfo info)
     {
-        Delta delta = IndexAdd(blocks_info, info);
+        Delta delta = Insert(blocks_info, info);
         do_write(blocks_info, dafs::Serialize(info));
     }
 
@@ -86,7 +86,7 @@ namespace dafs
     void
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
-        Delta delta = IndexRemove(nodeset_info, info);
+        Delta delta = Remove(nodeset_info, info);
         do_write(blocks_info, dafs::Serialize(info));
     }
 
@@ -112,7 +112,7 @@ namespace dafs
     ReplicatedStorage::AddNode(std::string address, short port)
     {
         std::string item(address + ":" + std::to_string(port));
-        Delta delta = IndexAdd(nodeset_info, item);
+        Delta delta = Insert(nodeset_info, item);
 
         do_write(nodeset_info, dafs::Serialize(delta));
     }
@@ -122,7 +122,7 @@ namespace dafs
     ReplicatedStorage::RemoveNode(std::string address, short port)
     {
         std::string item(address + ":" + std::to_string(port));
-        Delta delta = IndexRemove(nodeset_info, item);
+        Delta delta = Remove(nodeset_info, item);
 
         do_write(nodeset_info, dafs::Serialize(delta));
     }
@@ -191,7 +191,7 @@ namespace dafs
             std::fstream f(fs::path(blocks_info.path).string(),
                            std::ios::out | std::ios::binary);
 
-            dafs::Index<dafs::BlockInfo> index;
+            dafs::BlockIndex index;
             index.items = blocks;
             f << dafs::Serialize(index);
             f.flush();
