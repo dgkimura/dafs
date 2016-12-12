@@ -16,6 +16,24 @@ namespace dafs
 
 
     template <typename T>
+    dafs::Delta Set(
+        dafs::BlockInfo info,
+        T item,
+        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock)
+    {
+        dafs::BlockFormat block = get_block(info);
+
+        T olddata = dafs::Deserialize<T>(block.contents);
+
+        dafs::Delta delta = dafs::CreateDelta(
+            info.path,
+            dafs::SerializeIntoBlockFormat(olddata),
+            dafs::SerializeIntoBlockFormat(item));
+        return delta;
+    }
+
+
+    template <typename T>
     dafs::Delta Insert(
         dafs::BlockInfo info,
         T item,
