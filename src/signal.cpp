@@ -20,5 +20,6 @@ namespace dafs
     {
         std::unique_lock<std::mutex> lock(mutex);
         condition.wait(lock, [&] { return flag; });
+        flag = false;
     }
 }
