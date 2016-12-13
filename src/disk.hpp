@@ -23,13 +23,23 @@ namespace dafs
     {
         dafs::BlockFormat block = get_block(info);
 
-        T olddata = dafs::Deserialize<T>(block.contents);
-
-        dafs::Delta delta = dafs::CreateDelta(
-            info.path,
-            dafs::SerializeIntoBlockFormat(olddata),
-            dafs::SerializeIntoBlockFormat(item));
-        return delta;
+        if (!block.contents.empty())
+        {
+            T olddata = dafs::Deserialize<T>(block.contents);
+            dafs::Delta delta = dafs::CreateDelta(
+                info.path,
+                dafs::SerializeIntoBlockFormat(olddata),
+                dafs::SerializeIntoBlockFormat(item));
+            return delta;
+        }
+        else
+        {
+            dafs::Delta delta = dafs::CreateDelta(
+                info.path,
+                "",
+                dafs::SerializeIntoBlockFormat(item));
+            return delta;
+        }
     }
 
 
