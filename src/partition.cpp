@@ -2,7 +2,6 @@
 
 #include "delta.hpp"
 #include "disk.hpp"
-#include "node.hpp"
 #include "partition.hpp"
 #include "serialization.hpp"
 
