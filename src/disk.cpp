@@ -25,8 +25,12 @@ namespace dafs
     void
     Write(dafs::BlockInfo info, dafs::Delta delta)
     {
-        std::fstream s(info.path,
-                       std::ios::in | std::ios::out | std::ios::binary);
+        auto mode = std::ios::in | std::ios::out | std::ios::binary;
+        if (!boost::filesystem::exists(info.path))
+        {
+            mode |= std::ios::trunc;
+        }
+        std::fstream s(fs::path(info.path).string(), mode);
         s.seekg(0, std::ios::beg);
         s << dafs::ApplyDelta(delta, s);
         s.close();

@@ -41,17 +41,15 @@ namespace dafs
     {
         dafs::BlockFormat block = get_block(info);
 
-        auto oldset = dafs::Index<T>();
         auto newset = dafs::Index<T>();
         if (!block.contents.empty())
         {
-            oldset = dafs::Deserialize<dafs::Index<T>>(block.contents);
             newset = dafs::Deserialize<dafs::Index<T>>(block.contents);
         }
         newset.items.push_back(item);
         dafs::Delta delta = dafs::CreateDelta(
             info.path,
-            dafs::SerializeIntoBlockFormat(oldset),
+            block.contents,
             dafs::SerializeIntoBlockFormat(newset));
         return delta;
     }
@@ -65,7 +63,6 @@ namespace dafs
     {
         dafs::BlockFormat block = get_block(info);
 
-        auto oldset = dafs::Deserialize<dafs::Index<T>>(block.contents);
         auto newset = dafs::Deserialize<dafs::Index<T>>(block.contents);
         newset.items.erase
         (
@@ -82,7 +79,7 @@ namespace dafs
         );
         dafs::Delta delta = dafs::CreateDelta(
             info.path,
-            dafs::SerializeIntoBlockFormat(oldset),
+            block.contents,
             dafs::SerializeIntoBlockFormat(newset));
         return delta;
     }

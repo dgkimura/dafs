@@ -73,6 +73,12 @@ namespace dafs
         int descriptor;
 
         std::string path;
+
+        bool
+        operator==(const FileInfo& rhs) const
+        {
+            return path == rhs.path;
+        }
     };
 
 

@@ -5,34 +5,34 @@ namespace dafs
 {
     void
     HandleCreateFile(
-        dafs::Storage& store,
+        dafs::Partition& partition,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        store.CreateFile(fileinfo);
+        partition.CreateFile(fileinfo);
     }
 
 
     void
     HandleDeleteFile(
-        dafs::Storage& store,
+        dafs::Partition& partition,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        store.DeleteFile(fileinfo);
+        partition.DeleteFile(fileinfo);
     }
 
 
     void
     HandleReadBlock(
-        dafs::Storage& store,
+        dafs::Partition& partition,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
-        auto blockformat = store.ReadBlock(blockinfo);
+        auto blockformat = partition.ReadBlock(blockinfo);
 
         // return blockformat and version
     }
@@ -40,18 +40,18 @@ namespace dafs
 
     void
     HandleWriteBlock(
-        dafs::Storage& store,
+        dafs::Partition& partition,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
         auto block = metadata.GetValue<dafs::BlockFormat>();
-        store.WriteBlock(blockinfo, block);
+        partition.WriteBlock(blockinfo, block);
     }
 
 
     void HandleAllocate(
-        dafs::Storage& store,
+        dafs::Partition& partition,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -60,7 +60,7 @@ namespace dafs
 
 
     void HandleAllocated(
-        dafs::Storage& store,
+        dafs::Partition& partition,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {

@@ -27,6 +27,10 @@ namespace std
     {
         std::size_t operator()(dafs::BlockInfo const& b) const
         {
+            if (!boost::filesystem::exists(b.path))
+            {
+                return 0;
+            }
             std::fstream f(b.path,
                            std::ios::in | std::ios::binary);
             dafs::BlockFormat rawblock = dafs::Deserialize<dafs::BlockFormat>(f);

@@ -32,7 +32,6 @@ namespace dafs
                    (
                        [&parliament, &condition](dafs::ProposalContent& context)
                        {
-                           dafs::WriteBlock(context);
                            dafs::AddNode(context, parliament);
                            condition.Set();
                        }
@@ -44,7 +43,6 @@ namespace dafs
                    (
                        [&parliament, &condition](dafs::ProposalContent& context)
                        {
-                           dafs::WriteBlock(context);
                            dafs::RemoveNode(context, parliament);
                            condition.Set();
                        }

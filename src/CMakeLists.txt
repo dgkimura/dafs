@@ -9,6 +9,8 @@ set(SOURCES
     filesystem.cpp
     handler.cpp
     metadataparser.cpp
+    nodeset.cpp
+    partition.cpp
     propose.cpp
     loader.cpp
     sender.cpp
