@@ -28,7 +28,6 @@ namespace dafs
 
         ReplicatedNodeSet(
             Parliament& parliament,
-            dafs::BlockInfo nodeset_info,
             dafs::Signal& in_progress);
 
         ReplicatedNodeSet(
@@ -40,14 +39,7 @@ namespace dafs
 
     private:
 
-        virtual void propose_update(
-            BlockInfo info,
-            std::string data,
-            dafs::ProposalType proposal_type);
-
         Parliament& parliament;
-
-        dafs::BlockInfo nodeset_info;
 
         dafs::Signal& in_progress;
     };

@@ -23,8 +23,6 @@ namespace
         static constexpr const char * NodeSetName = "nodeset";
 
         static constexpr const char * IdentityName = "identity";
-
-        static constexpr const int UnknownId = -1;
     };
 };
 

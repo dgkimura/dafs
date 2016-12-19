@@ -43,10 +43,10 @@ int main(void)
     );
 
     Parliament parliament(directory, DecreeHandler(dafs::Commit(parliament, in_progress)));
-    parliament.AddLegislator("127.0.0.1", 8080);
+    //parliament.AddLegislator("127.0.0.1", 8080);
 
     auto store = dafs::ReplicatedStorage(parliament, in_progress);
-    auto nodeset = dafs::ReplicatedNodeSet(parliament, nodeset_info, in_progress);
+    auto nodeset = dafs::ReplicatedNodeSet(parliament, in_progress);
 
     auto partition = dafs::Partition(
         store,
@@ -56,9 +56,16 @@ int main(void)
         nodeset_info,
         identity_info
     );
-    partition.AddNode("2.2.2.2", 8081);
+    partition.SetIdentity(111);
+    partition.SetIdentity(222);
+    partition.SetIdentity(333);
+    partition.SetIdentity(444);
+    partition.SetIdentity(555);
     partition.AddNode("1.1.1.1", 1111);
-    partition.RemoveNode("2.2.2.2", 8081);
+    partition.AddNode("2.2.2.2", 2222);
+    partition.AddNode("3.3.3.3", 3333);
+    partition.AddNode("4.4.4.4", 4444);
+    //partition.RemoveNode("2.2.2.2", 8081);
 
     for (;;);
 }

@@ -33,15 +33,5 @@ namespace dafs
 
     void WriteBlock(
         dafs::ProposalContent& content);
-
-
-    void AddNode(
-        dafs::ProposalContent& content,
-        Parliament& parliament);
-
-
-    void RemoveNode(
-        dafs::ProposalContent& content,
-        Parliament& parliament);
 }
 

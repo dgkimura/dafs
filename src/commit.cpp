@@ -25,28 +25,6 @@ namespace dafs
                            condition.Set();
                        }
                    )
-              },
-              {
-                   ProposalType::AddNode,
-                   dafs::Callback<dafs::ProposalContent&>
-                   (
-                       [&parliament, &condition](dafs::ProposalContent& context)
-                       {
-                           dafs::AddNode(context, parliament);
-                           condition.Set();
-                       }
-                   )
-              },
-              {
-                   ProposalType::RemoveNode,
-                   dafs::Callback<dafs::ProposalContent&>
-                   (
-                       [&parliament, &condition](dafs::ProposalContent& context)
-                       {
-                           dafs::RemoveNode(context, parliament);
-                           condition.Set();
-                       }
-                   )
               }
           }
     {
@@ -75,54 +53,6 @@ namespace dafs
         {
             dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
             dafs::Write(edit.info, delta);
-        }
-    }
-
-
-    void
-    AddNode(
-        dafs::ProposalContent& edit,
-        Parliament& parliament)
-    {
-        //
-        // Check hash and revision of block info list.
-        //
-        // TODO: Add revision check
-        if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
-        {
-            // TODO: Parse delta to find node added
-
-            //
-            // Update running node set.
-            //
-            std::vector<std::string> hostport;
-            split(hostport, edit.change, boost::is_any_of(":"));
-            parliament.AddLegislator(hostport[0],
-                                     boost::lexical_cast<short>(hostport[1]));
-        }
-    }
-
-
-    void
-    RemoveNode(
-        dafs::ProposalContent& edit,
-        Parliament& parliament)
-    {
-        //
-        // Check hash and revision of block info list.
-        //
-        // TODO: Add revision check
-        if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
-        {
-            // TODO: Parse delta to find node removed
-
-            //
-            // Update running node set.
-            //
-            std::vector<std::string> hostport;
-            split(hostport, edit.change, boost::is_any_of(":"));
-            parliament.RemoveLegislator(hostport[0],
-                                        boost::lexical_cast<short>(hostport[1]));
         }
     }
 }

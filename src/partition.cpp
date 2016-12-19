@@ -92,10 +92,6 @@ namespace dafs
     void
     Partition::AddNode(std::string address, short port)
     {
-        std::string item(address + ":" + std::to_string(port));
-        Delta delta = dafs::Insert(nodes, item);
-
-        store.Write(nodes, delta);
         nodeset.AddNode(address, port);
     }
 
@@ -103,10 +99,6 @@ namespace dafs
     void
     Partition::RemoveNode(std::string address, short port)
     {
-        std::string item(address + ":" + std::to_string(port));
-        Delta delta = dafs::Remove(nodes, item);
-
-        store.Write(nodes, delta);
         nodeset.RemoveNode(address, port);
     }
 }
