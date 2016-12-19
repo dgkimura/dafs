@@ -19,6 +19,10 @@ int main(void)
     if (!boost::filesystem::exists(directory))
     {
         boost::filesystem::create_directory(directory);
+        boost::filesystem::path replicasetfile(directory);
+        replicasetfile /= "replicaset";
+        std::fstream s(replicasetfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
+        s << "127.0.0.1:8080" << std::endl;
     }
 
     dafs::BlockInfo files_info = dafs::CreateBlockInfo(
@@ -38,7 +42,7 @@ int main(void)
         dafs::CreateLocation(hostport)
     );
 
-    Parliament parliament(directory, dafs::Commit(parliament, in_progress));
+    Parliament parliament(directory, DecreeHandler(dafs::Commit(parliament, in_progress)));
     parliament.AddLegislator("127.0.0.1", 8080);
 
     auto store = dafs::ReplicatedStorage(parliament, in_progress);
