@@ -19,14 +19,14 @@ namespace dafs
                    ProposalType::WriteBlock,
                    dafs::Callback<dafs::ProposalContent&>
                    (
-                       [&condition](dafs::ProposalContent& context)
+                       [](dafs::ProposalContent& context)
                        {
                            dafs::WriteBlock(context);
-                           condition.Set();
                        }
                    )
               }
-          }
+          },
+          condition(condition)
     {
     }
 
@@ -38,6 +38,7 @@ namespace dafs
         dafs::ProposalContent edit = dafs::Deserialize<dafs::ProposalContent>(p.content);
 
         proposal_map[p.type](edit);
+        condition.Set();
     }
 
 

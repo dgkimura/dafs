@@ -28,6 +28,8 @@ namespace dafs
             dafs::Callback<dafs::ProposalContent&>,
             dafs::ProposalTypeHash
         > proposal_map;
+
+        dafs::Signal& condition;
     };
 
 
