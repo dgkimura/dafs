@@ -33,6 +33,7 @@ namespace dafs
     ReplicatedNodeSet::AddNode(std::string address, short port)
     {
         parliament.AddLegislator(address, port);
+        in_progress.Wait();
     }
 
 
@@ -40,5 +41,6 @@ namespace dafs
     ReplicatedNodeSet::RemoveNode(std::string address, short port)
     {
         parliament.RemoveLegislator(address, port);
+        in_progress.Wait();
     }
 }
