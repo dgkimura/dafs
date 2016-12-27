@@ -14,6 +14,20 @@ namespace dafs
 
 
     //
+    // Defines directory where partition is located.
+    //
+    struct Root
+    {
+        std::string directory;
+
+        Root(std::string directory)
+            : directory(directory)
+        {
+        }
+    };
+
+
+    //
     // Defines segment of bytes. (used to write to blocks)
     //
     struct Bytes

@@ -1,5 +1,6 @@
 #include <boost/filesystem.hpp>
 
+#include "commit.hpp"
 #include "delta.hpp"
 #include "disk.hpp"
 #include "partition.hpp"
@@ -9,19 +10,48 @@
 namespace dafs
 {
     Partition::Partition(
-        dafs::Storage& store,
-        dafs::NodeSet& nodeset,
-        dafs::BlockInfo files,
-        dafs::BlockInfo blocks,
-        dafs::BlockInfo nodes,
-        dafs::BlockInfo identity
+        Root root
     )
-    : store(store),
-      nodeset(nodeset),
-      files(files),
-      blocks(blocks),
-      nodes(nodes),
-      identity(identity)
+        : parliament(root.directory,
+                     DecreeHandler(dafs::Commit(parliament, in_progress))),
+          store(parliament, in_progress),
+          nodeset(parliament, in_progress),
+          files(
+              dafs::CreateBlockInfo(
+                  (boost::filesystem::path(root.directory) /
+                   boost::filesystem::path(Constant::FileListName)).string(),
+                  dafs::CreateLocation("N/A"))),
+          blocks(
+              dafs::CreateBlockInfo(
+                  (boost::filesystem::path(root.directory) /
+                   boost::filesystem::path(Constant::BlockListName)).string(),
+                  dafs::CreateLocation("N/A"))),
+          nodes(
+              dafs::CreateBlockInfo(
+                  (boost::filesystem::path(root.directory) /
+                   boost::filesystem::path(Constant::NodeSetName)).string(),
+                  dafs::CreateLocation("N/A"))),
+          identity(
+              dafs::CreateBlockInfo(
+                  (boost::filesystem::path(root.directory) /
+                   boost::filesystem::path(Constant::IdentityName)).string(),
+                  dafs::CreateLocation("N/A"))),
+          in_progress()
+    {
+    }
+
+
+    Partition::Partition(
+        const Partition& other
+    )
+        : parliament(other.parliament),
+          store(other.store),
+          nodeset(other.nodeset),
+          files(other.files),
+          blocks(other.blocks),
+          nodes(other.nodes),
+          identity(other.identity),
+          in_progress()
     {
     }
 

@@ -1,7 +1,10 @@
 #pragma once
 
+#include <paxos/parliament.hpp>
+
 #include "filesystem.hpp"
 #include "nodeset.hpp"
+#include "signal.hpp"
 #include "storage.hpp"
 
 
@@ -12,12 +15,11 @@ namespace dafs
     public:
 
         Partition(
-            dafs::Storage& store,
-            dafs::NodeSet& nodeset,
-            dafs::BlockInfo files,
-            dafs::BlockInfo blocks,
-            dafs::BlockInfo nodes,
-            dafs::BlockInfo identity
+            Root root
+        );
+
+        Partition(
+            const Partition& other
         );
 
         int GetIdentity();
@@ -42,9 +44,11 @@ namespace dafs
 
     private:
 
-        Storage& store;
+        Parliament parliament;
 
-        NodeSet& nodeset;
+        ReplicatedStorage store;
+
+        ReplicatedNodeSet nodeset;
 
         dafs::BlockInfo files;
 
@@ -53,5 +57,7 @@ namespace dafs
         dafs::BlockInfo nodes;
 
         dafs::BlockInfo identity;
+
+        dafs::Signal in_progress;
     };
 }

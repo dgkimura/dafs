@@ -1,20 +1,12 @@
 #include <boost/filesystem.hpp>
 
-#include <paxos/parliament.hpp>
-
-#include "commit.hpp"
-#include "filesystem.hpp"
 #include "main.hpp"
 #include "partition.hpp"
-#include "signal.hpp"
-
-dafs::Signal in_progress;
 
 
 int main(void)
 {
     std::string directory = "node-1";
-    std::string hostport = "127.0.0.1:8080";
 
     if (!boost::filesystem::exists(directory))
     {
@@ -25,36 +17,8 @@ int main(void)
         s << "127.0.0.1:8080" << std::endl;
     }
 
-    dafs::BlockInfo files_info = dafs::CreateBlockInfo(
-        (fs::path(directory) / fs::path(Constant::FileListName)).string(),
-        dafs::CreateLocation(hostport)
-    );
-    dafs::BlockInfo blocks_info = dafs::CreateBlockInfo(
-        (fs::path(directory) / fs::path(Constant::BlockListName)).string(),
-        dafs::CreateLocation(hostport)
-    );
-    dafs::BlockInfo nodeset_info = dafs::CreateBlockInfo(
-        (fs::path(directory) / fs::path(Constant::NodeSetName)).string(),
-        dafs::CreateLocation(hostport)
-    );
-    dafs::BlockInfo identity_info = dafs::CreateBlockInfo(
-        (fs::path(directory) / fs::path(Constant::IdentityName)).string(),
-        dafs::CreateLocation(hostport)
-    );
-
-    Parliament parliament(directory, DecreeHandler(dafs::Commit(parliament, in_progress)));
-    //parliament.AddLegislator("127.0.0.1", 8080);
-
-    auto store = dafs::ReplicatedStorage(parliament, in_progress);
-    auto nodeset = dafs::ReplicatedNodeSet(parliament, in_progress);
-
     auto partition = dafs::Partition(
-        store,
-        nodeset,
-        files_info,
-        blocks_info,
-        nodeset_info,
-        identity_info
+        dafs::Root(directory)
     );
     partition.SetIdentity(111);
     partition.SetIdentity(222);
