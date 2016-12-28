@@ -56,18 +56,21 @@ namespace dafs
     }
 
 
-    int
+    dafs::Partition::Identity
     Partition::GetIdentity()
     {
         dafs::BlockFormat b =  store.ReadBlock(identity);
-        return dafs::Deserialize<int>(b.contents);
+        return Identity
+        {
+            dafs::Deserialize<int>(b.contents)
+        };
     }
 
 
     void
-    Partition::SetIdentity(int number)
+    Partition::SetIdentity(dafs::Partition::Identity id)
     {
-        dafs::Delta delta = dafs::Set(identity, number);
+        dafs::Delta delta = dafs::Set(identity, id.identity);
         store.Write(identity, delta);
     }
 

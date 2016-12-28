@@ -22,9 +22,14 @@ namespace dafs
             const Partition& other
         );
 
-        int GetIdentity();
+        struct Identity
+        {
+            int identity;
+        };
 
-        void SetIdentity(int number);
+        Identity GetIdentity();
+
+        void SetIdentity(Identity id);
 
         void CreateFile(dafs::FileInfo info);
 

@@ -20,11 +20,11 @@ int main(void)
     auto partition = dafs::Partition(
         dafs::Root(directory)
     );
-    partition.SetIdentity(111);
-    partition.SetIdentity(222);
-    partition.SetIdentity(333);
-    partition.SetIdentity(444);
-    partition.SetIdentity(555);
+    partition.SetIdentity(dafs::Partition::Identity{111});
+    partition.SetIdentity(dafs::Partition::Identity{222});
+    partition.SetIdentity(dafs::Partition::Identity{333});
+    partition.SetIdentity(dafs::Partition::Identity{444});
+    partition.SetIdentity(dafs::Partition::Identity{555});
     partition.AddNode("1.1.1.1", 1111);
     partition.AddNode("2.2.2.2", 2222);
     partition.AddNode("3.3.3.3", 3333);
