@@ -60,7 +60,7 @@ namespace dafs
         dafs::Delta delta = dafs::CreateDelta(
             info.path,
             block.contents,
-            dafs::SerializeIntoBlockFormat(newset));
+            dafs::Serialize(dafs::Index<T>(newset)));
         return delta;
     }
 
@@ -90,7 +90,7 @@ namespace dafs
         dafs::Delta delta = dafs::CreateDelta(
             info.path,
             block.contents,
-            dafs::SerializeIntoBlockFormat(newset));
+            dafs::Serialize(dafs::Index<T>(newset)));
         return delta;
     }
 }

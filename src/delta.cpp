@@ -43,7 +43,7 @@ namespace dafs
             new_string,
             new_string_length
         );
-        return std::string(new_string);
+        return std::string(new_string).erase(length);
     }
 
 
@@ -66,6 +66,6 @@ namespace dafs
         );
 
         stream.seekp(0, std::ios::beg);
-        return std::string(new_string);
+        return std::string(new_string).erase(length);
     }
 }

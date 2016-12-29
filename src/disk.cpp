@@ -15,7 +15,9 @@ namespace dafs
         {
             std::fstream f(fs::path(info.path).string(),
                            std::ios::in | std::ios::binary);
-            b = dafs::Deserialize<dafs::BlockFormat>(f);
+            std::stringstream buffer;
+            buffer << f.rdbuf();
+            b.contents = buffer.str();
             f.close();
         }
         return b;
