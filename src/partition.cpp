@@ -14,7 +14,7 @@ namespace dafs
     )
         : parliament(root.directory,
                      DecreeHandler(dafs::Commit(parliament, in_progress))),
-          store(parliament, in_progress),
+          store(parliament, in_progress, root),
           nodeset(parliament, in_progress),
           files(
               dafs::CreateBlockInfo(

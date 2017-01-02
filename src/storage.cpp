@@ -15,16 +15,20 @@ namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(
         Parliament& parliament,
-        dafs::Signal& in_progress)
+        dafs::Signal& in_progress,
+        Root root)
     : parliament(parliament),
-      in_progress(in_progress)
+      in_progress(in_progress),
+      root(root)
     {
     }
 
 
     ReplicatedStorage::ReplicatedStorage(
         const ReplicatedStorage& other)
-    : in_progress(other.in_progress)
+    : parliament(other.parliament),
+      in_progress(other.in_progress),
+      root(other.root)
     {
     }
 
@@ -32,7 +36,7 @@ namespace dafs
     BlockFormat
     ReplicatedStorage::ReadBlock(BlockInfo info)
     {
-        return ReadBlock(info);
+        return ReadBlock(get_storage_info(info));
     }
 
 
@@ -42,14 +46,14 @@ namespace dafs
         BlockFormat was = ReadBlock(info);
         Delta delta = CreateDelta(info.path, was.contents, data.contents);
 
-        do_write(info, dafs::Serialize(delta));
+        do_write(get_storage_info(info), dafs::Serialize(delta));
     }
 
 
     void
     ReplicatedStorage::Write(BlockInfo info, Delta delta)
     {
-        do_write(info, dafs::Serialize(delta));
+        do_write(get_storage_info(info), dafs::Serialize(delta));
     }
 
 
@@ -58,8 +62,6 @@ namespace dafs
         BlockInfo info,
         std::string data)
     {
-        info.path = fs::path(info.path).string();
-
         parliament.SendProposal
         (
             dafs::Serialize<dafs::Proposal>
@@ -74,5 +76,14 @@ namespace dafs
             )
         );
         in_progress.Wait();
+    }
+
+
+    dafs::BlockInfo
+    ReplicatedStorage::get_storage_info(dafs::BlockInfo info)
+    {
+        info.path = (boost::filesystem::path(root.directory) /
+                     boost::filesystem::path(info.path)).string();
+        return info;
     }
 }
