@@ -55,21 +55,7 @@ namespace dafs
         stream.seekg(0, std::ios::beg);
         std::stringstream buffer;
         buffer << stream.rdbuf();
-        std::string original = buffer.str();
 
-        char new_string[BLOCK_SIZE_IN_BYTES];
-        int new_string_length = BLOCK_SIZE_IN_BYTES;
-
-        int length = ApplyEditScript(
-            &original[0],
-            original.length(),
-            &delta.difference[0],
-            delta.difference.length(),
-            new_string,
-            new_string_length
-        );
-
-        stream.seekp(0, std::ios::beg);
-        return std::string(new_string).erase(length);
+        return ApplyDelta(delta, buffer.str());
     }
 }
