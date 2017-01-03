@@ -15,32 +15,10 @@ namespace dafs
     Write(dafs::BlockInfo info, dafs::Delta delta);
 
 
-    template <typename T>
-    dafs::Delta Set(
-        dafs::BlockInfo info,
-        T item,
-        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock)
-    {
-        dafs::BlockFormat block = get_block(info);
-
-        if (!block.contents.empty())
-        {
-            T olddata = dafs::Deserialize<T>(block.contents);
-            dafs::Delta delta = dafs::CreateDelta(
-                info.path,
-                dafs::SerializeIntoBlockFormat(olddata),
-                dafs::SerializeIntoBlockFormat(item));
-            return delta;
-        }
-        else
-        {
-            dafs::Delta delta = dafs::CreateDelta(
-                info.path,
-                "",
-                dafs::SerializeIntoBlockFormat(item));
-            return delta;
-        }
-    }
+    dafs::Delta
+    Set(dafs::BlockInfo info,
+        std::string content,
+        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock);
 
 
     template <typename T>

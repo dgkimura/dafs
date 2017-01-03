@@ -14,29 +14,26 @@ namespace dafs
     )
         : parliament(root.directory,
                      DecreeHandler(dafs::Commit(parliament, in_progress))),
-          store(parliament, in_progress, root),
+          store(parliament, in_progress),
           nodeset(parliament, in_progress),
           files(
               dafs::CreateBlockInfo(
-                  (boost::filesystem::path(root.directory) /
-                   boost::filesystem::path(Constant::FileListName)).string(),
+                  boost::filesystem::path(Constant::FileListName).string(),
                   dafs::CreateLocation("N/A"))),
           blocks(
               dafs::CreateBlockInfo(
-                  (boost::filesystem::path(root.directory) /
-                   boost::filesystem::path(Constant::BlockListName)).string(),
+                  boost::filesystem::path(Constant::BlockListName).string(),
                   dafs::CreateLocation("N/A"))),
           nodes(
               dafs::CreateBlockInfo(
-                  (boost::filesystem::path(root.directory) /
-                   boost::filesystem::path(Constant::NodeSetName)).string(),
+                  boost::filesystem::path(Constant::NodeSetName).string(),
                   dafs::CreateLocation("N/A"))),
           identity(
               dafs::CreateBlockInfo(
-                  (boost::filesystem::path(root.directory) /
-                   boost::filesystem::path(Constant::IdentityName)).string(),
+                  boost::filesystem::path(Constant::IdentityName).string(),
                   dafs::CreateLocation("N/A"))),
-          in_progress()
+          in_progress(),
+          root(root)
     {
     }
 
@@ -51,7 +48,8 @@ namespace dafs
           blocks(other.blocks),
           nodes(other.nodes),
           identity(other.identity),
-          in_progress()
+          in_progress(),
+          root(other.root)
     {
     }
 
@@ -59,10 +57,10 @@ namespace dafs
     dafs::Partition::Identity
     Partition::GetIdentity()
     {
-        dafs::BlockFormat b =  store.ReadBlock(identity);
+        dafs::BlockFormat b =  store.ReadBlock(rooted(identity));
         return Identity
         {
-            dafs::Deserialize<int>(b.contents)
+            dafs::Deserialize<std::string>(b.contents)
         };
     }
 
@@ -70,55 +68,55 @@ namespace dafs
     void
     Partition::SetIdentity(dafs::Partition::Identity id)
     {
-        dafs::Delta delta = dafs::Set(identity, id.identity);
-        store.Write(identity, delta);
+        dafs::Delta delta = dafs::Set(rooted(identity), id.identity);
+        store.Write(rooted(identity), delta);
     }
 
 
     void
     Partition::CreateFile(FileInfo info)
     {
-        Delta delta = dafs::Insert(files, info);
-        store.Write(files, delta);
+        Delta delta = dafs::Insert(rooted(files), info);
+        store.Write(rooted(files), delta);
     }
 
 
     void
     Partition::DeleteFile(FileInfo info)
     {
-        Delta delta = dafs::Remove(files, info);
-        store.Write(files, delta);
+        Delta delta = dafs::Remove(rooted(files), info);
+        store.Write(rooted(files), delta);
     }
 
 
     void
     Partition::CreateBlock(BlockInfo info)
     {
-        Delta delta = dafs::Insert(blocks, info);
-        store.Write(blocks, delta);
+        Delta delta = dafs::Insert(rooted(blocks), info);
+        store.Write(rooted(blocks), delta);
     }
 
 
     void
     Partition::DeleteBlock(BlockInfo info)
     {
-        Delta delta = dafs::Remove(nodes, info);
-        store.Write(blocks, delta);
+        Delta delta = dafs::Remove(rooted(nodes), info);
+        store.Write(rooted(blocks), delta);
     }
 
 
     BlockFormat
     Partition::ReadBlock(BlockInfo block)
     {
-        return store.ReadBlock(block);
+        return store.ReadBlock(rooted(block));
     }
 
 
     void
     Partition::WriteBlock(BlockInfo block, BlockFormat format)
     {
-        dafs::Delta delta = dafs::Set(block, format.contents);
-        store.Write(block, delta);
+        dafs::Delta delta = dafs::Set(rooted(block), format.contents);
+        store.Write(rooted(block), delta);
     }
 
 
@@ -133,5 +131,14 @@ namespace dafs
     Partition::RemoveNode(std::string address, short port)
     {
         nodeset.RemoveNode(address, port);
+    }
+
+
+    dafs::BlockInfo
+    Partition::rooted(dafs::BlockInfo info)
+    {
+        info.path = (boost::filesystem::path(root.directory) /
+                     boost::filesystem::path(info.path)).string();
+        return info;
     }
 }

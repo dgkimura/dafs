@@ -24,7 +24,7 @@ namespace dafs
 
         struct Identity
         {
-            int identity;
+            std::string identity;
         };
 
         Identity GetIdentity();
@@ -64,5 +64,9 @@ namespace dafs
         dafs::BlockInfo identity;
 
         dafs::Signal in_progress;
+
+        dafs::Root root;
+
+        dafs::BlockInfo rooted(dafs::BlockInfo info);
     };
 }

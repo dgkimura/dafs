@@ -66,11 +66,11 @@ TEST(DiskTest, testSetBlockInEmptyBlockFormat)
         return b;
     };
 
-    int i = 3;
+    std::string i = "3";
     dafs::Delta delta = dafs::Set(the_blocklist, i, get_empty_block);
     ASSERT_EQ(
         delta.difference,
-        "\xFF\xC0\x80@3"
+        "\x9D@3"
     );
 }
 

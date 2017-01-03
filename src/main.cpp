@@ -27,11 +27,11 @@ int main(void)
     auto partition_zero = SetupPartition("p-zero", "127.0.0.1:8080");
     auto partition_plus = SetupPartition("p-plus", "127.0.0.1:8090");
 
-    partition_minus.SetIdentity(dafs::Partition::Identity{111});
-    partition_minus.SetIdentity(dafs::Partition::Identity{222});
-    partition_zero.SetIdentity(dafs::Partition::Identity{333});
-    partition_plus.SetIdentity(dafs::Partition::Identity{444});
-    partition_plus.SetIdentity(dafs::Partition::Identity{555});
+    partition_minus.SetIdentity(dafs::Partition::Identity{"111"});
+    partition_minus.SetIdentity(dafs::Partition::Identity{"222"});
+    partition_zero.SetIdentity(dafs::Partition::Identity{"333"});
+    partition_plus.SetIdentity(dafs::Partition::Identity{"444"});
+    partition_plus.SetIdentity(dafs::Partition::Identity{"555"});
 
     //partition_plus.AddNode("1.1.1.1", 1111);
     //partition_zero.AddNode("2.2.2.2", 2222);

@@ -47,8 +47,7 @@ namespace dafs
 
         ReplicatedStorage(
             Parliament& parliament,
-            dafs::Signal& in_progress,
-            dafs::Root root);
+            dafs::Signal& in_progress);
 
         ReplicatedStorage(
             const ReplicatedStorage& other);
@@ -65,12 +64,8 @@ namespace dafs
             BlockInfo info,
             std::string data);
 
-        dafs::BlockInfo get_storage_info(dafs::BlockInfo info);
-
         Parliament parliament;
 
         Signal& in_progress;
-
-        dafs::Root root;
     };
 }

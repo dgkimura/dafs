@@ -33,7 +33,8 @@ namespace std
             }
             std::fstream f(b.path,
                            std::ios::in | std::ios::binary);
-            dafs::BlockFormat rawblock = dafs::Deserialize<dafs::BlockFormat>(f);
+            dafs::BlockFormat rawblock;
+            f >> rawblock.contents;
             return std::hash<dafs::BlockFormat>{}(rawblock);
         }
     };

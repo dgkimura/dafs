@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "diflib.h"
 
 #include "delta.hpp"
@@ -51,8 +53,10 @@ namespace dafs
     ApplyDelta(Delta& delta, std::fstream& stream)
     {
         stream.seekg(0, std::ios::beg);
-        std::string original((std::istreambuf_iterator<char>(stream)),
-                             (std::istreambuf_iterator<char>()));
+        std::stringstream buffer;
+        buffer << stream.rdbuf();
+        std::string original = buffer.str();
+
         char new_string[BLOCK_SIZE_IN_BYTES];
         int new_string_length = BLOCK_SIZE_IN_BYTES;
 
