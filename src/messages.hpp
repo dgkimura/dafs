@@ -39,6 +39,11 @@ namespace dafs
         // [Internal] Allocated resources.
         //
         _Allocated,
+
+        //
+        // [Internal] Initiate node into a cluster.
+        //
+        _InitiateCluster,
     };
 
 

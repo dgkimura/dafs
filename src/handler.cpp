@@ -66,4 +66,13 @@ namespace dafs
     {
         // dafs::Allocation allocation
     }
+
+
+    void HandleInitiateCluster(
+        dafs::Partition& partition,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
+    {
+        // initiate a node into a cluster
+    }
 }

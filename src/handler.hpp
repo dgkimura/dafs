@@ -59,4 +59,10 @@ namespace dafs
         dafs::Partition& partition,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
+
+
+    void HandleInitiateCluster(
+        dafs::Partition& partition,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
 }

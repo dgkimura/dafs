@@ -13,7 +13,8 @@ namespace dafs
               { dafs::MessageType::ReadBlock, dafs::HandleReadBlock },
               { dafs::MessageType::WriteBlock, dafs::HandleWriteBlock },
               { dafs::MessageType::_Allocate, dafs::HandleAllocate },
-              { dafs::MessageType::_Allocated, dafs::HandleAllocated }
+              { dafs::MessageType::_Allocated, dafs::HandleAllocated },
+              { dafs::MessageType::_InitiateCluster, dafs::HandleInitiateCluster }
           }
     {
     }
