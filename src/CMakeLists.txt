@@ -9,14 +9,13 @@ set(SOURCES
     filesystem.cpp
     handler.cpp
     metadataparser.cpp
-    nodeset.cpp
     partition.cpp
     propose.cpp
     loader.cpp
     sender.cpp
     server.cpp
     signal.cpp
-    storage.cpp
+    replicated.cpp
 )
 add_executable(dafs-server main.cpp ${SOURCES})
 add_executable(dafs-cli prompt.cpp)

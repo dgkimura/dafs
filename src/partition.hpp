@@ -3,9 +3,8 @@
 #include <paxos/parliament.hpp>
 
 #include "filesystem.hpp"
-#include "nodeset.hpp"
 #include "signal.hpp"
-#include "storage.hpp"
+#include "replicated.hpp"
 
 
 namespace dafs

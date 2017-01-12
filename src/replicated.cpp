@@ -6,9 +6,9 @@
 
 #include "commit.hpp"
 #include "customhash.hpp"
+#include "replicated.hpp"
 #include "serialization.hpp"
 #include "signal.hpp"
-#include "storage.hpp"
 
 
 namespace dafs
@@ -72,6 +72,39 @@ namespace dafs
                 )
             )
         );
+        in_progress.Wait();
+    }
+
+
+    ReplicatedNodeSet::ReplicatedNodeSet(
+        Parliament& parliament,
+        dafs::Signal& in_progress)
+    : parliament(parliament),
+      in_progress(in_progress)
+    {
+    }
+
+
+    ReplicatedNodeSet::ReplicatedNodeSet(
+        const ReplicatedNodeSet& other)
+    : parliament(other.parliament),
+      in_progress(other.in_progress)
+    {
+    }
+
+
+    void
+    ReplicatedNodeSet::AddNode(std::string address, short port)
+    {
+        parliament.AddLegislator(address, port);
+        in_progress.Wait();
+    }
+
+
+    void
+    ReplicatedNodeSet::RemoveNode(std::string address, short port)
+    {
+        parliament.RemoveLegislator(address, port);
         in_progress.Wait();
     }
 }
