@@ -39,9 +39,13 @@ namespace dafs
 
         private:
 
-            boost::asio::ip::tcp::socket socket;
+            void handle_read_message(
+                Dispatcher& dispatcher,
+                const boost::system::error_code& err);
 
-            enum {max_length = 8192};
+            boost::asio::streambuf response;
+
+            boost::asio::ip::tcp::socket socket;
         };
     };
 }

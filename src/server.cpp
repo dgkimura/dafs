@@ -50,23 +50,43 @@ namespace dafs
     void
     Server::Session::Start(Dispatcher& dispatcher)
     {
-        auto self(shared_from_this());
+        boost::asio::async_read(socket, response,
+            boost::asio::transfer_at_least(1),
+            boost::bind(
+                &Session::handle_read_message,
+                shared_from_this(),
+                dispatcher,
+                boost::asio::placeholders::error));
+    }
 
-        char data_[max_length];
 
-        socket.async_read_some(boost::asio::buffer(data_, max_length),
-            [self, &data_, &dispatcher](boost::system::error_code ec,
-                                        std::size_t length)
-            {
-                if (!ec)
-                {
-                    // 1. Deserialize std::string(data_)
-                    dafs::Message m = Deserialize<Message>(data_);
+    void
+    Server::Session::handle_read_message(
+        Dispatcher& dispatcher,
+        const boost::system::error_code& err)
+    {
+        if (!err)
+        {
+            boost::asio::async_read(socket, response,
+                boost::asio::transfer_at_least(1),
+                boost::bind(
+                    &Session::handle_read_message,
+                    shared_from_this(),
+                    dispatcher,
+                    boost::asio::placeholders::error));
+        }
+        if (err == boost::asio::error::eof)
+        {
+            boost::asio::streambuf::const_buffers_type bufs = response.data();
+            std::string content(
+                boost::asio::buffers_begin(bufs),
+                boost::asio::buffers_begin(bufs) + response.size());
 
-                    // 2. Route message to dispatcher for handling.
-                    auto routine = dispatcher.GetRoutine(m);
-                }
-            }
-        );
+            // 1. Deserialize std::string(data_)
+            dafs::Message m = Deserialize<Message>(content);
+
+            // 2. Route message to dispatcher for handling.
+            auto routine = dispatcher.GetRoutine(m);
+        }
     }
 }
