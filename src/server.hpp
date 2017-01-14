@@ -1,9 +1,11 @@
 #pragma once
 
 #include <boost/asio.hpp>
+#include <boost/enable_shared_from_this.hpp>
 
-#include "filesystem.hpp"
 #include "dispatcher.hpp"
+#include "filesystem.hpp"
+#include "node.hpp"
 
 
 namespace dafs
@@ -12,7 +14,11 @@ namespace dafs
     {
     public:
 
-        Server(Dispatcher dispather, std::string address, short port);
+        Server(
+            std::string address,
+            short port,
+            Node node,
+            Dispatcher dispather);
 
         ~Server();
 
@@ -26,20 +32,23 @@ namespace dafs
 
         boost::asio::ip::tcp::socket socket;
 
+        Node node;
+
         Dispatcher dispatcher;
 
-        class Session : public std::enable_shared_from_this<Session>
+        class Session : public boost::enable_shared_from_this<Session>
         {
         public:
             Session(
                 boost::asio::ip::tcp::socket socket
             );
 
-            void Start(Dispatcher& dispatcher);
+            void Start(Node& node, Dispatcher& dispatcher);
 
         private:
 
             void handle_read_message(
+                Node& node,
                 Dispatcher& dispatcher,
                 const boost::system::error_code& err);
 

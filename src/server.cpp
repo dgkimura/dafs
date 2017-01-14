@@ -8,10 +8,15 @@ namespace dafs
     using boost::asio::ip::tcp;
 
 
-    Server::Server(Dispatcher dispatcher, std::string address, short port)
+    Server::Server(
+        std::string address,
+        short port,
+        Node node,
+        Dispatcher dispatcher)
         : io_service(),
           acceptor(io_service, tcp::endpoint(tcp::v4(), port)),
           socket(io_service),
+          node(node),
           dispatcher(dispatcher)
     {
     }
@@ -32,7 +37,9 @@ namespace dafs
             {
                 if (!ec_accept)
                 {
-                    std::make_shared<Session>(std::move(socket))->Start(dispatcher);
+                    std::make_shared<Session>(std::move(socket))->Start(
+                        node,
+                        dispatcher);
                 }
                 do_accept();
             });
@@ -48,13 +55,14 @@ namespace dafs
 
 
     void
-    Server::Session::Start(Dispatcher& dispatcher)
+    Server::Session::Start(Node& node, Dispatcher& dispatcher)
     {
         boost::asio::async_read(socket, response,
             boost::asio::transfer_at_least(1),
             boost::bind(
                 &Session::handle_read_message,
                 shared_from_this(),
+                node,
                 dispatcher,
                 boost::asio::placeholders::error));
     }
@@ -62,6 +70,7 @@ namespace dafs
 
     void
     Server::Session::handle_read_message(
+        Node& node,
         Dispatcher& dispatcher,
         const boost::system::error_code& err)
     {
@@ -72,6 +81,7 @@ namespace dafs
                 boost::bind(
                     &Session::handle_read_message,
                     shared_from_this(),
+                    node,
                     dispatcher,
                     boost::asio::placeholders::error));
         }
