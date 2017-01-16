@@ -14,7 +14,9 @@ namespace dafs
               { dafs::MessageType::WriteBlock, dafs::HandleWriteBlock },
               { dafs::MessageType::_Allocate, dafs::HandleAllocate },
               { dafs::MessageType::_Allocated, dafs::HandleAllocated },
-              { dafs::MessageType::_InitiateCluster, dafs::HandleInitiateCluster }
+              { dafs::MessageType::_RequestInitiation, dafs::HandleRequestInitiation },
+              { dafs::MessageType::_ProcessInitation, dafs::HandleProcessInitation },
+              { dafs::MessageType::_ConcludeInitation, dafs::HandleConcludeInitation }
           }
     {
     }

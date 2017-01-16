@@ -61,7 +61,19 @@ namespace dafs
         dafs::Sender& sender);
 
 
-    void HandleInitiateCluster(
+    void HandleRequestInitiation(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
+
+
+    void HandleProcessInitation(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
+
+
+    void HandleConcludeInitation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
