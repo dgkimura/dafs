@@ -1,8 +1,8 @@
 #pragma once
 
-#include "delta.hpp"
-#include "filesystem.hpp"
-#include "serialization.hpp"
+#include "dafs/delta.hpp"
+#include "dafs/filesystem.hpp"
+#include "dafs/serialization.hpp"
 
 
 namespace dafs

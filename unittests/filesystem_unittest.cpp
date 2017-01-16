@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "filesystem.hpp"
+#include "dafs/filesystem.hpp"
 
 
 TEST(FileSystemTest, testBlockFieldsAreConstructed)

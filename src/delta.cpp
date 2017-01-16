@@ -2,8 +2,8 @@
 
 #include "diflib.h"
 
-#include "delta.hpp"
-#include "filesystem.hpp"
+#include "dafs/delta.hpp"
+#include "dafs/filesystem.hpp"
 
 
 namespace dafs

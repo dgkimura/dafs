@@ -39,12 +39,11 @@ target_link_libraries(dafs-server
 add_dependencies(dafs-server diflib)
 add_dependencies(dafs-server paxos)
 
+include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
 
 set_property(TARGET dafs-server PROPERTY CXX_STANDARD 11)
-
-set(dafs_DIR ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 
 foreach(source ${SOURCES})
     set(DAFS_SOURCES ${DAFS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${source})

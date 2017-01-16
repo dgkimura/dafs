@@ -5,9 +5,9 @@
 
 #include <paxos/parliament.hpp>
 
-#include "callback.hpp"
-#include "filesystem.hpp"
-#include "signal.hpp"
+#include "dafs/callback.hpp"
+#include "dafs/filesystem.hpp"
+#include "dafs/signal.hpp"
 
 
 namespace dafs

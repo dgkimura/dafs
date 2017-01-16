@@ -46,7 +46,7 @@ add_dependencies(all_unittests diflib)
 add_dependencies(all_unittests paxos)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest/include)
-include_directories(${dafs_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
 

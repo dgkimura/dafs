@@ -1,10 +1,10 @@
 #include <boost/filesystem.hpp>
 
-#include "commit.hpp"
-#include "delta.hpp"
-#include "disk.hpp"
-#include "partition.hpp"
-#include "serialization.hpp"
+#include "dafs/commit.hpp"
+#include "dafs/delta.hpp"
+#include "dafs/disk.hpp"
+#include "dafs/partition.hpp"
+#include "dafs/serialization.hpp"
 
 
 namespace dafs

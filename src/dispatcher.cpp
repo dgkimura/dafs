@@ -1,7 +1,7 @@
-#include "dispatcher.hpp"
-#include "handler.hpp"
-#include "metadataparser.hpp"
-#include "messages.hpp"
+#include "dafs/dispatcher.hpp"
+#include "dafs/handler.hpp"
+#include "dafs/metadataparser.hpp"
+#include "dafs/messages.hpp"
 
 
 namespace dafs

@@ -4,12 +4,12 @@
 
 #include <paxos/parliament.hpp>
 
-#include "delta.hpp"
-#include "disk.hpp"
-#include "filesystem.hpp"
-#include "propose.hpp"
-#include "signal.hpp"
-#include "serialization.hpp"
+#include "dafs/delta.hpp"
+#include "dafs/disk.hpp"
+#include "dafs/filesystem.hpp"
+#include "dafs/propose.hpp"
+#include "dafs/signal.hpp"
+#include "dafs/serialization.hpp"
 
 
 namespace

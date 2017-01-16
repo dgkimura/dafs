@@ -1,6 +1,6 @@
-#include "customhash.hpp"
-#include "propose.hpp"
-#include "serialization.hpp"
+#include "dafs/customhash.hpp"
+#include "dafs/propose.hpp"
+#include "dafs/serialization.hpp"
 
 
 namespace dafs

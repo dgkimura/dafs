@@ -1,8 +1,8 @@
 #pragma once
 
-#include "metadataparser.hpp"
-#include "partition.hpp"
-#include "sender.hpp"
+#include "dafs/metadataparser.hpp"
+#include "dafs/partition.hpp"
+#include "dafs/sender.hpp"
 
 
 namespace dafs

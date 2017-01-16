@@ -4,11 +4,11 @@
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "commit.hpp"
-#include "customhash.hpp"
-#include "replicated.hpp"
-#include "serialization.hpp"
-#include "signal.hpp"
+#include "dafs/commit.hpp"
+#include "dafs/customhash.hpp"
+#include "dafs/replicated.hpp"
+#include "dafs/serialization.hpp"
+#include "dafs/signal.hpp"
 
 
 namespace dafs

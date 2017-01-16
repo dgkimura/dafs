@@ -4,7 +4,7 @@
 
 #include <boost/asio.hpp>
 
-#include "messages.hpp"
+#include "dafs/messages.hpp"
 
 
 namespace dafs

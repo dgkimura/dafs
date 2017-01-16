@@ -3,11 +3,11 @@
 #include "boost/algorithm/string.hpp"
 #include "boost/lexical_cast.hpp"
 
-#include "commit.hpp"
-#include "customhash.hpp"
-#include "disk.hpp"
-#include "propose.hpp"
-#include "serialization.hpp"
+#include "dafs/commit.hpp"
+#include "dafs/customhash.hpp"
+#include "dafs/disk.hpp"
+#include "dafs/propose.hpp"
+#include "dafs/serialization.hpp"
 
 
 namespace dafs

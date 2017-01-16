@@ -2,8 +2,8 @@
 
 #include <boost/filesystem.hpp>
 
-#include "loader.hpp"
-#include "serialization.hpp"
+#include "dafs/loader.hpp"
+#include "dafs/serialization.hpp"
 
 
 namespace dafs

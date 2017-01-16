@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "filesystem.hpp"
-#include "metadataparser.hpp"
+#include "dafs/filesystem.hpp"
+#include "dafs/metadataparser.hpp"
 
 
 TEST(MessagesTest, testMetaDataParserCanGetValue)

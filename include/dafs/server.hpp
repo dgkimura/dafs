@@ -3,9 +3,9 @@
 #include <boost/asio.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-#include "dispatcher.hpp"
-#include "filesystem.hpp"
-#include "node.hpp"
+#include "dafs/dispatcher.hpp"
+#include "dafs/filesystem.hpp"
+#include "dafs/node.hpp"
 
 
 namespace dafs

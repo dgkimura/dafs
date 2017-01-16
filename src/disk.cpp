@@ -2,7 +2,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include "disk.hpp"
+#include "dafs/disk.hpp"
 
 
 namespace dafs

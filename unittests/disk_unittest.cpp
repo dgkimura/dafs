@@ -3,8 +3,8 @@
 
 #include "gtest/gtest.h"
 
-#include "serialization.hpp"
-#include "disk.hpp"
+#include "dafs/serialization.hpp"
+#include "dafs/disk.hpp"
 
 
 const dafs::BlockInfo the_blocklist

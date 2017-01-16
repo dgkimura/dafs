@@ -3,10 +3,10 @@
 #include <functional>
 #include <unordered_map>
 
-#include "messages.hpp"
-#include "metadataparser.hpp"
-#include "partition.hpp"
-#include "sender.hpp"
+#include "dafs/messages.hpp"
+#include "dafs/metadataparser.hpp"
+#include "dafs/partition.hpp"
+#include "dafs/sender.hpp"
 
 
 namespace dafs

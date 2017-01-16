@@ -1,7 +1,7 @@
 #include <boost/filesystem.hpp>
 
-#include "main.hpp"
-#include "node.hpp"
+#include "dafs/main.hpp"
+#include "dafs/node.hpp"
 
 
 void
