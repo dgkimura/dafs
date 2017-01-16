@@ -5,34 +5,34 @@ namespace dafs
 {
     void
     HandleCreateFile(
-        dafs::Partition& partition,
+        dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        partition.CreateFile(fileinfo);
+        node.GetPartition(Node::Slot::Zero).CreateFile(fileinfo);
     }
 
 
     void
     HandleDeleteFile(
-        dafs::Partition& partition,
+        dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>();
-        partition.DeleteFile(fileinfo);
+        node.GetPartition(Node::Slot::Zero).DeleteFile(fileinfo);
     }
 
 
     void
     HandleReadBlock(
-        dafs::Partition& partition,
+        dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
-        auto blockformat = partition.ReadBlock(blockinfo);
+        auto blockformat = node.GetPartition(Node::Slot::Zero).ReadBlock(blockinfo);
 
         // return blockformat and version
     }
@@ -40,18 +40,18 @@ namespace dafs
 
     void
     HandleWriteBlock(
-        dafs::Partition& partition,
+        dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
         auto block = metadata.GetValue<dafs::BlockFormat>();
-        partition.WriteBlock(blockinfo, block);
+        node.GetPartition(Node::Slot::Zero).WriteBlock(blockinfo, block);
     }
 
 
     void HandleAllocate(
-        dafs::Partition& partition,
+        dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -60,7 +60,7 @@ namespace dafs
 
 
     void HandleAllocated(
-        dafs::Partition& partition,
+        dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
@@ -69,7 +69,7 @@ namespace dafs
 
 
     void HandleInitiateCluster(
-        dafs::Partition& partition,
+        dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {

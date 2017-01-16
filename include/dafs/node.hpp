@@ -1,3 +1,5 @@
+#pragma once
+
 #include "dafs/filesystem.hpp"
 #include "dafs/partition.hpp"
 

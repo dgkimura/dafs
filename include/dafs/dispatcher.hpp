@@ -5,7 +5,7 @@
 
 #include "dafs/messages.hpp"
 #include "dafs/metadataparser.hpp"
-#include "dafs/partition.hpp"
+#include "dafs/node.hpp"
 #include "dafs/sender.hpp"
 
 
@@ -14,7 +14,7 @@ namespace dafs
     using MessageHandler = std::function
     <
         void (
-            dafs::Partition& partition,
+            dafs::Node& node,
             dafs::MetaDataParser metadata,
             dafs::Sender& sender)
     >;
