@@ -9,7 +9,8 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+
         node.GetPartition(Node::Slot::Zero).CreateFile(fileinfo);
     }
 
@@ -20,7 +21,8 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>();
+        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
+
         node.GetPartition(Node::Slot::Zero).DeleteFile(fileinfo);
     }
 
@@ -31,7 +33,7 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
+        auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto blockformat = node.GetPartition(Node::Slot::Zero).ReadBlock(blockinfo);
 
         // return blockformat and version
@@ -44,8 +46,9 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto blockinfo = metadata.GetValue<dafs::BlockInfo>();
-        auto block = metadata.GetValue<dafs::BlockFormat>();
+        auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
+        auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
+
         node.GetPartition(Node::Slot::Zero).WriteBlock(blockinfo, block);
     }
 
@@ -73,7 +76,10 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        // initiate a node into a cluster
+        auto address = metadata.GetValue<std::string>(dafs::AddressKey);
+        auto port = metadata.GetValue<short>(dafs::PortKey);
+
+        node.GetPartition(Node::Slot::Zero).AddNode(address, port);
     }
 
 

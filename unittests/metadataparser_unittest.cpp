@@ -31,5 +31,5 @@ TEST(MessagesTest, testMetaDataParserCanGetValue)
 
     dafs::MetaDataParser parser(metadata);
 
-    ASSERT_EQ(parser.GetValue<dafs::FileInfo>().path, "name");
+    ASSERT_EQ(parser.GetValue<dafs::FileInfo>(dafs::FileInfoKey).path, "name");
 }

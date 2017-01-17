@@ -19,5 +19,14 @@ namespace dafs
     const std::string BlockInfoKey = "BlockInfo";
 
 
+    const std::string BlockFormatKey = "BlockFormat";
+
+
     const std::string BytesKey = "Bytes";
+
+
+    const std::string AddressKey = "Address";
+
+
+    const std::string PortKey = "Port";
 }

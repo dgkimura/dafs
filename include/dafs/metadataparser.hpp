@@ -17,14 +17,14 @@ namespace dafs
         MetaDataParser(std::vector<dafs::MetaData>);
 
         template<typename T>
-        T GetValue()
+        T GetValue(std::string key)
         {
             std::string value;
             for (auto data : metadata)
             {
-                if (data.key == map_type[typeid(T)])
+                if (data.key == key)
                 {
-                    value= data.value;
+                    value = data.value;
                     break;
                 }
             }
@@ -34,8 +34,6 @@ namespace dafs
     private:
 
         std::vector<dafs::MetaData> metadata;
-
-        std::map<std::type_index, std::string> map_type;
     };
 
 }
