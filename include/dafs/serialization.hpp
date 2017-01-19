@@ -202,7 +202,7 @@ namespace dafs
 
 
     template <typename T>
-    T Deserialize(std::fstream& stream)
+    T Deserialize(std::istream& stream)
     {
         T object;
         boost::archive::text_iarchive oa(stream);
@@ -212,7 +212,7 @@ namespace dafs
 
 
     template <typename T>
-    T DeserializeFromBlockFormat(std::fstream& stream)
+    T DeserializeFromBlockFormat(std::istream& stream)
     {
         dafs::BlockFormat b = Deserialize<dafs::BlockFormat>(stream);
         return Deserialize<T>(b.contents);

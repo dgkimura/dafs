@@ -53,7 +53,7 @@ TEST(DiskTest, testAddBlockInEmptyBlockFormat)
     dafs::Delta delta = dafs::Insert(the_blocklist, a_block, get_empty_block);
     ASSERT_EQ(
         delta.difference,
-        "\x7F" "22 serialization::archive 11 0 0 1 0 0 7 a_block 0 0 10 an_addreHss 8080 0"
+        "\x7F" "22 serialization::archive 14 0 0 1 0 0 7 a_block 0 0 10 an_addreHss 8080 0"
     );
 }
 
