@@ -39,7 +39,7 @@ namespace dafs
 
 
     //
-    // Describes location.
+    // Describes identity of object.
     //
     struct Identity
     {
@@ -60,6 +60,36 @@ namespace dafs
         operator==(const Identity& rhs) const
         {
             return id == rhs.id;
+        }
+
+        bool
+        operator!=(const Identity& rhs) const
+        {
+            return id != rhs.id;
+        }
+
+        bool
+        operator<(const Identity& rhs) const
+        {
+            return id < rhs.id;
+        }
+
+        bool
+        operator>(const Identity& rhs) const
+        {
+            return id > rhs.id;
+        }
+
+        bool
+        operator<=(const Identity& rhs) const
+        {
+            return id <= rhs.id;
+        }
+
+        bool
+        operator>=(const Identity& rhs) const
+        {
+            return id >= rhs.id;
         }
     };
 

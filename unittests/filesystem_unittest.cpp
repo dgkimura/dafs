@@ -34,3 +34,25 @@ TEST(FileSystemTest, testsBlockInfoFieldsAreConstructed)
     ASSERT_EQ(path, b.path);
     ASSERT_EQ(identity, b.identity);
 }
+
+
+TEST(FileSystemTest, testsIdentityComparison)
+{
+    dafs::Identity a = dafs::Identity("00000000-0000-0000-0000-000000000000");
+    dafs::Identity b = dafs::Identity("22222222-2222-2222-2222-222222222222");
+
+    ASSERT_TRUE(a < b);
+    ASSERT_FALSE(a < a);
+
+    ASSERT_TRUE(a <= b);
+    ASSERT_TRUE(a <= a);
+
+    ASSERT_FALSE(a > b);
+    ASSERT_FALSE(a > a);
+
+    ASSERT_FALSE(a >= b);
+    ASSERT_TRUE(a >= a);
+
+    ASSERT_FALSE(a == b);
+    ASSERT_TRUE(a == a);
+}
