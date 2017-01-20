@@ -21,14 +21,9 @@ namespace dafs
             const Partition& other
         );
 
-        struct Identity
-        {
-            std::string identity;
-        };
+        dafs::Identity GetIdentity();
 
-        Identity GetIdentity();
-
-        void SetIdentity(Identity id);
+        void SetIdentity(dafs::Identity id);
 
         void CreateFile(dafs::FileInfo info);
 

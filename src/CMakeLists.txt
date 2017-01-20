@@ -12,7 +12,6 @@ set(SOURCES
     node.cpp
     partition.cpp
     propose.cpp
-    loader.cpp
     sender.cpp
     server.cpp
     signal.cpp

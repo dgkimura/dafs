@@ -24,10 +24,9 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
     dafs::BlockInfo expected
     {
         "the-path",
-        dafs::Location
+        dafs::Identity
         {
-            "the-address",
-            80
+            "00000000-0000-0000-0000-000000000000",
         },
         23  //revision
     }, actual;
@@ -36,7 +35,7 @@ TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
     actual = dafs::Deserialize<dafs::BlockInfo>(string_obj);
 
     ASSERT_EQ(expected.path, actual.path);
-    ASSERT_EQ(expected.location.address, actual.location.address);
+    ASSERT_EQ(expected.identity, actual.identity);
 }
 
 
@@ -72,15 +71,13 @@ TEST(SerializationUnitTest, testFileInfoIsSerializableAndDeserializable)
 {
     dafs::FileInfo expected
     {
-        dafs::Location
+        dafs::Identity
         {
-            "previous",
-            80
+            "00000000-0000-0000-0000-000000000000",
         },
-        dafs::Location
+        dafs::Identity
         {
-            "next",
-            80
+            "00000000-0000-0000-0000-000000000000",
         },
         1,
         "filename"
@@ -89,8 +86,8 @@ TEST(SerializationUnitTest, testFileInfoIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::FileInfo>(string_obj);
 
-    ASSERT_EQ(expected.previous.address, actual.previous.address);
-    ASSERT_EQ(expected.next.address, actual.next.address);
+    ASSERT_EQ(expected.previous, actual.previous);
+    ASSERT_EQ(expected.next, actual.next);
     ASSERT_EQ(expected.descriptor, actual.descriptor);
     ASSERT_EQ(expected.path, actual.path);
 }
@@ -102,15 +99,13 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
     {
         dafs::FileInfo
         {
-            dafs::Location
+            dafs::Identity
             {
-                "previous",
-                80
+                "00000000-0000-0000-0000-000000000000",
             },
-            dafs::Location
+            dafs::Identity
             {
-                "next",
-                80
+                "11111111-1111-1111-1111-111111111111",
             },
             1
         },
@@ -118,19 +113,17 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
             dafs::BlockInfo
             {
                 "the-path-of-block-1",
-                dafs::Location
+                dafs::Identity
                 {
-                    "the-address",
-                    80
+                    "00000000-0000-0000-0000-000000000000",
                 }
             },
             dafs::BlockInfo
             {
                 "the-path-of-block-2",
-                dafs::Location
+                dafs::Identity
                 {
-                    "the-address",
-                    80
+                    "11111111-1111-1111-1111-111111111111",
                 }
             }
         }
@@ -139,14 +132,14 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::FileFormat>(string_obj);
 
-    ASSERT_EQ(expected.info.previous.address, actual.info.previous.address);
-    ASSERT_EQ(expected.info.next.address, actual.info.next.address);
+    ASSERT_EQ(expected.info.previous, actual.info.previous);
+    ASSERT_EQ(expected.info.next, actual.info.next);
     ASSERT_EQ(expected.info.descriptor, actual.info.descriptor);
     ASSERT_EQ(expected.info.path, actual.info.path);
     ASSERT_EQ(expected.blocks[0].path, actual.blocks[0].path);
-    ASSERT_EQ(expected.blocks[0].location.address, actual.blocks[0].location.address);
+    ASSERT_EQ(expected.blocks[0].identity, actual.blocks[0].identity);
     ASSERT_EQ(expected.blocks[1].path, actual.blocks[1].path);
-    ASSERT_EQ(expected.blocks[1].location.address, actual.blocks[1].location.address);
+    ASSERT_EQ(expected.blocks[1].identity, actual.blocks[1].identity);
 }
 
 
@@ -158,45 +151,39 @@ TEST(SerializationUnitTest, testFileIndexIsSerializableAndDeserializable)
         {
             dafs::FileInfo
             {
-                dafs::Location
+                dafs::Identity
                 {
-                    "previous",
-                    80
+                    "00000000-0000-0000-0000-000000000000",
                 },
-                dafs::Location
+                dafs::Identity
                 {
-                    "next",
-                    80
+                    "11111111-1111-1111-1111-111111111111",
                 },
                 1,
                 "filename"
             },
             dafs::FileInfo
             {
-                dafs::Location
+                dafs::Identity
                 {
-                    "my-previous",
-                    80
+                    "33333333-3333-3333-3333-333333333333",
                 },
-                dafs::Location
+                dafs::Identity
                 {
-                    "my-next",
-                    80
+                    "44444444-4444-4444-4444-444444444444",
                 },
                 2,
                 "my-file"
             },
             dafs::FileInfo
             {
-                dafs::Location
+                dafs::Identity
                 {
-                    "your-previous",
-                    80
+                    "55555555-5555-5555-5555-555555555555",
                 },
-                dafs::Location
+                dafs::Identity
                 {
-                    "your-next",
-                    80
+                    "66666666-6666-6666-6666-666666666666",
                 },
                 3,
                 "your-file"
@@ -222,20 +209,18 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
             dafs::BlockInfo
             {
                 "my-block",
-                dafs::Location
+                dafs::Identity
                 {
-                    "my-address",
-                    80
+                    "00000000-0000-0000-0000-000000000000",
                 },
                 0  // revision
             },
             dafs::BlockInfo
             {
                 "your-block",
-                dafs::Location
+                dafs::Identity
                 {
-                    "your-address",
-                    80
+                    "11111111-1111-1111-1111-111111111111",
                 },
                 1  // revision
             }
@@ -246,7 +231,7 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
     actual = dafs::Deserialize<dafs::Index<dafs::BlockInfo>>(string_obj);
 
     ASSERT_EQ(expected.items[0].path, actual.items[0].path);
-    ASSERT_EQ(expected.items[1].location.address, actual.items[1].location.address);
+    ASSERT_EQ(expected.items[1].identity, actual.items[1].identity);
 }
 
 

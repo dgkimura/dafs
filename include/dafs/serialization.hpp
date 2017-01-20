@@ -3,8 +3,10 @@
 #include <fstream>
 #include <sstream>
 
-#include "boost/archive/text_iarchive.hpp"
-#include "boost/archive/text_oarchive.hpp"
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_serialize.hpp>
 
 #include "delta.hpp"
 #include "filesystem.hpp"
@@ -30,10 +32,9 @@ namespace dafs
 
 
     template <typename Archive>
-    void serialize(Archive& ar, dafs::Location& obj, const unsigned int version)
+    void serialize(Archive& ar, dafs::Identity& obj, const unsigned int version)
     {
-        ar & obj.address;
-        ar & obj.port;
+        ar & obj.id;
     }
 
 
@@ -48,7 +49,7 @@ namespace dafs
     void serialize(Archive& ar, dafs::BlockInfo& obj, const unsigned int version)
     {
         ar & obj.path;
-        ar & obj.location;
+        ar & obj.identity;
         ar & obj.revision;
     }
 

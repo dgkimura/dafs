@@ -24,23 +24,13 @@ TEST(FileSystemTest, testBytesFieldsAreConstructed)
 }
 
 
-TEST(FileSystemTest, testLocationFieldsAreConstructed)
-{
-    std::string address = "localhost";
-
-    dafs::Location l = dafs::CreateLocation(address);
-
-    ASSERT_EQ(address, l.address);
-}
-
-
 TEST(FileSystemTest, testsBlockInfoFieldsAreConstructed)
 {
     std::string path = "myfile";
-    dafs::Location location = dafs::CreateLocation("localhost");
+    dafs::Identity identity = dafs::Identity("01234567-89ab-cdef-0123-456789abcdef");
 
-    dafs::BlockInfo b = dafs::CreateBlockInfo(path, location);
+    dafs::BlockInfo b = dafs::CreateBlockInfo(path, identity);
 
     ASSERT_EQ(path, b.path);
-    ASSERT_EQ(location.address, b.location.address);
+    ASSERT_EQ(identity, b.identity);
 }

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <boost/filesystem.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid.hpp>
 
 #include <string>
 #include <vector>
@@ -39,11 +41,26 @@ namespace dafs
     //
     // Describes location.
     //
-    struct Location
+    struct Identity
     {
-        std::string address;
+        boost::uuids::uuid id;
 
-        short port;
+        Identity()
+        {
+            id = boost::uuids::nil_uuid();
+        }
+
+        Identity(std::string uuid)
+        {
+            boost::uuids::string_generator gen;
+            id = gen(uuid);
+        }
+
+        bool
+        operator==(const Identity& rhs) const
+        {
+            return id == rhs.id;
+        }
     };
 
 
@@ -54,7 +71,7 @@ namespace dafs
     {
         std::string path;
 
-        Location location;
+        Identity identity;
 
         int revision;
 
@@ -80,9 +97,9 @@ namespace dafs
     //
     struct FileInfo
     {
-        Location previous;
+        Identity previous;
 
-        Location next;
+        Identity next;
 
         int descriptor;
 
@@ -120,9 +137,6 @@ namespace dafs
     using BlockIndex = Index<BlockInfo>;
 
 
-    using LocationIndex = Index<Location>;
-
-
     //
     // Function to create Bytes
     //
@@ -130,14 +144,8 @@ namespace dafs
 
 
     //
-    // Function to create Location
-    //
-    Location CreateLocation(const std::string& address);
-
-
-    //
     // Function to create BlockInfo
     //
     BlockInfo CreateBlockInfo(const std::string& path,
-                              const dafs::Location location);
+                              const dafs::Identity identity);
 }

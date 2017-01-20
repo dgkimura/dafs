@@ -14,13 +14,13 @@ TEST(MessagesTest, testMetaDataParserCanGetValue)
             dafs::Serialize<dafs::FileInfo>(
                 dafs::FileInfo
                 {
-                    dafs::Location
+                    dafs::Identity
                     {
-                        "previous"
+                        "00000000-0000-0000-0000-000000000000",
                     },
-                    dafs::Location
+                    dafs::Identity
                     {
-                        "next"
+                        "11111111-1111-1111-1111-111111111111",
                     },
                     1,
                     "name"

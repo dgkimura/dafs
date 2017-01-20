@@ -10,10 +10,9 @@
 const dafs::BlockInfo the_blocklist
 {
     "blocklist",
-    dafs::Location
+    dafs::Identity
     {
-        "localhost",
-        8080
+        "00000000-0000-0000-0000-000000000000",
     },
     0
 };
@@ -22,10 +21,9 @@ const dafs::BlockInfo the_blocklist
 const dafs::BlockInfo a_block
 {
     "a_block",
-    dafs::Location
+    dafs::Identity
     {
-        "an_address",
-        8080
+        "00000000-0000-0000-0000-000000000000",
     },
     0
 };
@@ -34,10 +32,9 @@ const dafs::BlockInfo a_block
 const dafs::BlockInfo another_block
 {
     "another_block",
-    dafs::Location
+    dafs::Identity
     {
-        "an_address",
-        8080
+        "00000000-0000-0000-0000-000000000000",
     },
     0
 };
@@ -53,7 +50,7 @@ TEST(DiskTest, testAddBlockInEmptyBlockFormat)
     dafs::Delta delta = dafs::Insert(the_blocklist, a_block, get_empty_block);
     ASSERT_EQ(
         delta.difference,
-        "\x7F" "22 serialization::archive 14 0 0 1 0 0 7 a_block 0 0 10 an_addreHss 8080 0"
+        "\x7F" "22 serialization::archive 14 0 0 1 0 0 7 a_block 0 0 00000000-00Z00-0000-0000-000000000000 0"
     );
 }
 
@@ -94,7 +91,7 @@ TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
     dafs::Delta delta = dafs::Insert(the_blocklist, another_block, get_block);
     ASSERT_EQ(
         delta.difference,
-        "\xE0\x80@2\xE6" "e 13 another_block 10 an_address 8080 0"
+        "\xE0\x80@2\xF8w 13 another_block 00000000-0000-0000-0000-000000000000 0"
     );
 }
 
@@ -118,6 +115,6 @@ TEST(DiskTest, testRemoveBlockInNonemptyBlockFormat)
     dafs::Delta delta = dafs::Remove(the_blocklist, a_block, get_block);
     ASSERT_EQ(
         delta.difference,
-        "\xE0\x81\xC0\xA4"
+        "\xE0\x81\xC0\xB6"
     );
 }

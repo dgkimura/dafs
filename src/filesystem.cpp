@@ -14,21 +14,12 @@ namespace dafs
     }
 
 
-    Location
-    CreateLocation(const std::string& address)
-    {
-        Location location;
-        location.address = address;
-        return location;
-    }
-
-
     BlockInfo
-    CreateBlockInfo(const std::string& path, const dafs::Location location)
+    CreateBlockInfo(const std::string& path, const dafs::Identity identity)
     {
         BlockInfo blockinfo;
         blockinfo.path = path;
-        blockinfo.location = location;
+        blockinfo.identity = identity;
         return blockinfo;
     }
 }

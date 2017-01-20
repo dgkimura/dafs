@@ -19,19 +19,19 @@ namespace dafs
           files(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::FileListName).string(),
-                  dafs::CreateLocation("N/A"))),
+                  dafs::Identity())),
           blocks(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::BlockListName).string(),
-                  dafs::CreateLocation("N/A"))),
+                  dafs::Identity())),
           nodes(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::NodeSetName).string(),
-                  dafs::CreateLocation("N/A"))),
+                  dafs::Identity())),
           identity(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
-                  dafs::CreateLocation("N/A"))),
+                  dafs::Identity())),
           in_progress(),
           root(root)
     {
@@ -54,21 +54,18 @@ namespace dafs
     }
 
 
-    dafs::Partition::Identity
+    dafs::Identity
     Partition::GetIdentity()
     {
         dafs::BlockFormat b =  store.ReadBlock(rooted(identity));
-        return Identity
-        {
-            dafs::Deserialize<std::string>(b.contents)
-        };
+        return dafs::Deserialize<dafs::Identity>(b.contents);
     }
 
 
     void
-    Partition::SetIdentity(dafs::Partition::Identity id)
+    Partition::SetIdentity(dafs::Identity id)
     {
-        dafs::Delta delta = dafs::Set(rooted(identity), id.identity);
+        dafs::Delta delta = dafs::Set(rooted(identity), dafs::Serialize(id));
         store.Write(rooted(identity), delta);
     }
 
