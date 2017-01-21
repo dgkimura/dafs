@@ -77,18 +77,21 @@ TEST(SerializationUnitTest, testFileInfoIsSerializableAndDeserializable)
         },
         dafs::Identity
         {
-            "00000000-0000-0000-0000-000000000000",
+            "22222222-2222-2222-2222-222222222222",
         },
-        1,
+        dafs::Identity
+        {
+            "33333333-3333-3333-3333-333333333333",
+        },
         "filename"
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::FileInfo>(string_obj);
 
+    ASSERT_EQ(expected.current, actual.current);
     ASSERT_EQ(expected.previous, actual.previous);
     ASSERT_EQ(expected.next, actual.next);
-    ASSERT_EQ(expected.descriptor, actual.descriptor);
     ASSERT_EQ(expected.path, actual.path);
 }
 
@@ -107,7 +110,11 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
             {
                 "11111111-1111-1111-1111-111111111111",
             },
-            1
+            dafs::Identity
+            {
+                "33333333-3333-3333-3333-333333333333",
+            },
+            "filename"
         },
         {
             dafs::BlockInfo
@@ -132,9 +139,9 @@ TEST(SerializationUnitTest, testFileFormatIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::FileFormat>(string_obj);
 
+    ASSERT_EQ(expected.info.current, actual.info.current);
     ASSERT_EQ(expected.info.previous, actual.info.previous);
     ASSERT_EQ(expected.info.next, actual.info.next);
-    ASSERT_EQ(expected.info.descriptor, actual.info.descriptor);
     ASSERT_EQ(expected.info.path, actual.info.path);
     ASSERT_EQ(expected.blocks[0].path, actual.blocks[0].path);
     ASSERT_EQ(expected.blocks[0].identity, actual.blocks[0].identity);
@@ -159,24 +166,18 @@ TEST(SerializationUnitTest, testFileIndexIsSerializableAndDeserializable)
                 {
                     "11111111-1111-1111-1111-111111111111",
                 },
-                1,
+                dafs::Identity
+                {
+                    "33333333-3333-3333-3333-333333333333",
+                },
                 "filename"
             },
             dafs::FileInfo
             {
                 dafs::Identity
                 {
-                    "33333333-3333-3333-3333-333333333333",
-                },
-                dafs::Identity
-                {
                     "44444444-4444-4444-4444-444444444444",
                 },
-                2,
-                "my-file"
-            },
-            dafs::FileInfo
-            {
                 dafs::Identity
                 {
                     "55555555-5555-5555-5555-555555555555",
@@ -185,7 +186,22 @@ TEST(SerializationUnitTest, testFileIndexIsSerializableAndDeserializable)
                 {
                     "66666666-6666-6666-6666-666666666666",
                 },
-                3,
+                "my-file"
+            },
+            dafs::FileInfo
+            {
+                dafs::Identity
+                {
+                    "77777777-7777-7777-7777-777777777777",
+                },
+                dafs::Identity
+                {
+                    "88888888-8888-8888-8888-888888888888",
+                },
+                dafs::Identity
+                {
+                    "99999999-9999-9999-9999-999999999999",
+                },
                 "your-file"
             }
         }

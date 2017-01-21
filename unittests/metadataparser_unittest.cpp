@@ -22,7 +22,10 @@ TEST(MessagesTest, testMetaDataParserCanGetValue)
                     {
                         "11111111-1111-1111-1111-111111111111",
                     },
-                    1,
+                    dafs::Identity
+                    {
+                        "33333333-3333-3333-3333-333333333333",
+                    },
                     "name"
                 }
             )

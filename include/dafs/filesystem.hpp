@@ -39,7 +39,7 @@ namespace dafs
 
 
     //
-    // Describes identity of object.
+    // Associates stored objects with partitions.
     //
     struct Identity
     {
@@ -127,18 +127,18 @@ namespace dafs
     //
     struct FileInfo
     {
+        Identity current;
+
         Identity previous;
 
         Identity next;
-
-        int descriptor;
 
         std::string path;
 
         bool
         operator==(const FileInfo& rhs) const
         {
-            return path == rhs.path;
+            return path == rhs.path && current == rhs.current;
         }
     };
 

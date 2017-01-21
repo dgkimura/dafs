@@ -1,5 +1,4 @@
 #include <boost/filesystem.hpp>
-#include <boost/uuid/uuid_generators.hpp>
 
 #include "dafs/main.hpp"
 #include "dafs/node.hpp"
