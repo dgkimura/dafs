@@ -1,7 +1,10 @@
 #include <boost/filesystem.hpp>
 
+#include "dafs/dispatcher.hpp"
 #include "dafs/main.hpp"
 #include "dafs/node.hpp"
+#include "dafs/sender.hpp"
+#include "dafs/server.hpp"
 
 
 void
@@ -41,6 +44,12 @@ int main(void)
     n.GetPartition(dafs::Node::Slot::Plus).AddNode("1.1.1.1", 1111);
     n.GetPartition(dafs::Node::Slot::Zero).AddNode("2.2.2.2", 2222);
     n.GetPartition(dafs::Node::Slot::Zero).RemoveNode("2.2.2.2", 2222);
+
+    dafs::NetworkSender sender;
+
+    dafs::Dispatcher dispatcher(n, sender);
+
+    dafs::Server server("127.0.0.1111111", 8000, dispatcher);
 
     for (;;);
 }

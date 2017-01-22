@@ -6,7 +6,7 @@
 
 namespace dafs
 {
-    Dispatcher::Dispatcher()
+    Dispatcher::Dispatcher(dafs::Node& node, dafs::Sender& sender)
         : registered_map {
               { dafs::MessageType::CreateFile, dafs::HandleCreateFile },
               { dafs::MessageType::DeleteFile, dafs::HandleDeleteFile },
@@ -17,14 +17,17 @@ namespace dafs
               { dafs::MessageType::_RequestInitiation, dafs::HandleRequestInitiation },
               { dafs::MessageType::_ProcessInitation, dafs::HandleProcessInitation },
               { dafs::MessageType::_ConcludeInitation, dafs::HandleConcludeInitation }
-          }
+          },
+          node(node),
+          sender(sender)
     {
     }
 
 
-    MessageHandler
-    Dispatcher::GetRoutine(dafs::Message message)
+    void
+    Dispatcher::Process(dafs::Message message)
     {
-        return registered_map[message.type];
+        dafs::MetaDataParser metadata(message.metadata);
+        registered_map[message.type](node, metadata, sender);
     }
 }

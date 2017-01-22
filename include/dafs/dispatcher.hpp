@@ -34,9 +34,9 @@ namespace dafs
     {
     public:
 
-        Dispatcher();
+        Dispatcher(dafs::Node& node, dafs::Sender& sender);
 
-        MessageHandler GetRoutine(dafs::Message);
+        void Process(dafs::Message);
 
     private:
 
@@ -46,5 +46,9 @@ namespace dafs
             dafs::MessageHandler,
             dafs::MessageTypeHash
         > registered_map;
+
+        dafs::Node& node;
+
+        dafs::Sender& sender;
     };
 }

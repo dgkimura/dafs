@@ -5,7 +5,6 @@
 
 #include "dafs/dispatcher.hpp"
 #include "dafs/filesystem.hpp"
-#include "dafs/node.hpp"
 
 
 namespace dafs
@@ -17,7 +16,6 @@ namespace dafs
         Server(
             std::string address,
             short port,
-            Node node,
             Dispatcher dispather);
 
         ~Server();
@@ -32,8 +30,6 @@ namespace dafs
 
         boost::asio::ip::tcp::socket socket;
 
-        Node node;
-
         Dispatcher dispatcher;
 
         class Session : public boost::enable_shared_from_this<Session>
@@ -43,12 +39,11 @@ namespace dafs
                 boost::asio::ip::tcp::socket socket
             );
 
-            void Start(Node& node, Dispatcher& dispatcher);
+            void Start(Dispatcher& dispatcher);
 
         private:
 
             void handle_read_message(
-                Node& node,
                 Dispatcher& dispatcher,
                 const boost::system::error_code& err);
 
