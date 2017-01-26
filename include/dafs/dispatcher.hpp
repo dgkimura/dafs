@@ -13,10 +13,7 @@ namespace dafs
 {
     using MessageHandler = std::function
     <
-        void (
-            dafs::Node& node,
-            dafs::MetaDataParser metadata,
-            dafs::Sender& sender)
+        void (dafs::MetaDataParser metadata)
     >;
 
 
