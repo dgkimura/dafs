@@ -11,7 +11,7 @@ namespace dafs
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
 
-        node.GetPartition(Node::Slot::Zero).CreateFile(fileinfo);
+        node.GetPartition(fileinfo.current).CreateFile(fileinfo);
     }
 
 
@@ -23,7 +23,7 @@ namespace dafs
     {
         auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
 
-        node.GetPartition(Node::Slot::Zero).DeleteFile(fileinfo);
+        node.GetPartition(fileinfo.current).DeleteFile(fileinfo);
     }
 
 
@@ -34,7 +34,7 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
-        auto blockformat = node.GetPartition(Node::Slot::Zero).ReadBlock(blockinfo);
+        auto blockformat = node.GetPartition(blockinfo.identity).ReadBlock(blockinfo);
 
         // return blockformat and version
     }
@@ -49,7 +49,7 @@ namespace dafs
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
 
-        node.GetPartition(Node::Slot::Zero).WriteBlock(blockinfo, block);
+        node.GetPartition(blockinfo.identity).WriteBlock(blockinfo, block);
     }
 
 

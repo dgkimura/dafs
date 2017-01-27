@@ -29,4 +29,11 @@ namespace dafs
             }
         }
     }
+
+
+    dafs::Partition&
+    Node::GetPartition(Identity identity)
+    {
+        return slot_zero;
+    }
 }

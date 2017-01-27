@@ -19,7 +19,9 @@ namespace dafs
 
         Node();
 
-        dafs::Partition& GetPartition(Slot slot);
+        dafs::Partition& GetPartition(Node::Slot slot);
+
+        dafs::Partition& GetPartition(dafs::Identity identity);
 
     private:
 
