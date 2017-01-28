@@ -34,6 +34,17 @@ namespace dafs
     dafs::Partition&
     Node::GetPartition(Identity identity)
     {
-        return slot_zero;
+        if (identity < slot_minus.GetIdentity())
+        {
+            return slot_minus;
+        }
+        else if (slot_plus.GetIdentity() < identity)
+        {
+            return slot_plus;
+        }
+        else
+        {
+            return slot_zero;
+        }
     }
 }
