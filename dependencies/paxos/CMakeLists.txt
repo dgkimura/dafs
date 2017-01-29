@@ -11,10 +11,11 @@ ExternalProject_Add(
 
 set(paxos_DEPENDENCIES
     ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_filesystem${CMAKE_SHARED_LIBRARY_SUFFIX}
+    ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_iostreams${CMAKE_SHARED_LIBRARY_SUFFIX}
+    ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_log${CMAKE_SHARED_LIBRARY_SUFFIX}
+    ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_program_options${CMAKE_SHARED_LIBRARY_SUFFIX}
     ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_serialization${CMAKE_SHARED_LIBRARY_SUFFIX}
     ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_system${CMAKE_SHARED_LIBRARY_SUFFIX}
-    ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_log${CMAKE_SHARED_LIBRARY_SUFFIX}
-    ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_iostreams${CMAKE_SHARED_LIBRARY_SUFFIX}
     ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_thread${CMAKE_SHARED_LIBRARY_SUFFIX}
 )
 set(paxos_LIBS

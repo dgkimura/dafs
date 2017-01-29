@@ -1,10 +1,34 @@
+#include <iostream>
+
 #include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
+#include <boost/uuid/uuid.hpp>
 
 #include "dafs/dispatcher.hpp"
 #include "dafs/main.hpp"
 #include "dafs/node.hpp"
 #include "dafs/sender.hpp"
 #include "dafs/server.hpp"
+
+
+void
+ParseOptions(int argc, char** argv)
+{
+    boost::program_options::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "produce help message")
+        ("address", boost::program_options::value<std::string>(), "address of the node")
+        ("identity", boost::program_options::value<boost::uuids::uuid>(), "uuid identity of the node")
+    ;
+    boost::program_options::variables_map vm;
+    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+    boost::program_options::notify(vm);
+
+    if (vm.count("help")) {
+        std::cout << desc << "\n";
+        std::exit(EXIT_FAILURE);
+    }
+}
 
 
 void
@@ -21,8 +45,10 @@ SetupPartition(std::string directory, std::string hostport)
 }
 
 
-int main(void)
+int main(int argc, char** argv)
 {
+    ParseOptions(argc, argv);
+
     SetupPartition("p-minus", "127.0.0.1:8070");
     SetupPartition("p-zero", "127.0.0.1:8080");
     SetupPartition("p-plus", "127.0.0.1:8090");
