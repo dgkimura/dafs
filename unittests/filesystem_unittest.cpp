@@ -56,3 +56,35 @@ TEST(FileSystemTest, testsIdentityComparison)
     ASSERT_FALSE(a == b);
     ASSERT_TRUE(a == a);
 }
+
+
+TEST(FileSystemTest, testsIdentityArithmatic)
+{
+    dafs::Identity a = dafs::Identity("33333333-3333-3333-3333-333333333333");
+    dafs::Identity b = dafs::Identity("11111111-1111-1111-1111-111111111111");
+
+    // test arithmatic
+    ASSERT_EQ(dafs::Identity("44444444-4444-4444-4444-444444444444"), a + b);
+    ASSERT_EQ(dafs::Identity("22222222-2222-2222-2222-222222222222"), a - b);
+
+    a = dafs::Identity("00000000-0000-0000-0000-000000000991");
+    b = dafs::Identity("00000000-0000-0000-0000-000000000088");
+
+    // test carrying arithmatic
+    ASSERT_EQ(dafs::Identity("00000000-0000-0000-0000-000000000a19"), a + b);
+    ASSERT_EQ(dafs::Identity("00000000-0000-0000-0000-000000000909"), a - b);
+}
+
+
+TEST(FileSystemTest, testsIdentityMedian)
+{
+    dafs::Identity a = dafs::Identity("33333333-3333-3333-3333-333333333333");
+    dafs::Identity b = dafs::Identity("11111111-1111-1111-1111-111111111111");
+
+    ASSERT_EQ(dafs::Identity("22222222-2222-2222-2222-222222222222"), a.Median(b));
+
+    a = dafs::Identity("ffffffff-ffff-ffff-ffff-ffffffffffff");
+    b = dafs::Identity("11111111-1111-1111-1111-111111111111");
+
+    ASSERT_EQ(dafs::Identity("88888888-8888-8888-8888-888888888888"), a.Median(b));
+}
