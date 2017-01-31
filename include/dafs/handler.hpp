@@ -7,18 +7,6 @@
 
 namespace dafs
 {
-    void HandleCreateFile(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
-    void HandleDeleteFile(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
     void HandleOpenFile(
         dafs::Node& node,
         dafs::MetaDataParser metadata,

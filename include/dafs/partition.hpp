@@ -17,10 +17,6 @@ namespace dafs
 
         virtual void SetIdentity(dafs::Identity id) = 0;
 
-        virtual void CreateFile(dafs::FileInfo info) = 0;
-
-        virtual void DeleteFile(FileInfo file) = 0;
-
         virtual void CreateBlock(BlockInfo block) = 0;
 
         virtual void DeleteBlock(BlockInfo block) = 0;
@@ -45,14 +41,6 @@ namespace dafs
         }
 
         virtual void SetIdentity(dafs::Identity id) override
-        {
-        }
-
-        virtual void CreateFile(dafs::FileInfo info) override
-        {
-        }
-
-        virtual void DeleteFile(FileInfo file) override
         {
         }
 
@@ -98,10 +86,6 @@ namespace dafs
         virtual dafs::Identity GetIdentity() override;
 
         virtual void SetIdentity(dafs::Identity id) override;
-
-        virtual void CreateFile(dafs::FileInfo info) override;
-
-        virtual void DeleteFile(FileInfo file) override;
 
         virtual void CreateBlock(BlockInfo block) override;
 

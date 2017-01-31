@@ -8,12 +8,6 @@ namespace dafs
 {
     Dispatcher::Dispatcher(dafs::Node& node, dafs::Sender& sender)
         : registered_map {
-              { dafs::MessageType::CreateFile,
-                    [&node, &sender](dafs::MetaDataParser metadata)
-                        { dafs::HandleCreateFile(node, metadata, sender); } },
-              { dafs::MessageType::DeleteFile,
-                    [&node, &sender](dafs::MetaDataParser metadata)
-                        { dafs::HandleDeleteFile(node, metadata, sender); } },
               { dafs::MessageType::ReadBlock,
                     [&node, &sender](dafs::MetaDataParser metadata)
                         { dafs::HandleReadBlock(node, metadata, sender); } },

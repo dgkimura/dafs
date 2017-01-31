@@ -4,30 +4,6 @@
 namespace dafs
 {
     void
-    HandleCreateFile(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
-    {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
-
-        node.GetPartition(fileinfo.current)->CreateFile(fileinfo);
-    }
-
-
-    void
-    HandleDeleteFile(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
-    {
-        auto fileinfo = metadata.GetValue<dafs::FileInfo>(dafs::FileInfoKey);
-
-        node.GetPartition(fileinfo.current)->DeleteFile(fileinfo);
-    }
-
-
-    void
     HandleReadBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata,

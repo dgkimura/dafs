@@ -71,22 +71,6 @@ namespace dafs
 
 
     void
-    ReplicatedPartition::CreateFile(FileInfo info)
-    {
-        Delta delta = dafs::Insert(rooted(files), info);
-        store.Write(rooted(files), delta);
-    }
-
-
-    void
-    ReplicatedPartition::DeleteFile(FileInfo info)
-    {
-        Delta delta = dafs::Remove(rooted(files), info);
-        store.Write(rooted(files), delta);
-    }
-
-
-    void
     ReplicatedPartition::CreateBlock(BlockInfo info)
     {
         Delta delta = dafs::Insert(rooted(blocks), info);
