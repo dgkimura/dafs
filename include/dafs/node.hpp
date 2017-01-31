@@ -30,5 +30,7 @@ namespace dafs
         dafs::Partition slot_zero;
 
         dafs::Partition slot_plus;
+
+        dafs::Partition slot_empty;
     };
 }

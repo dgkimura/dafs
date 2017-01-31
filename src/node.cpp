@@ -5,7 +5,8 @@ namespace dafs
     Node::Node()
         : slot_minus(dafs::Root("p-minus")),
           slot_zero(dafs::Root("p-zero")),
-          slot_plus(dafs::Root("p-plus"))
+          slot_plus(dafs::Root("p-plus")),
+          slot_empty(dafs::Root("p-empty"))
     {
     }
 
@@ -34,17 +35,21 @@ namespace dafs
     dafs::Partition&
     Node::GetPartition(Identity identity)
     {
-        if (identity < slot_minus.GetIdentity())
+        if (slot_minus.GetIdentity() <= identity &&
+            identity < slot_minus.GetIdentity().Median(slot_zero.GetIdentity()))
         {
             return slot_minus;
         }
-        else if (slot_plus.GetIdentity() < identity)
-        {
-            return slot_plus;
-        }
-        else
+        else if (identity >= slot_minus.GetIdentity().Median(slot_zero.GetIdentity()) &&
+                 identity < slot_zero.GetIdentity().Median(slot_plus.GetIdentity()))
         {
             return slot_zero;
         }
+        else if (identity < slot_plus.GetIdentity() &&
+                 identity >= slot_minus.GetIdentity().Median(slot_zero.GetIdentity()))
+        {
+            return slot_plus;
+        }
+        return slot_empty;
     }
 }
