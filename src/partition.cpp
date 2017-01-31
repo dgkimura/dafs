@@ -9,7 +9,7 @@
 
 namespace dafs
 {
-    Partition::Partition(
+    ReplicatedPartition::ReplicatedPartition(
         Root root
     )
         : parliament(root.directory,
@@ -38,8 +38,8 @@ namespace dafs
     }
 
 
-    Partition::Partition(
-        const Partition& other
+    ReplicatedPartition::ReplicatedPartition(
+        const ReplicatedPartition& other
     )
         : parliament(other.parliament),
           store(other.store),
@@ -55,7 +55,7 @@ namespace dafs
 
 
     dafs::Identity
-    Partition::GetIdentity()
+    ReplicatedPartition::GetIdentity()
     {
         dafs::BlockFormat b =  store.ReadBlock(rooted(identity));
         return dafs::Deserialize<dafs::Identity>(b.contents);
@@ -63,7 +63,7 @@ namespace dafs
 
 
     void
-    Partition::SetIdentity(dafs::Identity id)
+    ReplicatedPartition::SetIdentity(dafs::Identity id)
     {
         dafs::Delta delta = dafs::Set(rooted(identity), dafs::Serialize(id));
         store.Write(rooted(identity), delta);
@@ -71,7 +71,7 @@ namespace dafs
 
 
     void
-    Partition::CreateFile(FileInfo info)
+    ReplicatedPartition::CreateFile(FileInfo info)
     {
         Delta delta = dafs::Insert(rooted(files), info);
         store.Write(rooted(files), delta);
@@ -79,7 +79,7 @@ namespace dafs
 
 
     void
-    Partition::DeleteFile(FileInfo info)
+    ReplicatedPartition::DeleteFile(FileInfo info)
     {
         Delta delta = dafs::Remove(rooted(files), info);
         store.Write(rooted(files), delta);
@@ -87,7 +87,7 @@ namespace dafs
 
 
     void
-    Partition::CreateBlock(BlockInfo info)
+    ReplicatedPartition::CreateBlock(BlockInfo info)
     {
         Delta delta = dafs::Insert(rooted(blocks), info);
         store.Write(rooted(blocks), delta);
@@ -95,7 +95,7 @@ namespace dafs
 
 
     void
-    Partition::DeleteBlock(BlockInfo info)
+    ReplicatedPartition::DeleteBlock(BlockInfo info)
     {
         Delta delta = dafs::Remove(rooted(nodes), info);
         store.Write(rooted(blocks), delta);
@@ -103,14 +103,14 @@ namespace dafs
 
 
     BlockFormat
-    Partition::ReadBlock(BlockInfo block)
+    ReplicatedPartition::ReadBlock(BlockInfo block)
     {
         return store.ReadBlock(rooted(block));
     }
 
 
     void
-    Partition::WriteBlock(BlockInfo block, BlockFormat format)
+    ReplicatedPartition::WriteBlock(BlockInfo block, BlockFormat format)
     {
         dafs::Delta delta = dafs::Set(rooted(block), format.contents);
         store.Write(rooted(block), delta);
@@ -118,21 +118,21 @@ namespace dafs
 
 
     void
-    Partition::AddNode(std::string address, short port)
+    ReplicatedPartition::AddNode(std::string address, short port)
     {
         nodeset.AddNode(address, port);
     }
 
 
     void
-    Partition::RemoveNode(std::string address, short port)
+    ReplicatedPartition::RemoveNode(std::string address, short port)
     {
         nodeset.RemoveNode(address, port);
     }
 
 
     dafs::BlockInfo
-    Partition::rooted(dafs::BlockInfo info)
+    ReplicatedPartition::rooted(dafs::BlockInfo info)
     {
         info.path = (boost::filesystem::path(root.directory) /
                      boost::filesystem::path(info.path)).string();

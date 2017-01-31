@@ -13,33 +13,59 @@ namespace dafs
     {
     public:
 
-        Partition(
+        virtual dafs::Identity GetIdentity() = 0;
+
+        virtual void SetIdentity(dafs::Identity id) = 0;
+
+        virtual void CreateFile(dafs::FileInfo info) = 0;
+
+        virtual void DeleteFile(FileInfo file) = 0;
+
+        virtual void CreateBlock(BlockInfo block) = 0;
+
+        virtual void DeleteBlock(BlockInfo block) = 0;
+
+        virtual BlockFormat ReadBlock(BlockInfo block) = 0;
+
+        virtual void WriteBlock(BlockInfo block, BlockFormat format) = 0;
+
+        virtual void AddNode(std::string address, short port) = 0;
+
+        virtual void RemoveNode(std::string address, short port) = 0;
+    };
+
+
+    class ReplicatedPartition : public Partition
+    {
+    public:
+
+        ReplicatedPartition(
             Root root
         );
 
-        Partition(
-            const Partition& other
+        ReplicatedPartition(
+            const ReplicatedPartition& other
         );
 
-        dafs::Identity GetIdentity();
+        virtual dafs::Identity GetIdentity();
 
-        void SetIdentity(dafs::Identity id);
+        virtual void SetIdentity(dafs::Identity id);
 
-        void CreateFile(dafs::FileInfo info);
+        virtual void CreateFile(dafs::FileInfo info);
 
-        void DeleteFile(FileInfo file);
+        virtual void DeleteFile(FileInfo file);
 
-        void CreateBlock(BlockInfo block);
+        virtual void CreateBlock(BlockInfo block);
 
-        void DeleteBlock(BlockInfo block);
+        virtual void DeleteBlock(BlockInfo block);
 
-        BlockFormat ReadBlock(BlockInfo block);
+        virtual BlockFormat ReadBlock(BlockInfo block);
 
-        void WriteBlock(BlockInfo block, BlockFormat format);
+        virtual void WriteBlock(BlockInfo block, BlockFormat format);
 
-        void AddNode(std::string address, short port);
+        virtual void AddNode(std::string address, short port);
 
-        void RemoveNode(std::string address, short port);
+        virtual void RemoveNode(std::string address, short port);
 
     private:
 

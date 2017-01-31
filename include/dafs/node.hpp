@@ -19,18 +19,18 @@ namespace dafs
 
         Node();
 
-        dafs::Partition& GetPartition(Node::Slot slot);
+        std::shared_ptr<dafs::Partition> GetPartition(Node::Slot slot);
 
-        dafs::Partition& GetPartition(dafs::Identity identity);
+        std::shared_ptr<dafs::Partition> GetPartition(dafs::Identity identity);
 
     private:
 
-        dafs::Partition slot_minus;
+        std::shared_ptr<dafs::Partition> slot_minus;
 
-        dafs::Partition slot_zero;
+        std::shared_ptr<dafs::Partition> slot_zero;
 
-        dafs::Partition slot_plus;
+        std::shared_ptr<dafs::Partition> slot_plus;
 
-        dafs::Partition slot_empty;
+        std::shared_ptr<dafs::Partition> slot_empty;
     };
 }
