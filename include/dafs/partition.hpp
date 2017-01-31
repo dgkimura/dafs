@@ -35,6 +35,54 @@ namespace dafs
     };
 
 
+    class EmptyPartition : public Partition
+    {
+    public:
+
+        virtual dafs::Identity GetIdentity() override
+        {
+            return dafs::Deserialize<dafs::Identity>("00000000-0000-0000-0000-000000000000");
+        }
+
+        virtual void SetIdentity(dafs::Identity id) override
+        {
+        }
+
+        virtual void CreateFile(dafs::FileInfo info) override
+        {
+        }
+
+        virtual void DeleteFile(FileInfo file) override
+        {
+        }
+
+        virtual void CreateBlock(BlockInfo block) override
+        {
+        }
+
+        virtual void DeleteBlock(BlockInfo block) override
+        {
+        }
+
+        virtual BlockFormat ReadBlock(BlockInfo block) override
+        {
+            return dafs::BlockFormat{""};
+        }
+
+        virtual void WriteBlock(BlockInfo block, BlockFormat format) override
+        {
+        }
+
+        virtual void AddNode(std::string address, short port) override
+        {
+        }
+
+        virtual void RemoveNode(std::string address, short port) override
+        {
+        }
+    };
+
+
     class ReplicatedPartition : public Partition
     {
     public:
@@ -47,25 +95,25 @@ namespace dafs
             const ReplicatedPartition& other
         );
 
-        virtual dafs::Identity GetIdentity();
+        virtual dafs::Identity GetIdentity() override;
 
-        virtual void SetIdentity(dafs::Identity id);
+        virtual void SetIdentity(dafs::Identity id) override;
 
-        virtual void CreateFile(dafs::FileInfo info);
+        virtual void CreateFile(dafs::FileInfo info) override;
 
-        virtual void DeleteFile(FileInfo file);
+        virtual void DeleteFile(FileInfo file) override;
 
-        virtual void CreateBlock(BlockInfo block);
+        virtual void CreateBlock(BlockInfo block) override;
 
-        virtual void DeleteBlock(BlockInfo block);
+        virtual void DeleteBlock(BlockInfo block) override;
 
-        virtual BlockFormat ReadBlock(BlockInfo block);
+        virtual BlockFormat ReadBlock(BlockInfo block) override;
 
-        virtual void WriteBlock(BlockInfo block, BlockFormat format);
+        virtual void WriteBlock(BlockInfo block, BlockFormat format) override;
 
-        virtual void AddNode(std::string address, short port);
+        virtual void AddNode(std::string address, short port) override;
 
-        virtual void RemoveNode(std::string address, short port);
+        virtual void RemoveNode(std::string address, short port) override;
 
     private:
 
