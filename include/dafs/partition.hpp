@@ -35,13 +35,19 @@ namespace dafs
     {
     public:
 
+        EmptyPartition(dafs::Identity identity)
+            : identity(identity)
+        {
+        }
+
         virtual dafs::Identity GetIdentity() override
         {
-            return dafs::Deserialize<dafs::Identity>("00000000-0000-0000-0000-000000000000");
+            return identity;
         }
 
         virtual void SetIdentity(dafs::Identity id) override
         {
+            identity = id;
         }
 
         virtual void CreateBlock(BlockInfo block) override
@@ -68,6 +74,10 @@ namespace dafs
         virtual void RemoveNode(std::string address, short port) override
         {
         }
+
+    private:
+
+        dafs::Identity identity;
     };
 
 

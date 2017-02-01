@@ -6,7 +6,8 @@ namespace dafs
         : slot_minus(std::make_shared<dafs::ReplicatedPartition>(dafs::Root("p-minus"))),
           slot_zero(std::make_shared<dafs::ReplicatedPartition>(dafs::Root("p-zero"))),
           slot_plus(std::make_shared<dafs::ReplicatedPartition>(dafs::Root("p-plus"))),
-          slot_empty(std::make_shared<dafs::EmptyPartition>())
+          slot_empty(std::make_shared<dafs::EmptyPartition>(
+              dafs::Identity("00000000-0000-0000-0000-000000000000")))
     {
     }
 
