@@ -58,14 +58,14 @@ namespace dafs
     ReplicatedPartition::GetIdentity()
     {
         dafs::BlockFormat b =  store.ReadBlock(rooted(identity));
-        return dafs::Deserialize<dafs::Identity>(b.contents);
+        return dafs::Identity(b.contents);
     }
 
 
     void
     ReplicatedPartition::SetIdentity(dafs::Identity id)
     {
-        dafs::Delta delta = dafs::Set(rooted(identity), dafs::Serialize(id));
+        dafs::Delta delta = dafs::Set(rooted(identity), boost::uuids::to_string(id.id));
         store.Write(rooted(identity), delta);
     }
 
