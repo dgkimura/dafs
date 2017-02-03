@@ -50,7 +50,7 @@ TEST(DiskTest, testAddBlockInEmptyBlockFormat)
     dafs::Delta delta = dafs::Insert(the_blocklist, a_block, get_empty_block);
     ASSERT_EQ(
         delta.difference,
-        "\x7F" "22 serialization::archive 14 0 0 1 0 0 7 a_block 0 0 00000000-00Z00-0000-0000-000000000000 0"
+        "\x7F" "22 serialization::archive 14 0 0 1 0 0 7 a_block 0 0 36 00000000]-0000-0000-0000-000000000000 0"
     );
 }
 
@@ -91,7 +91,7 @@ TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
     dafs::Delta delta = dafs::Insert(the_blocklist, another_block, get_block);
     ASSERT_EQ(
         delta.difference,
-        "\xE0\x80@2\xF8w 13 another_block 00000000-0000-0000-0000-000000000000 0"
+        "\xE0\x80@2\xFBz 13 another_block 36 00000000-0000-0000-0000-000000000000 0"
     );
 }
 
@@ -115,6 +115,6 @@ TEST(DiskTest, testRemoveBlockInNonemptyBlockFormat)
     dafs::Delta delta = dafs::Remove(the_blocklist, a_block, get_block);
     ASSERT_EQ(
         delta.difference,
-        "\xE0\x81\xC0\xB6"
+        "\xE0\x81\xC0\xB9"
     );
 }

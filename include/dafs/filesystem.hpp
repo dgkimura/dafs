@@ -2,6 +2,7 @@
 
 #include <map>
 #include <limits>
+#include <sstream>
 
 #include <boost/filesystem.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -46,97 +47,103 @@ namespace dafs
     //
     struct Identity
     {
-        boost::uuids::uuid id;
+        boost::uuids::string_generator gen;
+
+        std::string id;
 
         Identity()
         {
-            id = boost::uuids::nil_uuid();
+            id = "00000000-0000-0000-0000-000000000000";
         }
 
         Identity(std::string uuid)
         {
-            boost::uuids::string_generator gen;
-            id = gen(uuid);
+            id = uuid;
         }
 
         bool
         operator==(const Identity& rhs) const
         {
-            return id == rhs.id;
+            return gen(id) == gen(rhs.id);
         }
 
         bool
         operator!=(const Identity& rhs) const
         {
-            return id != rhs.id;
+            return gen(id) != gen(rhs.id);
         }
 
         bool
         operator<(const Identity& rhs) const
         {
-            return id < rhs.id;
+            return gen(id) < gen(rhs.id);
         }
 
         bool
         operator>(const Identity& rhs) const
         {
-            return id > rhs.id;
+            return gen(id) > gen(rhs.id);
         }
 
         bool
         operator<=(const Identity& rhs) const
         {
-            return id <= rhs.id;
+            return gen(id) <= gen(rhs.id);
         }
 
         bool
         operator>=(const Identity& rhs) const
         {
-            return id >= rhs.id;
+            return gen(id) >= gen(rhs.id);
         }
 
         Identity
         operator+(const Identity& rhs) const
         {
-            unsigned char rhs_uuid_data[16];
-            boost::uuids::uuid rhs_id = rhs.id;
-            std::memcpy(rhs_uuid_data, &rhs_id, 16);
+            std::string raw_result;
 
-            unsigned char lhs_uuid_data[16];
-            boost::uuids::uuid lhs_id = id;
-            std::memcpy(lhs_uuid_data, &lhs_id, 16);
-
-            unsigned char result_uuid_data[16];
             bool carry = false;
-            for (int i = 15; i >= 0; i--)
+            for (int i = id.size() - 1; i >= 0; i--)
             {
-                short result_data = lhs_uuid_data[i] + rhs_uuid_data[i];
-                result_uuid_data[i] = result_data + (carry ? 1 : 0);
-                carry = result_data > std::numeric_limits<unsigned char>::max() ?
-                        true : false;
+                if (id[i] == '-')
+                {
+                    raw_result = '-' + raw_result;
+                    continue;
+                }
+                int a;
+                int b;
+                int r;
+                std::stringstream(std::string(1, id[i])) >> std::hex >> a;
+                std::stringstream(std::string(1, rhs.id[i])) >> std::hex >> b;
+                r = a + b + (carry ? 1 : 0);
+
+                std::stringstream tmp;
+                tmp << std::hex << (r);
+                raw_result = tmp.str()[tmp.str().size() - 1] + raw_result;
+
+                carry = r > 0xF ? true : false;
             }
-            dafs::Identity result;
-            std::memcpy(&result, result_uuid_data, 16);
+            dafs::Identity result(raw_result);
             return result;
         }
 
         Identity
         operator-(const Identity& rhs) const
         {
-            unsigned char rhs_uuid_data[16];
-            boost::uuids::uuid rhs_id = rhs.id;
-            std::memcpy(rhs_uuid_data, &rhs_id, 16);
+            std::string raw_result;
 
-            unsigned char lhs_uuid_data[16];
-            boost::uuids::uuid lhs_id = id;
-            std::memcpy(lhs_uuid_data, &lhs_id, 16);
-
-            unsigned char result_uuid_data[16];
             bool borrow = false;
-            for (int i = 15; i >= 0; i--)
+            for (int i = id.size(); i >= 0; i--)
             {
-                unsigned short a = lhs_uuid_data[i];
-                unsigned short b = rhs_uuid_data[i];
+                if (id[i] == '-')
+                {
+                    raw_result = '-' + raw_result;
+                    continue;
+                }
+                int a;
+                int b;
+                std::stringstream(std::string(1, id[i])) >> std::hex >> a;
+                std::stringstream(std::string(1, rhs.id[i])) >> std::hex >> b;
                 if (borrow)
                 {
                     a -= 1;
@@ -144,16 +151,17 @@ namespace dafs
                 if (a < b)
                 {
                     borrow = true;
-                    a += std::numeric_limits<unsigned char>::max() + 1;
+                    a += 0xF + 1;
                 }
                 else
                 {
                     borrow = false;
                 }
-                result_uuid_data[i] = a - b;
+                std::stringstream tmp;
+                tmp << std::hex << (a - b);
+                raw_result = tmp.str() + raw_result;
             }
-            dafs::Identity result;
-            std::memcpy(&result, result_uuid_data, 16);
+            dafs::Identity result(raw_result);
             return result;
         }
 
@@ -165,15 +173,22 @@ namespace dafs
 
             Identity diff = upper - lower;
 
-            unsigned char result_uuid_data[16];
-            std::memcpy(result_uuid_data, &diff, 16);
-
-            for (int i = 15; i >= 0; i--)
+            std::string raw_result;
+            for (int i = id.size(); i >= 0; i--)
             {
-                result_uuid_data[i] = (result_uuid_data[i] >> 1);
+                if (id[i] == '-')
+                {
+                    raw_result = '-' + raw_result;
+                    continue;
+                }
+                int a;
+                std::stringstream(std::string(1, id[i])) >> std::hex >> a;
+                a >>= 1;
+                std::stringstream tmp;
+                tmp << std::hex << a;
+                raw_result = tmp.str() + raw_result;
             }
-            dafs::Identity result;
-            std::memcpy(&result, result_uuid_data, 16);
+            dafs::Identity result(raw_result);
             dafs::Identity median = result + lower;
             return median;
         }

@@ -65,7 +65,7 @@ namespace dafs
     void
     ReplicatedPartition::SetIdentity(dafs::Identity id)
     {
-        dafs::Delta delta = dafs::Set(rooted(identity), boost::uuids::to_string(id.id));
+        dafs::Delta delta = dafs::Set(rooted(identity), id.id);
         store.Write(rooted(identity), delta);
     }
 
