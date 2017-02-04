@@ -12,48 +12,84 @@
 
 
 void
-ParseOptions(int argc, char** argv)
-{
-    boost::program_options::options_description desc("Allowed options");
-    desc.add_options()
-        ("help", "produce help message")
-        ("address", boost::program_options::value<std::string>(), "address of the node")
-        ("identity", boost::program_options::value<boost::uuids::uuid>(), "uuid identity of the node")
-    ;
-    boost::program_options::variables_map vm;
-    boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-    boost::program_options::notify(vm);
-
-    if (vm.count("help")) {
-        std::cout << desc << "\n";
-        std::exit(EXIT_FAILURE);
-    }
-}
-
-
-void
-SetupPartition(std::string directory, std::string hostport)
+SetupPartition(std::string directory, std::string hostport, dafs::Identity identity)
 {
     if (!boost::filesystem::exists(directory))
     {
         boost::filesystem::create_directory(directory);
         boost::filesystem::path replicasetfile(directory);
         replicasetfile /= ReplicasetFilename;
-        std::fstream s(replicasetfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
-        s << hostport << std::endl;
+        std::fstream rs(replicasetfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
+        rs << hostport << std::endl;
+
+        boost::filesystem::path identityfile(directory);
+        identityfile /= IdentityFilename;
+        std::fstream ids(identityfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
+        ids << identity.id << std::endl;
     }
 }
 
 
 int main(int argc, char** argv)
 {
-    ParseOptions(argc, argv);
+    //
+    // Parse the command line options.
+    //
+    std::string address;
+    boost::uuids::uuid identity;
 
-    SetupPartition("p-minus", "127.0.0.1:8070");
-    SetupPartition("p-zero", "127.0.0.1:8080");
-    SetupPartition("p-plus", "127.0.0.1:8090");
+    boost::program_options::options_description desc("Allowed options");
+    desc.add_options()
+        ("help", "produce help message")
+        ("address",
+         boost::program_options::value(&address)->default_value("127.0.0.1"),
+         "address of the node")
+        ("identity",
+         boost::program_options::value(&identity),
+         "uuid identity of the node")
+    ;
+    boost::program_options::variables_map vm;
+    boost::program_options::store(
+        boost::program_options::parse_command_line(argc, argv, desc), vm);
+    boost::program_options::notify(vm);
 
+    if (vm.count("help"))
+    {
+        std::cout << desc << "\n";
+        std::exit(EXIT_FAILURE);
+    }
+
+    //
+    // Setup the partitions
+    //
+    if (vm.count("identity"))
+    {
+        SetupPartition(
+            "p-minus",
+            address + ":8070",
+            dafs::Identity(boost::uuids::to_string(identity)) - dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+        );
+        SetupPartition(
+            "p-zero",
+            address + ":8080",
+            dafs::Identity(boost::uuids::to_string(identity))
+        );
+        SetupPartition(
+            "p-plus",
+            address + ":8090",
+            dafs::Identity(boost::uuids::to_string(identity)) + dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+        );
+    }
+
+    //
+    // Start node and server.
+    //
     dafs::Node n;
+
+    n.GetPartition(dafs::Node::Slot::Minus)->WriteBlock(dafs::BlockInfo{"myblock", dafs::Identity("11111111-2222-3333-4444-555555555555"), 0},
+                                                      dafs::BlockFormat{"first contents of myblock"});
+    n.GetPartition(dafs::Node::Slot::Minus)->WriteBlock(dafs::BlockInfo{"myblock", dafs::Identity("11111111-2222-3333-4444-555555555555"), 0},
+                                                      dafs::BlockFormat{"next contents of myblock"});
 
     n.GetPartition(dafs::Node::Slot::Minus)->SetIdentity(dafs::Identity{"00000000-0000-0000-0000-000000000000"});
     n.GetPartition(dafs::Node::Slot::Minus)->SetIdentity(dafs::Identity{"11111111-1111-1111-1111-111111111111"});
@@ -75,7 +111,7 @@ int main(int argc, char** argv)
 
     dafs::Dispatcher dispatcher(n, sender);
 
-    dafs::Server server("127.0.0.1111111", 8000, dispatcher);
+    dafs::Server server(address, 8000, dispatcher);
 
     for (;;);
 }
