@@ -9,7 +9,7 @@
 
 namespace dafs
 {
-    class Server
+    class Server : public boost::enable_shared_from_this<Server>
     {
     public:
 
@@ -19,6 +19,8 @@ namespace dafs
             Dispatcher dispather);
 
         ~Server();
+
+        void Start();
 
     private:
 

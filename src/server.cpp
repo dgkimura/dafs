@@ -13,7 +13,7 @@ namespace dafs
         short port,
         Dispatcher dispatcher)
         : io_service(),
-          acceptor(io_service, tcp::endpoint(tcp::v4(), port)),
+          acceptor(io_service, tcp::endpoint(boost::asio::ip::address::from_string(address), port)),
           socket(io_service),
           dispatcher(dispatcher)
     {
@@ -29,6 +29,14 @@ namespace dafs
 
 
     void
+    Server::Start()
+    {
+        auto self(shared_from_this());
+        std::thread([this, self]() { io_service.run(); }).detach();
+    }
+
+
+    void
     Server::do_accept()
     {
         acceptor.async_accept(socket,
@@ -36,7 +44,7 @@ namespace dafs
             {
                 if (!ec_accept)
                 {
-                    std::make_shared<Session>(std::move(socket))->Start(
+                    boost::make_shared<Session>(std::move(socket))->Start(
                         dispatcher);
                 }
                 do_accept();
