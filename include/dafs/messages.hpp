@@ -73,7 +73,6 @@ namespace dafs
     {
         Address from;
         Address to;
-        std::string content;
         dafs::MessageType type;
         std::vector<dafs::MetaData> metadata;
     };

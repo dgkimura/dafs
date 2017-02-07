@@ -279,7 +279,6 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
         {
             "2.2.2.2", 2222
         },
-        "the message content",
         dafs::MessageType::CreateFile,
         {
             {
@@ -300,7 +299,6 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
     ASSERT_EQ(expected.to.port, actual.to.port);
     ASSERT_EQ(expected.from.ip, actual.from.ip);
     ASSERT_EQ(expected.from.port, actual.from.port);
-    ASSERT_EQ(expected.content, actual.content);
     ASSERT_EQ(expected.type, actual.type);
     ASSERT_EQ(expected.metadata[0].key, actual.metadata[0].key);
     ASSERT_EQ(expected.metadata[0].value, actual.metadata[0].value);

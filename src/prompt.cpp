@@ -17,7 +17,6 @@ CreateWriteBlockMessage(
     {
         credentials.address,    // from
         credentials.address,    // to
-        "NA",
         dafs::MessageType::WriteBlock,
         std::vector<dafs::MetaData>
         {
