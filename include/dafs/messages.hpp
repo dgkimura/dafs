@@ -62,10 +62,17 @@ namespace dafs
     };
 
 
+    struct Address
+    {
+        std::string ip;
+        short port;
+    };
+
+
     struct Message
     {
-        std::string from;
-        std::string to;
+        Address from;
+        Address to;
         std::string content;
         dafs::MessageType type;
         std::vector<dafs::MetaData> metadata;

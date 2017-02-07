@@ -1,4 +1,3 @@
-#include <boost/algorithm/string.hpp>
 #include <boost/asio/io_service.hpp>
 
 #include "dafs/sender.hpp"
@@ -33,14 +32,11 @@ namespace dafs
     void
     NetworkSender::Reply(dafs::Message message)
     {
-        std::vector<std::string> ip_port;
-        boost::split(ip_port, message.from, boost::is_any_of(":"));
-
         tcp::resolver resolver(io_service);
         auto endpoint = resolver.resolve(
                             {
-                                ip_port[0],
-                                ip_port[1]
+                                message.from.ip,
+                                std::to_string(message.from.port)
                             });
         std::lock_guard<std::mutex> guard(mutex);
         boost::asio::connect(socket, endpoint);

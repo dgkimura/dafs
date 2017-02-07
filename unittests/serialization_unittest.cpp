@@ -271,8 +271,14 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
 {
     dafs::Message expected
     {
-        "to",
-        "from",
+        dafs::Address
+        {
+            "1.1.1.1", 1111
+        },
+        dafs::Address
+        {
+            "2.2.2.2", 2222
+        },
         "the message content",
         dafs::MessageType::CreateFile,
         {
@@ -290,8 +296,10 @@ TEST(SerializationUnitTest, testMessageIsSerializableAndDeserializable)
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::Message>(string_obj);
 
-    ASSERT_EQ(expected.to, actual.to);
-    ASSERT_EQ(expected.from, actual.from);
+    ASSERT_EQ(expected.to.ip, actual.to.ip);
+    ASSERT_EQ(expected.to.port, actual.to.port);
+    ASSERT_EQ(expected.from.ip, actual.from.ip);
+    ASSERT_EQ(expected.from.port, actual.from.port);
     ASSERT_EQ(expected.content, actual.content);
     ASSERT_EQ(expected.type, actual.type);
     ASSERT_EQ(expected.metadata[0].key, actual.metadata[0].key);

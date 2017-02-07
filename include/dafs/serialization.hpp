@@ -116,6 +116,14 @@ namespace dafs
 
 
     template <typename Archive>
+    void serialize(Archive& ar, dafs::Address& obj, const unsigned int version)
+    {
+        ar & obj.ip;
+        ar & obj.port;
+    }
+
+
+    template <typename Archive>
     void serialize(Archive& ar, dafs::Message& obj, const unsigned int version)
     {
         ar & obj.from;
