@@ -6,6 +6,7 @@
 
 #include "dafs/commit.hpp"
 #include "dafs/customhash.hpp"
+#include "dafs/disk.hpp"
 #include "dafs/replicated.hpp"
 #include "dafs/serialization.hpp"
 #include "dafs/signal.hpp"
@@ -33,14 +34,14 @@ namespace dafs
     BlockFormat
     ReplicatedStorage::ReadBlock(BlockInfo info)
     {
-        return ReadBlock(info);
+        return dafs::ReadBlock(info);
     }
 
 
     void
     ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
     {
-        BlockFormat was = ReadBlock(info);
+        BlockFormat was = dafs::ReadBlock(info);
         Delta delta = CreateDelta(info.path, was.contents, data.contents);
 
         do_write(info, dafs::Serialize(delta));
