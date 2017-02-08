@@ -23,8 +23,6 @@ namespace dafs
 
         NetworkSender();
 
-        NetworkSender(const NetworkSender& sender);
-
         ~NetworkSender();
 
         void Reply(dafs::Message message);
