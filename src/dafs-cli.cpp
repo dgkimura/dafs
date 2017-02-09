@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
+#include "dafs/dafs-cli.hpp"
 #include "dafs/messages.hpp"
-#include "dafs/prompt.hpp"
 #include "dafs/sender.hpp"
 #include "dafs/serialization.hpp"
 

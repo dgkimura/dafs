@@ -5,7 +5,7 @@
 #include <boost/uuid/uuid.hpp>
 
 #include "dafs/dispatcher.hpp"
-#include "dafs/main.hpp"
+#include "dafs/dafs-server.hpp"
 #include "dafs/node.hpp"
 #include "dafs/sender.hpp"
 #include "dafs/server.hpp"

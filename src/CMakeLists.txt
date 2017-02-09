@@ -17,8 +17,8 @@ set(SOURCES
     signal.cpp
     replicated.cpp
 )
-add_executable(dafs-server main.cpp ${SOURCES})
-add_executable(dafs-cli prompt.cpp ${SOURCES})
+add_executable(dafs-server dafs-server.cpp ${SOURCES})
+add_executable(dafs-cli dafs-cli.cpp ${SOURCES})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
