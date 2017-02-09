@@ -3,7 +3,7 @@
 
 namespace dafs
 {
-    void
+    dafs::Message
     HandleReadBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
@@ -12,11 +12,20 @@ namespace dafs
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto blockformat = node.GetPartition(blockinfo.identity)->ReadBlock(blockinfo);
 
-        // return blockformat and version
+        dafs::Message m;
+        m.type = dafs::MessageType::ReadBlock;
+        m.metadata.push_back(
+            dafs::MetaData
+            {
+                dafs::BlockFormatKey,
+                dafs::Serialize<dafs::BlockFormat>(blockformat)
+            }
+        );
+        return m;
     }
 
 
-    void
+    dafs::Message
     HandleWriteBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
@@ -26,28 +35,37 @@ namespace dafs
         auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
 
         node.GetPartition(blockinfo.identity)->WriteBlock(blockinfo, block);
+        dafs::Message m;
+        return m;
     }
 
 
-    void HandleAllocate(
+    dafs::Message
+    HandleAllocate(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         // dafs::Allocation allocation
+        dafs::Message m;
+        return m;
     }
 
 
-    void HandleAllocated(
+    dafs::Message
+    HandleAllocated(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         // dafs::Allocation allocation
+        dafs::Message m;
+        return m;
     }
 
 
-    void HandleRequestInitiation(
+    dafs::Message
+    HandleRequestInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
@@ -56,23 +74,31 @@ namespace dafs
         auto port = metadata.GetValue<short>(dafs::PortKey);
 
         node.GetPartition(Node::Slot::Zero)->AddNode(address, port);
+        dafs::Message m;
+        return m;
     }
 
 
-    void HandleProcessInitation(
+    dafs::Message
+    HandleProcessInitation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         // initiate a node into a cluster
+        dafs::Message m;
+        return m;
     }
 
 
-    void HandleConcludeInitation(
+    dafs::Message
+    HandleConcludeInitation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
         // initiate a node into a cluster
+        dafs::Message m;
+        return m;
     }
 }

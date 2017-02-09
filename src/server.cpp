@@ -80,16 +80,6 @@ namespace dafs
     {
         if (!err)
         {
-            boost::asio::async_read(socket, response,
-                boost::asio::transfer_at_least(1),
-                boost::bind(
-                    &Session::handle_read_message,
-                    shared_from_this(),
-                    dispatcher,
-                    boost::asio::placeholders::error));
-        }
-        if (err == boost::asio::error::eof)
-        {
             boost::asio::streambuf::const_buffers_type bufs = response.data();
             std::string content(
                 boost::asio::buffers_begin(bufs),
@@ -99,7 +89,14 @@ namespace dafs
             dafs::Message m = Deserialize<Message>(content);
 
             // 2. Route message to dispatcher for handling.
-            dispatcher.Process(m);
+            auto result = dispatcher.Process(m);
+
+            // 3. Return result to the client.
+            std::string result_str = dafs::Serialize(result);
+            boost::asio::write(
+                socket,
+                boost::asio::buffer(result_str.c_str(), result_str.size()));
+            socket.close();
         }
     }
 }

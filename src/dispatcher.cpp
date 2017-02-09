@@ -6,13 +6,14 @@
 
 namespace dafs
 {
-    Dispatcher::Dispatcher(dafs::Node& node, dafs::Sender& sender)
+    Dispatcher::Dispatcher(dafs::Node& node)
         : registered_map {
               {
                   dafs::MessageType::ReadBlock,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleReadBlock(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleReadBlock(
                           node,
                           message.metadata,
                           sender);
@@ -20,9 +21,10 @@ namespace dafs
               },
               {
                   dafs::MessageType::WriteBlock,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleWriteBlock(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleWriteBlock(
                           node,
                           message.metadata,
                           sender);
@@ -30,9 +32,10 @@ namespace dafs
               },
               {
                   dafs::MessageType::_Allocate,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleAllocate(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleAllocate(
                           node,
                           message.metadata,
                           sender);
@@ -40,9 +43,10 @@ namespace dafs
               },
               {
                   dafs::MessageType::_Allocated,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleAllocated(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleAllocated(
                           node,
                           message.metadata,
                           sender);
@@ -50,9 +54,10 @@ namespace dafs
               },
               {
                   dafs::MessageType::_RequestInitiation,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleRequestInitiation(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleRequestInitiation(
                           node,
                           message.metadata,
                           sender);
@@ -60,9 +65,10 @@ namespace dafs
               },
               {
                   dafs::MessageType::_ProcessInitation,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleProcessInitation(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleProcessInitation(
                           node,
                           message.metadata,
                           sender);
@@ -70,9 +76,10 @@ namespace dafs
               },
               {
                   dafs::MessageType::_ConcludeInitation,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleConcludeInitation(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleConcludeInitation(
                           node,
                           message.metadata,
                           sender);
@@ -80,25 +87,25 @@ namespace dafs
               },
               {
                   dafs::MessageType::_ConcludeInitation,
-                  [&node, &sender](dafs::Message message)
+                  [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::HandleConcludeInitation(
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleConcludeInitation(
                           node,
                           message.metadata,
                           sender);
                   }
               }
           },
-          node(node),
-          sender(sender)
+          node(node)
     {
     }
 
 
-    void
+    dafs::Message
     Dispatcher::Process(dafs::Message message)
     {
         dafs::MetaDataParser metadata(message.metadata);
-        registered_map[message.type](message);
+        return registered_map[message.type](message);
     }
 }

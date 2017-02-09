@@ -85,8 +85,7 @@ int main(int argc, char** argv)
     // Start node and server.
     //
     dafs::Node n;
-    dafs::NetworkSender sender;
-    dafs::Dispatcher dispatcher(n, sender);
+    dafs::Dispatcher dispatcher(n);
 
     auto server = boost::make_shared<dafs::Server>(address, 9000, dispatcher);
     server->Start();

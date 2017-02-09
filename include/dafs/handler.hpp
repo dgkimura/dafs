@@ -7,61 +7,71 @@
 
 namespace dafs
 {
-    void HandleOpenFile(
+    dafs::Message
+    HandleOpenFile(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleReadFile(
+    dafs::Message
+    HandleReadFile(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleWriteFile(
+    dafs::Message
+    HandleWriteFile(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleReadBlock(
+    dafs::Message
+    HandleReadBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleWriteBlock(
+    dafs::Message
+    HandleWriteBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleAllocate(
+    dafs::Message
+    HandleAllocate(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleAllocated(
+    dafs::Message
+    HandleAllocated(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleRequestInitiation(
+    dafs::Message
+    HandleRequestInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleProcessInitation(
+    dafs::Message
+    HandleProcessInitation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
-    void HandleConcludeInitation(
+    dafs::Message
+    HandleConcludeInitation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);

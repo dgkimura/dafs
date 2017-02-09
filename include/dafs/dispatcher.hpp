@@ -6,14 +6,13 @@
 #include "dafs/messages.hpp"
 #include "dafs/metadataparser.hpp"
 #include "dafs/node.hpp"
-#include "dafs/sender.hpp"
 
 
 namespace dafs
 {
     using MessageHandler = std::function
     <
-        void (dafs::Message message)
+        dafs::Message (dafs::Message message)
     >;
 
 
@@ -31,9 +30,9 @@ namespace dafs
     {
     public:
 
-        Dispatcher(dafs::Node& node, dafs::Sender& sender);
+        Dispatcher(dafs::Node& node);
 
-        void Process(dafs::Message);
+        dafs::Message Process(dafs::Message);
 
     private:
 
@@ -45,7 +44,5 @@ namespace dafs
         > registered_map;
 
         dafs::Node& node;
-
-        dafs::Sender& sender;
     };
 }
