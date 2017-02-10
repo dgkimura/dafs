@@ -117,8 +117,6 @@ namespace dafs
 
         ReplicatedNodeSet nodeset;
 
-        dafs::BlockInfo files;
-
         dafs::BlockInfo blocks;
 
         dafs::BlockInfo nodes;

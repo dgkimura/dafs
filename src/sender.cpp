@@ -36,7 +36,9 @@ namespace dafs
         std::string message_str = dafs::Serialize(message);
 
         // 2. write message
-        boost::asio::write(socket, boost::asio::buffer(message_str.c_str(), message_str.size()));
+        boost::asio::write(
+            socket,
+            boost::asio::buffer(message_str.c_str(), message_str.size()));
     }
 
 
@@ -45,7 +47,11 @@ namespace dafs
     {
         boost::system::error_code error;
         boost::asio::streambuf reply;
-        while (boost::asio::read(socket, reply, boost::asio::transfer_at_least(1), error));
+        while (boost::asio::read(
+            socket,
+            reply,
+            boost::asio::transfer_at_least(1),
+            error));
 
         boost::asio::streambuf::const_buffers_type bufs = reply.data();
         std::string content(

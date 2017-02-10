@@ -8,27 +8,6 @@
 namespace dafs
 {
     dafs::Message
-    HandleOpenFile(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
-    dafs::Message
-    HandleReadFile(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
-    dafs::Message
-    HandleWriteFile(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
-    dafs::Message
     HandleReadBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata,

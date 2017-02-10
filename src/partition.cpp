@@ -16,10 +16,6 @@ namespace dafs
                      DecreeHandler(dafs::Commit(parliament, in_progress))),
           store(parliament, in_progress),
           nodeset(parliament, in_progress),
-          files(
-              dafs::CreateBlockInfo(
-                  boost::filesystem::path(Constant::FileListName).string(),
-                  dafs::Identity())),
           blocks(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::BlockListName).string(),
@@ -44,7 +40,6 @@ namespace dafs
         : parliament(other.parliament),
           store(other.store),
           nodeset(other.nodeset),
-          files(other.files),
           blocks(other.blocks),
           nodes(other.nodes),
           identity(other.identity),

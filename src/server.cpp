@@ -13,7 +13,10 @@ namespace dafs
         short port,
         Dispatcher dispatcher)
         : io_service(),
-          acceptor(io_service, tcp::endpoint(boost::asio::ip::address::from_string(address), port)),
+          acceptor(
+              io_service,
+              tcp::endpoint(
+                  boost::asio::ip::address::from_string(address), port)),
           socket(io_service),
           dispatcher(dispatcher)
     {
