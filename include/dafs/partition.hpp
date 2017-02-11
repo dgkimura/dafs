@@ -86,6 +86,7 @@ namespace dafs
     public:
 
         ReplicatedPartition(
+            Address address,
             Root root
         );
 

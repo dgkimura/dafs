@@ -2,10 +2,20 @@
 
 namespace dafs
 {
-    Node::Node()
-        : slot_minus(std::make_shared<dafs::ReplicatedPartition>(dafs::Root("p-minus"))),
-          slot_zero(std::make_shared<dafs::ReplicatedPartition>(dafs::Root("p-zero"))),
-          slot_plus(std::make_shared<dafs::ReplicatedPartition>(dafs::Root("p-plus"))),
+    Node::Node(
+        dafs::Address partition_minus_address,
+        dafs::Address partition_zero_address,
+        dafs::Address partition_plus_address
+    )
+        : slot_minus(std::make_shared<dafs::ReplicatedPartition>(
+              partition_minus_address,
+              dafs::Root("p-minus"))),
+          slot_zero(std::make_shared<dafs::ReplicatedPartition>(
+              partition_zero_address,
+              dafs::Root("p-zero"))),
+          slot_plus(std::make_shared<dafs::ReplicatedPartition>(
+              partition_plus_address,
+              dafs::Root("p-plus"))),
           slot_empty(std::make_shared<dafs::EmptyPartition>(
               dafs::Identity("00000000-0000-0000-0000-000000000000")))
     {

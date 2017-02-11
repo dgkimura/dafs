@@ -17,7 +17,11 @@ namespace dafs
             Plus
         };
 
-        Node();
+        Node(
+            dafs::Address partition_minus_address,
+            dafs::Address partition_zero_address,
+            dafs::Address partition_plus_address
+        );
 
         std::shared_ptr<dafs::Partition> GetPartition(Node::Slot slot);
 

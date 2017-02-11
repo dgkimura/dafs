@@ -10,9 +10,11 @@
 namespace dafs
 {
     ReplicatedPartition::ReplicatedPartition(
+        Address address,
         Root root
     )
-        : parliament(root.directory,
+        : parliament(Replica(address.ip, address.port),
+                     root.directory,
                      DecreeHandler(dafs::Commit(parliament, in_progress))),
           store(parliament, in_progress),
           nodeset(parliament, in_progress),

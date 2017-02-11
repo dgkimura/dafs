@@ -66,6 +66,16 @@ namespace dafs
     {
         std::string ip;
         short port;
+
+        Address()
+        {
+        }
+
+        Address(std::string ip, short port)
+            : ip(ip),
+              port(port)
+        {
+        }
     };
 
 

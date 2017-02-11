@@ -41,7 +41,7 @@ int main(int argc, char** argv)
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help", "produce help message")
-        ("address",
+        ("node-address",
          boost::program_options::value(&address)->default_value("127.0.0.1"),
          "address of the node")
         ("identity",
@@ -84,7 +84,10 @@ int main(int argc, char** argv)
     //
     // Start node and server.
     //
-    dafs::Node n;
+    dafs::Node n(
+        dafs::Address(address, 8070),
+        dafs::Address(address, 8080),
+        dafs::Address(address, 8090));
     dafs::Dispatcher dispatcher(n);
 
     auto server = boost::make_shared<dafs::Server>(address, 9000, dispatcher);
