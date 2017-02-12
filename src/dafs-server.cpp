@@ -36,17 +36,29 @@ int main(int argc, char** argv)
     // Parse the command line options.
     //
     std::string address;
+    short pminus_port;
+    short pzero_port;
+    short pplus_port;
     boost::uuids::uuid identity;
 
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help", "produce help message")
-        ("node-address",
-         boost::program_options::value(&address)->default_value("127.0.0.1"),
-         "address of the node")
         ("identity",
          boost::program_options::value(&identity),
          "uuid identity of the node")
+        ("node-address",
+         boost::program_options::value(&address)->default_value("127.0.0.1"),
+         "address of the node")
+        ("pminus-port",
+         boost::program_options::value(&pminus_port)->default_value(8070),
+         "port used for minus partition")
+        ("pzero-port",
+         boost::program_options::value(&pzero_port)->default_value(8080),
+         "port used for zero partition")
+        ("pplus-port",
+         boost::program_options::value(&pplus_port)->default_value(8090),
+         "port used for plus partition")
     ;
     boost::program_options::variables_map vm;
     boost::program_options::store(
@@ -66,17 +78,17 @@ int main(int argc, char** argv)
     {
         SetupPartition(
             "p-minus",
-            address + ":8070",
+            address + ":" + std::to_string (pminus_port),
             dafs::Identity(boost::uuids::to_string(identity)) - dafs::Identity("00000000-0000-0000-0000-0000000000ff")
         );
         SetupPartition(
             "p-zero",
-            address + ":8080",
+            address + ":" + std::to_string (pzero_port),
             dafs::Identity(boost::uuids::to_string(identity))
         );
         SetupPartition(
             "p-plus",
-            address + ":8090",
+            address + ":" + std::to_string (pplus_port),
             dafs::Identity(boost::uuids::to_string(identity)) + dafs::Identity("00000000-0000-0000-0000-0000000000ff")
         );
     }
@@ -85,9 +97,9 @@ int main(int argc, char** argv)
     // Start node and server.
     //
     dafs::Node n(
-        dafs::Address(address, 8070),
-        dafs::Address(address, 8080),
-        dafs::Address(address, 8090));
+        dafs::Address(address, pminus_port),
+        dafs::Address(address, pzero_port),
+        dafs::Address(address, pplus_port));
     dafs::Dispatcher dispatcher(n);
 
     auto server = boost::make_shared<dafs::Server>(address, 9000, dispatcher);
