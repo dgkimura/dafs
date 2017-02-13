@@ -2,7 +2,6 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
-#include <boost/uuid/uuid.hpp>
 
 #include "dafs/dispatcher.hpp"
 #include "dafs/dafs-server.hpp"
@@ -16,12 +15,14 @@ SetupPartition(std::string directory, std::string hostport, dafs::Identity ident
 {
     if (!boost::filesystem::exists(directory))
     {
+        // write out replicaset file
         boost::filesystem::create_directory(directory);
         boost::filesystem::path replicasetfile(directory);
         replicasetfile /= ReplicasetFilename;
         std::fstream rs(replicasetfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
         rs << hostport << std::endl;
 
+        // write out identity file
         boost::filesystem::path identityfile(directory);
         identityfile /= IdentityFilename;
         std::fstream ids(identityfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
@@ -30,66 +31,111 @@ SetupPartition(std::string directory, std::string hostport, dafs::Identity ident
 }
 
 
+void
+SetupNode(std::string settings_file)
+{
+    // write out node config file
+    std::fstream config(settings_file, std::ios::out | std::ios::trunc);
+    config << "[partition-minus]" << std::endl;
+    config << "port = 8070" << std::endl;
+    config << "" << std::endl;
+
+    config << "[partition-zero]" << std::endl;
+    config << "port = 8080" << std::endl;
+    config << "" << std::endl;
+
+    config << "[partition-plus]" << std::endl;
+    config << "port = 8090" << std::endl;
+}
+
+
 int main(int argc, char** argv)
 {
+    Options options;
+
     //
     // Parse the command line options.
     //
-    std::string address;
-    short pminus_port;
-    short pzero_port;
-    short pplus_port;
-    boost::uuids::uuid identity;
-
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help", "produce help message")
         ("identity",
-         boost::program_options::value(&identity),
+         boost::program_options::value(&options.identity),
          "uuid identity of the node")
-        ("node-address",
-         boost::program_options::value(&address)->default_value("127.0.0.1"),
+        ("address",
+         boost::program_options::value(&options.address)->default_value("127.0.0.1"),
          "address of the node")
-        ("pminus-port",
-         boost::program_options::value(&pminus_port)->default_value(8070),
-         "port used for minus partition")
-        ("pzero-port",
-         boost::program_options::value(&pzero_port)->default_value(8080),
-         "port used for zero partition")
-        ("pplus-port",
-         boost::program_options::value(&pplus_port)->default_value(8090),
-         "port used for plus partition")
+        ("port",
+         boost::program_options::value(&options.port)->default_value(9000),
+         "port of the node")
+        ("config",
+         boost::program_options::value(&options.settings_file)->default_value("config.ini"),
+         "node configuration file")
     ;
-    boost::program_options::variables_map vm;
+    boost::program_options::variables_map cli_vm;
     boost::program_options::store(
-        boost::program_options::parse_command_line(argc, argv, desc), vm);
-    boost::program_options::notify(vm);
+        boost::program_options::parse_command_line(argc, argv, desc),
+        cli_vm);
+    boost::program_options::notify(cli_vm);
 
-    if (vm.count("help"))
+    if (cli_vm.count("help"))
     {
         std::cout << desc << "\n";
         std::exit(EXIT_FAILURE);
     }
 
+    if (cli_vm.count("identity"))
+    {
+        SetupNode(options.settings_file);
+    }
+
+    //
+    // Parse the configuration file.
+    //
+    boost::program_options::options_description desc_settings("Configuration options");
+    desc_settings.add_options()
+        ("partition-minus.port",
+         boost::program_options::value(&options.minus_port),
+         "port of the plus partition")
+        ("partition-zero.port",
+         boost::program_options::value(&options.zero_port),
+         "port of the zero partition")
+        ("partition-plus.port",
+         boost::program_options::value(&options.plus_port),
+         "port of the plus partition")
+    ;
+
+    std::ifstream config(options.settings_file);
+    boost::program_options::variables_map config_vm;
+    boost::program_options::store(
+        boost::program_options::parse_config_file<char>(
+            options.settings_file.c_str(),
+            desc_settings),
+        config_vm);
+    boost::program_options::notify(config_vm);
+
+
     //
     // Setup the partitions
     //
-    if (vm.count("identity"))
+    if (cli_vm.count("identity"))
     {
         SetupPartition(
             "p-minus",
-            address + ":" + std::to_string (pminus_port),
-            dafs::Identity(boost::uuids::to_string(identity)) - dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+            options.address + ":" + std::to_string (options.minus_port),
+            dafs::Identity(boost::uuids::to_string(options.identity)) -
+            dafs::Identity("00000000-0000-0000-0000-0000000000ff")
         );
         SetupPartition(
             "p-zero",
-            address + ":" + std::to_string (pzero_port),
-            dafs::Identity(boost::uuids::to_string(identity))
+            options.address + ":" + std::to_string (options.zero_port),
+            dafs::Identity(boost::uuids::to_string(options.identity))
         );
         SetupPartition(
             "p-plus",
-            address + ":" + std::to_string (pplus_port),
-            dafs::Identity(boost::uuids::to_string(identity)) + dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+            options.address + ":" + std::to_string (options.plus_port),
+            dafs::Identity(boost::uuids::to_string(options.identity)) +
+            dafs::Identity("00000000-0000-0000-0000-0000000000ff")
         );
     }
 
@@ -97,12 +143,16 @@ int main(int argc, char** argv)
     // Start node and server.
     //
     dafs::Node n(
-        dafs::Address(address, pminus_port),
-        dafs::Address(address, pzero_port),
-        dafs::Address(address, pplus_port));
+        dafs::Address(options.address, options.minus_port),
+        dafs::Address(options.address, options.zero_port),
+        dafs::Address(options.address, options.plus_port));
     dafs::Dispatcher dispatcher(n);
 
-    auto server = boost::make_shared<dafs::Server>(address, 9000, dispatcher);
+    auto server = boost::make_shared<dafs::Server>(
+        options.address,
+        options.port,
+        dispatcher);
+
     server->Start();
 
     for (;;);
