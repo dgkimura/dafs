@@ -40,6 +40,57 @@ const dafs::BlockInfo another_block
 };
 
 
+TEST(DiskTest, testContainsBlockInEmptyBlockFormat)
+{
+    auto get_empty_block = [](dafs::BlockInfo info) {
+        dafs::BlockFormat b;
+        return b;
+    };
+
+    ASSERT_FALSE(dafs::Contains(the_blocklist, a_block, get_empty_block));
+}
+
+
+TEST(DiskTest, testContainsBlockInBlockFormatWithBlock)
+{
+    auto get_block = [](dafs::BlockInfo info) -> dafs::BlockFormat {
+        dafs::BlockFormat block;
+        block.contents = dafs::Serialize(
+            dafs::BlockIndex
+            {
+                std::vector<dafs::BlockInfo>
+                {
+                    a_block
+                }
+            }
+        );
+        return block;
+    };
+
+    ASSERT_TRUE(dafs::Contains(the_blocklist, a_block, get_block));
+}
+
+
+TEST(DiskTest, testContainsBlockInBlockFormatWithoutBlock)
+{
+    auto get_block = [](dafs::BlockInfo info) -> dafs::BlockFormat {
+        dafs::BlockFormat block;
+        block.contents = dafs::Serialize(
+            dafs::BlockIndex
+            {
+                std::vector<dafs::BlockInfo>
+                {
+                    another_block
+                }
+            }
+        );
+        return block;
+    };
+
+    ASSERT_FALSE(dafs::Contains(the_blocklist, a_block, get_block));
+}
+
+
 TEST(DiskTest, testAddBlockInEmptyBlockFormat)
 {
     auto get_empty_block = [](dafs::BlockInfo info) {

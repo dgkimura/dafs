@@ -21,6 +21,8 @@ namespace dafs
 
         virtual void DeleteBlock(BlockInfo block) = 0;
 
+        virtual bool ContainsBlock(BlockInfo block) = 0;
+
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) = 0;
@@ -56,6 +58,11 @@ namespace dafs
 
         virtual void DeleteBlock(BlockInfo block) override
         {
+        }
+
+        virtual bool ContainsBlock(BlockInfo block) override
+        {
+            return true;
         }
 
         virtual BlockFormat ReadBlock(BlockInfo block) override
@@ -101,6 +108,8 @@ namespace dafs
         virtual void CreateBlock(BlockInfo block) override;
 
         virtual void DeleteBlock(BlockInfo block) override;
+
+        virtual bool ContainsBlock(BlockInfo block) override;
 
         virtual BlockFormat ReadBlock(BlockInfo block) override;
 

@@ -83,6 +83,13 @@ namespace dafs
     }
 
 
+    bool
+    ReplicatedPartition::ContainsBlock(BlockInfo info)
+    {
+        return dafs::Contains(rooted(blocks), info);
+    }
+
+
     BlockFormat
     ReplicatedPartition::ReadBlock(BlockInfo block)
     {
@@ -95,6 +102,10 @@ namespace dafs
     {
         dafs::Delta delta = dafs::Set(rooted(block), format.contents);
         store.Write(rooted(block), delta);
+        if (!ContainsBlock(block))
+        {
+            CreateBlock(block);
+        }
     }
 
 
