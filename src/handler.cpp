@@ -70,10 +70,12 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto address = metadata.GetValue<std::string>(dafs::AddressKey);
+        auto ip = metadata.GetValue<std::string>(dafs::AddressKey);
         auto port = metadata.GetValue<short>(dafs::PortKey);
+        auto identity = dafs::Identity(metadata.GetValue<std::string>(
+            dafs::IdentityKey));
 
-        node.GetPartition(Node::Slot::Zero)->AddNode(address, port);
+        node.GetPartition(Node::Slot::Zero)->AddNode(dafs::Address(ip, port));
         dafs::Message m;
         return m;
     }

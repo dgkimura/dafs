@@ -110,16 +110,16 @@ namespace dafs
 
 
     void
-    ReplicatedPartition::AddNode(std::string address, short port)
+    ReplicatedPartition::AddNode(dafs::Address address)
     {
-        nodeset.AddNode(address, port);
+        nodeset.AddNode(address);
     }
 
 
     void
-    ReplicatedPartition::RemoveNode(std::string address, short port)
+    ReplicatedPartition::RemoveNode(dafs::Address address)
     {
-        nodeset.RemoveNode(address, port);
+        nodeset.RemoveNode(address);
     }
 
 

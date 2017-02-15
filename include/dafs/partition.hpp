@@ -3,6 +3,7 @@
 #include <paxos/parliament.hpp>
 
 #include "dafs/filesystem.hpp"
+#include "dafs/messages.hpp"
 #include "dafs/signal.hpp"
 #include "dafs/replicated.hpp"
 
@@ -27,9 +28,9 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) = 0;
 
-        virtual void AddNode(std::string address, short port) = 0;
+        virtual void AddNode(dafs::Address address) = 0;
 
-        virtual void RemoveNode(std::string address, short port) = 0;
+        virtual void RemoveNode(dafs::Address address) = 0;
     };
 
 
@@ -74,11 +75,11 @@ namespace dafs
         {
         }
 
-        virtual void AddNode(std::string address, short port) override
+        virtual void AddNode(dafs::Address address) override
         {
         }
 
-        virtual void RemoveNode(std::string address, short port) override
+        virtual void RemoveNode(dafs::Address address) override
         {
         }
 
@@ -115,9 +116,9 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) override;
 
-        virtual void AddNode(std::string address, short port) override;
+        virtual void AddNode(dafs::Address address) override;
 
-        virtual void RemoveNode(std::string address, short port) override;
+        virtual void RemoveNode(dafs::Address address) override;
 
     private:
 

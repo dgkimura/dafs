@@ -95,17 +95,17 @@ namespace dafs
 
 
     void
-    ReplicatedNodeSet::AddNode(std::string address, short port)
+    ReplicatedNodeSet::AddNode(dafs::Address address)
     {
-        parliament.AddLegislator(address, port);
+        parliament.AddLegislator(address.ip, address.port);
         in_progress.Wait();
     }
 
 
     void
-    ReplicatedNodeSet::RemoveNode(std::string address, short port)
+    ReplicatedNodeSet::RemoveNode(dafs::Address address)
     {
-        parliament.RemoveLegislator(address, port);
+        parliament.RemoveLegislator(address.ip, address.port);
         in_progress.Wait();
     }
 }

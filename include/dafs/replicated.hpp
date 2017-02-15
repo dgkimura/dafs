@@ -7,6 +7,7 @@
 #include "dafs/delta.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/filesystem.hpp"
+#include "dafs/messages.hpp"
 #include "dafs/propose.hpp"
 #include "dafs/signal.hpp"
 #include "dafs/serialization.hpp"
@@ -74,9 +75,9 @@ namespace dafs
     {
     public:
 
-        virtual void AddNode(std::string address, short port) = 0;
+        virtual void AddNode(dafs::Address address) = 0;
 
-        virtual void RemoveNode(std::string address, short port) = 0;
+        virtual void RemoveNode(dafs::Address address) = 0;
     };
 
 
@@ -91,9 +92,9 @@ namespace dafs
         ReplicatedNodeSet(
             const ReplicatedNodeSet& other);
 
-        virtual void AddNode(std::string address, short port) override;
+        virtual void AddNode(dafs::Address address) override;
 
-        virtual void RemoveNode(std::string address, short port) override;
+        virtual void RemoveNode(dafs::Address address) override;
 
     private:
 
