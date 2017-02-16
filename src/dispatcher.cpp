@@ -31,28 +31,6 @@ namespace dafs
                   }
               },
               {
-                  dafs::MessageType::_Allocate,
-                  [&node](dafs::Message message) -> dafs::Message
-                  {
-                      dafs::NetworkSender sender(message.from);
-                      return dafs::HandleAllocate(
-                          node,
-                          message.metadata,
-                          sender);
-                  }
-              },
-              {
-                  dafs::MessageType::_Allocated,
-                  [&node](dafs::Message message) -> dafs::Message
-                  {
-                      dafs::NetworkSender sender(message.from);
-                      return dafs::HandleAllocated(
-                          node,
-                          message.metadata,
-                          sender);
-                  }
-              },
-              {
                   dafs::MessageType::_RequestInitiation,
                   [&node](dafs::Message message) -> dafs::Message
                   {

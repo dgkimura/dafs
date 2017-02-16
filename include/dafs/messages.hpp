@@ -31,16 +31,6 @@ namespace dafs
         WriteBlock,
 
         //
-        // Allocate resources.
-        //
-        _Allocate,
-
-        //
-        // Allocated resources.
-        //
-        _Allocated,
-
-        //
         // Request initation - message sent to a node to signal it to request
         // an initiation into a given cluster.
         //

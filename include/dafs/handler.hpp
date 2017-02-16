@@ -22,20 +22,6 @@ namespace dafs
 
 
     dafs::Message
-    HandleAllocate(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
-    dafs::Message
-    HandleAllocated(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
-    dafs::Message
     HandleRequestInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
