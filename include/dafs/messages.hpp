@@ -31,6 +31,11 @@ namespace dafs
         WriteBlock,
 
         //
+        // Get details of the node.
+        //
+        GetNodeDetails,
+
+        //
         // Request initation - message sent to a node to signal it to request
         // an initiation into a given cluster.
         //
@@ -64,6 +69,15 @@ namespace dafs
         Address(std::string ip, short port)
             : ip(ip),
               port(port)
+        {
+        }
+    };
+
+
+    struct EmptyAddress : public Address
+    {
+        EmptyAddress()
+            : Address("", 0)
         {
         }
     };

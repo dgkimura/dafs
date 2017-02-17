@@ -22,6 +22,13 @@ namespace dafs
 
 
     dafs::Message
+    HandleGetNodeDetails(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
+
+
+    dafs::Message
     HandleRequestInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,

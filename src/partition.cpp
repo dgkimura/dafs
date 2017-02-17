@@ -30,6 +30,10 @@ namespace dafs
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
                   dafs::Identity())),
+          author(
+              dafs::CreateBlockInfo(
+                  boost::filesystem::path(Constant::AuthorName).string(),
+                  dafs::Identity())),
           in_progress(),
           root(root)
     {
@@ -51,11 +55,25 @@ namespace dafs
     }
 
 
+    dafs::PartitionDetails
+    ReplicatedPartition::GetDetails()
+    {
+        dafs::BlockFormat author_block =  store.ReadBlock(rooted(author));
+        dafs::BlockFormat id_block =  store.ReadBlock(rooted(identity));
+
+        return dafs::PartitionDetails
+        {
+            dafs::Deserialize<dafs::Address>(author_block.contents),
+            dafs::Deserialize<dafs::Identity>(id_block.contents)
+        };
+    }
+
+
     dafs::Identity
     ReplicatedPartition::GetIdentity()
     {
         dafs::BlockFormat b =  store.ReadBlock(rooted(identity));
-        return dafs::Identity(b.contents);
+        return dafs::Deserialize<dafs::Identity>(b.contents);
     }
 
 

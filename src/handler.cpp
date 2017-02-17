@@ -41,6 +41,30 @@ namespace dafs
 
 
     dafs::Message
+    HandleGetNodeDetails(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
+    {
+        auto details = dafs::NodeDetails
+        {
+            node.GetPartition(dafs::Node::Slot::Minus)->GetDetails(),
+            node.GetPartition(dafs::Node::Slot::Zero)->GetDetails(),
+            node.GetPartition(dafs::Node::Slot::Plus)->GetDetails()
+        };
+        dafs::Message m;
+        m.metadata.push_back(
+            dafs::MetaData
+            {
+                dafs::NodeDetailsKey,
+                dafs::Serialize<dafs::NodeDetails>(details)
+            }
+        );
+        return m;
+    }
+
+
+    dafs::Message
     HandleRequestInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata,

@@ -8,6 +8,7 @@
 #include <boost/uuid/uuid_io.hpp>
 
 #include "delta.hpp"
+#include "details.hpp"
 #include "filesystem.hpp"
 #include "messages.hpp"
 #include "propose.hpp"
@@ -124,6 +125,23 @@ namespace dafs
 
 
     template <typename Archive>
+    void serialize(Archive& ar, dafs::PartitionDetails& obj, const unsigned int version)
+    {
+        ar & obj.author;
+        ar & obj.identity;
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::NodeDetails& obj, const unsigned int version)
+    {
+        ar & obj.minus_details;
+        ar & obj.zero_details;
+        ar & obj.plus_details;
+    }
+
+
+    template <typename Archive>
     void serialize(Archive& ar, dafs::Message& obj, const unsigned int version)
     {
         ar & obj.from;
@@ -185,15 +203,6 @@ namespace dafs
         boost::archive::text_oarchive oa(stream);
         oa << object;
         return stream.str();
-    }
-
-
-    template <typename T>
-    std::string SerializeIntoBlockFormat(T object)
-    {
-        dafs::BlockFormat b;
-        b.contents = Serialize(object);
-        return Serialize(b);
     }
 
 

@@ -3,6 +3,7 @@
 
 #include "dafs/dafs-cli.hpp"
 #include "dafs/messages.hpp"
+#include "dafs/metadataparser.hpp"
 #include "dafs/sender.hpp"
 #include "dafs/serialization.hpp"
 
@@ -45,6 +46,28 @@ CreateReadBlockMessage(
         credentials.address,    // from
         credentials.address,    // to
         dafs::MessageType::ReadBlock,
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::BlockInfoKey,
+                dafs::Serialize<dafs::BlockInfo>(info)
+            }
+        }
+    };
+}
+
+
+dafs::Message
+CreateGetNodeDetailsMessage(
+    const dafs::Credentials credentials,
+    const dafs::BlockInfo info)
+{
+    return dafs::Message
+    {
+        credentials.address,    // from
+        credentials.address,    // to
+        dafs::MessageType::GetNodeDetails,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -108,6 +131,45 @@ int main(void)
             sender->Send(m);
             auto result = sender->Receive();
             std::cout << dafs::Serialize(result);
+        }
+        else if (input == "info")
+        {
+            dafs::BlockInfo info
+            {
+                "path_to_block_info",
+                dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                0 // revision
+            };
+            dafs::Message m = CreateGetNodeDetailsMessage(creds, info);
+
+            auto sender = boost::make_shared<dafs::NetworkSender>(creds.address);
+            sender->Send(m);
+            auto result = sender->Receive();
+            auto details = dafs::MetaDataParser(result.metadata)
+                           .GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
+
+            auto p_minus = details.minus_details;
+            auto p_zero = details.zero_details;
+            auto p_plus = details.plus_details;
+            std::cout << "Node info:\n"
+                      << "  - p-minus" << std::endl
+                      << "      - author"  << std::endl
+                      << "           ip: " << p_minus.author.ip << std::endl
+                      << "           port: " << p_minus.author.port << std::endl
+                      << "      - identity"  << std::endl
+                      << "           uuid: " << p_minus.identity.id << std::endl
+                      << "  - p-zero" << std::endl
+                      << "      - author"  << std::endl
+                      << "           ip: " << p_zero.author.ip << std::endl
+                      << "           port: " << p_zero.author.port << std::endl
+                      << "      - identity"  << std::endl
+                      << "           uuid: " << p_zero.identity.id << std::endl
+                      << "  - p-plus" << std::endl
+                      << "      - author"  << std::endl
+                      << "           ip: " << p_plus.author.ip << std::endl
+                      << "           port: " << p_plus.author.port << std::endl
+                      << "      - identity"  << std::endl
+                      << "           uuid: " << p_plus.identity.id << std::endl;
         }
     }
 }

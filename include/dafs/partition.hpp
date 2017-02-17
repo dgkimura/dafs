@@ -14,6 +14,8 @@ namespace dafs
     {
     public:
 
+        virtual dafs::PartitionDetails GetDetails() = 0;
+
         virtual dafs::Identity GetIdentity() = 0;
 
         virtual void SetIdentity(dafs::Identity id) = 0;
@@ -41,6 +43,15 @@ namespace dafs
         EmptyPartition(dafs::Identity identity)
             : identity(identity)
         {
+        }
+
+        virtual dafs::PartitionDetails GetDetails() override
+        {
+            return dafs::PartitionDetails
+            {
+                dafs::Address("127.0.0.1", 8080),
+                identity
+            };
         }
 
         virtual dafs::Identity GetIdentity() override
@@ -102,6 +113,8 @@ namespace dafs
             const ReplicatedPartition& other
         );
 
+        virtual dafs::PartitionDetails GetDetails() override;
+
         virtual dafs::Identity GetIdentity() override;
 
         virtual void SetIdentity(dafs::Identity id) override;
@@ -133,6 +146,8 @@ namespace dafs
         dafs::BlockInfo nodes;
 
         dafs::BlockInfo identity;
+
+        dafs::BlockInfo author;
 
         dafs::Signal in_progress;
 

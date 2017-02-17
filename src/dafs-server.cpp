@@ -11,7 +11,11 @@
 
 
 void
-SetupPartition(std::string directory, std::string hostport, dafs::Identity identity)
+SetupPartition(
+    std::string directory,
+    dafs::Address management_interface,
+    dafs::Address replication_interface,
+    dafs::Identity identity)
 {
     if (!boost::filesystem::exists(directory))
     {
@@ -20,13 +24,20 @@ SetupPartition(std::string directory, std::string hostport, dafs::Identity ident
         boost::filesystem::path replicasetfile(directory);
         replicasetfile /= ReplicasetFilename;
         std::fstream rs(replicasetfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
-        rs << hostport << std::endl;
+        rs << replication_interface.ip << ":"
+           << std::to_string(replication_interface.port) << std::endl;
 
         // write out identity file
         boost::filesystem::path identityfile(directory);
         identityfile /= IdentityFilename;
-        std::fstream ids(identityfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
-        ids << identity.id << std::endl;
+        std::fstream id_stream(identityfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
+        id_stream << dafs::Serialize(identity) << std::endl;
+
+        // write out identity file
+        boost::filesystem::path authorfile(directory);
+        authorfile /= AuthorFilename;
+        std::fstream author_stream(authorfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
+        author_stream << dafs::Serialize(management_interface) << std::endl;
     }
 }
 
@@ -122,18 +133,21 @@ int main(int argc, char** argv)
     {
         SetupPartition(
             "p-minus",
-            options.address + ":" + std::to_string (options.minus_port),
+            dafs::EmptyAddress(),
+            dafs::Address(options.address, options.minus_port),
             dafs::Identity(boost::uuids::to_string(options.identity)) -
             dafs::Identity("00000000-0000-0000-0000-0000000000ff")
         );
         SetupPartition(
             "p-zero",
-            options.address + ":" + std::to_string (options.zero_port),
+            dafs::Address(options.address, options.port),
+            dafs::Address(options.address, options.zero_port),
             dafs::Identity(boost::uuids::to_string(options.identity))
         );
         SetupPartition(
             "p-plus",
-            options.address + ":" + std::to_string (options.plus_port),
+            dafs::EmptyAddress(),
+            dafs::Address(options.address, options.plus_port),
             dafs::Identity(boost::uuids::to_string(options.identity)) +
             dafs::Identity("00000000-0000-0000-0000-0000000000ff")
         );

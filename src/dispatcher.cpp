@@ -31,6 +31,17 @@ namespace dafs
                   }
               },
               {
+                  dafs::MessageType::GetNodeDetails,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleGetNodeDetails(
+                          node,
+                          message.metadata,
+                          sender);
+                  }
+              },
+              {
                   dafs::MessageType::_RequestInitiation,
                   [&node](dafs::Message message) -> dafs::Message
                   {

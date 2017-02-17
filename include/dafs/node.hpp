@@ -1,6 +1,7 @@
 #pragma once
 
 #include "dafs/filesystem.hpp"
+#include "dafs/messages.hpp"
 #include "dafs/partition.hpp"
 
 

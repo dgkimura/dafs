@@ -32,4 +32,7 @@ namespace dafs
 
 
     const std::string IdentityKey = "Identity";
+
+
+    const std::string NodeDetailsKey = "NodeDetails";
 }
