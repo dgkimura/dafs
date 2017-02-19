@@ -5,12 +5,6 @@
 #include <boost/uuid/uuid.hpp>
 
 
-const std::string IdentityFilename = "identity";
-
-
-const std::string AuthorFilename = "author";
-
-
 struct Options
 {
     std::string settings_file;

@@ -3,6 +3,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
+#include "dafs/constants.hpp"
 #include "dafs/dispatcher.hpp"
 #include "dafs/dafs-server.hpp"
 #include "dafs/node.hpp"
@@ -29,13 +30,13 @@ SetupPartition(
 
         // write out identity file
         boost::filesystem::path identityfile(directory);
-        identityfile /= IdentityFilename;
+        identityfile /= Constant::IdentityFilename;
         std::fstream id_stream(identityfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
         id_stream << dafs::Serialize(identity) << std::endl;
 
         // write out identity file
         boost::filesystem::path authorfile(directory);
-        authorfile /= AuthorFilename;
+        authorfile /= Constant::AuthorFilename;
         std::fstream author_stream(authorfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
         author_stream << dafs::Serialize(management_interface) << std::endl;
     }

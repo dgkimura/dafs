@@ -4,6 +4,7 @@
 
 #include <paxos/parliament.hpp>
 
+#include "dafs/constants.hpp"
 #include "dafs/delta.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/filesystem.hpp"
@@ -11,23 +12,6 @@
 #include "dafs/propose.hpp"
 #include "dafs/signal.hpp"
 #include "dafs/serialization.hpp"
-
-
-namespace
-{
-    struct Constant
-    {
-        static constexpr const char * FileListName = "filelist";
-
-        static constexpr const char * BlockListName = "blocklist";
-
-        static constexpr const char * NodeSetName = "nodeset";
-
-        static constexpr const char * IdentityName = "identity";
-
-        static constexpr const char * AuthorName = "author";
-    };
-};
 
 
 namespace dafs
