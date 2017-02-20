@@ -39,6 +39,26 @@ namespace dafs
 
 
     void
+    ReplicatedStorage::DeleteBlock(BlockInfo info)
+    {
+        parliament.SendProposal
+        (
+            dafs::Serialize<dafs::Proposal>
+            (
+                CreateProposal
+                (
+                    dafs::ProposalType::DeleteBlock,
+                    "",
+                    info,
+                    info.revision
+                )
+            )
+        );
+        in_progress.Wait();
+    }
+
+
+    void
     ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
     {
         BlockFormat was = dafs::ReadBlock(info);

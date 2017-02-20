@@ -41,6 +41,20 @@ namespace dafs
 
 
     dafs::Message
+    HandleDeleteBlock(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
+    {
+        auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
+
+        node.GetPartition(blockinfo.identity)->DeleteBlock(blockinfo);
+        dafs::Message m;
+        return m;
+    }
+
+
+    dafs::Message
     HandleGetNodeDetails(
         dafs::Node& node,
         dafs::MetaDataParser metadata,

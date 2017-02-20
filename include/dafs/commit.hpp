@@ -35,5 +35,9 @@ namespace dafs
 
     void WriteBlock(
         dafs::ProposalContent& content);
+
+
+    void DeleteBlock(
+        dafs::ProposalContent& content);
 }
 

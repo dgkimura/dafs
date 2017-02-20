@@ -31,6 +31,17 @@ namespace dafs
                   }
               },
               {
+                  dafs::MessageType::DeleteBlock,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      dafs::NetworkSender sender(message.from);
+                      return dafs::HandleDeleteBlock(
+                          node,
+                          message.metadata,
+                          sender);
+                  }
+              },
+              {
                   dafs::MessageType::GetNodeDetails,
                   [&node](dafs::Message message) -> dafs::Message
                   {

@@ -8,6 +8,18 @@
 namespace dafs
 {
     dafs::BlockFormat
+    DeleteBlock(dafs::BlockInfo info)
+    {
+        dafs::BlockFormat b = dafs::ReadBlock(info);
+        if (boost::filesystem::exists(info.path))
+        {
+            std::remove(fs::path(info.path).string().c_str());
+        }
+        return b;
+    }
+
+
+    dafs::BlockFormat
     ReadBlock(dafs::BlockInfo info)
     {
         dafs::BlockFormat b;

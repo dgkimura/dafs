@@ -96,7 +96,9 @@ namespace dafs
     void
     ReplicatedPartition::DeleteBlock(BlockInfo info)
     {
-        Delta delta = dafs::Remove(rooted(nodes), info);
+        store.DeleteBlock(rooted(info));
+
+        Delta delta = dafs::Remove(rooted(blocks), info);
         store.Write(rooted(blocks), delta);
     }
 

@@ -11,16 +11,6 @@ namespace dafs
     enum class MessageType
     {
         //
-        // Create a file inside the distributed system.
-        //
-        CreateFile,
-
-        //
-        // Delete a file from the distributed system.
-        //
-        DeleteFile,
-
-        //
         // Read from a known block.
         //
         ReadBlock,
@@ -29,6 +19,11 @@ namespace dafs
         // Write to a known block.
         //
         WriteBlock,
+
+        //
+        // Deletes a known block.
+        //
+        DeleteBlock,
 
         //
         // Get details of the node.

@@ -15,6 +15,7 @@ namespace dafs
     enum class ProposalType
     {
         WriteBlock,
+        DeleteBlock,
 
         AddNode,
         RemoveNode

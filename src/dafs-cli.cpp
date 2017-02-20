@@ -59,6 +59,28 @@ CreateReadBlockMessage(
 
 
 dafs::Message
+CreateDeleteBlockMessage(
+    const dafs::Credentials credentials,
+    const dafs::BlockInfo info)
+{
+    return dafs::Message
+    {
+        credentials.address,    // from
+        credentials.address,    // to
+        dafs::MessageType::DeleteBlock,
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::BlockInfoKey,
+                dafs::Serialize<dafs::BlockInfo>(info)
+            }
+        }
+    };
+}
+
+
+dafs::Message
 CreateGetNodeDetailsMessage(
     const dafs::Credentials credentials,
     const dafs::BlockInfo info)
@@ -131,6 +153,19 @@ int main(void)
             sender->Send(m);
             auto result = sender->Receive();
             std::cout << dafs::Serialize(result);
+        }
+        else if (input == "db")
+        {
+            dafs::BlockInfo info
+            {
+                "path_to_block_info",
+                dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                0 // revision
+            };
+            dafs::Message m = CreateDeleteBlockMessage(creds, info);
+
+            auto sender = boost::make_shared<dafs::NetworkSender>(creds.address);
+            sender->Send(m);
         }
         else if (input == "info")
         {

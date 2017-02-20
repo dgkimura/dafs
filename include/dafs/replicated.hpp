@@ -22,6 +22,8 @@ namespace dafs
 
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
 
+        virtual void DeleteBlock(BlockInfo info) = 0;
+
         virtual void WriteBlock(BlockInfo info, BlockFormat data) = 0;
 
         virtual void Write(BlockInfo info, Delta delta) = 0;
@@ -40,6 +42,8 @@ namespace dafs
             const ReplicatedStorage& other);
 
         virtual BlockFormat ReadBlock(BlockInfo block) override;
+
+        virtual void DeleteBlock(BlockInfo info) override;
 
         virtual void WriteBlock(BlockInfo info, BlockFormat data) override;
 

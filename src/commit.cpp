@@ -1,5 +1,3 @@
-#include <vector>
-
 #include "boost/algorithm/string.hpp"
 #include "boost/lexical_cast.hpp"
 
@@ -22,6 +20,16 @@ namespace dafs
                        [](dafs::ProposalContent& context)
                        {
                            dafs::WriteBlock(context);
+                       }
+                   )
+                },
+                {
+                   ProposalType::DeleteBlock,
+                   dafs::Callback<dafs::ProposalContent&>
+                   (
+                       [](dafs::ProposalContent& context)
+                       {
+                           dafs::DeleteBlock(context);
                        }
                    )
               }
@@ -54,6 +62,21 @@ namespace dafs
         {
             dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
             dafs::Write(edit.info, delta);
+        }
+    }
+
+
+    void
+    DeleteBlock(
+        dafs::ProposalContent& edit)
+    {
+        //
+        // Check hash and revision of block info list.
+        //
+        // TODO: Add revision check
+        if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
+        {
+            dafs::DeleteBlock(edit.info);
         }
     }
 }

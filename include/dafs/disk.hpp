@@ -8,6 +8,10 @@
 namespace dafs
 {
     dafs::BlockFormat
+    DeleteBlock(dafs::BlockInfo info);
+
+
+    dafs::BlockFormat
     ReadBlock(dafs::BlockInfo info);
 
 
