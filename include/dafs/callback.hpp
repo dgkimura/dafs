@@ -6,22 +6,26 @@
 
 namespace dafs
 {
-    template <typename... Ts>
+    template <typename Ret, typename... Ts>
     class Callback
     {
 
-    using Handler = std::function<void(Ts... args)>;
+    using Handler = std::function<Ret(Ts... args)>;
 
     public:
 
-        Callback(Handler handler=[](Ts... args){})
+        Callback(Handler handler)
             : handler(handler)
         {
         }
 
-        void operator()(Ts... args)
+        Callback()
         {
-            handler(args...);
+        }
+
+        Ret operator()(Ts... args)
+        {
+            return handler(args...);
         }
 
     private:

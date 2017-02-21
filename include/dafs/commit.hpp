@@ -21,11 +21,16 @@ namespace dafs
 
         void operator()(std::string proposal);
 
+        struct Result
+        {
+            std::string contents;
+        };
+
     private:
 
         std::unordered_map<
             dafs::ProposalType,
-            dafs::Callback<dafs::ProposalContent&>,
+            dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>,
             dafs::ProposalTypeHash
         > proposal_map;
 
@@ -33,11 +38,11 @@ namespace dafs
     };
 
 
-    void WriteBlock(
+    dafs::Commit::Result WriteBlock(
         dafs::ProposalContent& content);
 
 
-    void DeleteBlock(
+    dafs::Commit::Result DeleteBlock(
         dafs::ProposalContent& content);
 }
 

@@ -15,21 +15,21 @@ namespace dafs
           {
               {
                    ProposalType::WriteBlock,
-                   dafs::Callback<dafs::ProposalContent&>
+                   dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>
                    (
-                       [](dafs::ProposalContent& context)
+                       [](dafs::ProposalContent& context) -> dafs::Commit::Result
                        {
-                           dafs::WriteBlock(context);
+                           return dafs::WriteBlock(context);
                        }
                    )
                 },
                 {
                    ProposalType::DeleteBlock,
-                   dafs::Callback<dafs::ProposalContent&>
+                   dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>
                    (
-                       [](dafs::ProposalContent& context)
+                       [](dafs::ProposalContent& context) -> dafs::Commit::Result
                        {
-                           dafs::DeleteBlock(context);
+                           return dafs::DeleteBlock(context);
                        }
                    )
               }
@@ -50,10 +50,12 @@ namespace dafs
     }
 
 
-    void
+    dafs::Commit::Result
     WriteBlock(
         dafs::ProposalContent& edit)
     {
+        dafs::Commit::Result r;
+
         //
         // Check hash and revision of block info list.
         //
@@ -63,20 +65,24 @@ namespace dafs
             dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
             dafs::Write(edit.info, delta);
         }
+        return r;
     }
 
 
-    void
+    dafs::Commit::Result
     DeleteBlock(
         dafs::ProposalContent& edit)
     {
+        dafs::Commit::Result r;
+
         //
         // Check hash and revision of block info list.
         //
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            dafs::DeleteBlock(edit.info);
+            r.contents = dafs::Serialize(dafs::DeleteBlock(edit.info));
         }
+        return r;
     }
 }
