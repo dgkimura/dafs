@@ -6,8 +6,7 @@ namespace dafs
     dafs::Message
     HandleReadBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
+        dafs::MetaDataParser metadata)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto blockformat = node.GetPartition(blockinfo.identity)->ReadBlock(blockinfo);
@@ -28,8 +27,7 @@ namespace dafs
     dafs::Message
     HandleWriteBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
+        dafs::MetaDataParser metadata)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
@@ -43,8 +41,7 @@ namespace dafs
     dafs::Message
     HandleDeleteBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
+        dafs::MetaDataParser metadata)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
 
@@ -57,8 +54,7 @@ namespace dafs
     dafs::Message
     HandleGetNodeDetails(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
+        dafs::MetaDataParser metadata)
     {
         auto details = dafs::NodeDetails
         {
@@ -79,17 +75,67 @@ namespace dafs
 
 
     dafs::Message
+    HandleJoinCluster(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata)
+    {
+        dafs::Message search_message
+        {
+            node.GetPartition(dafs::Node::Slot::Zero)->GetDetails().author,
+            metadata.GetValue<dafs::Address>(dafs::AddressKey),
+            dafs::MessageType::GetNodeDetails
+        };
+
+        auto details = node.GetPartition(dafs::Node::Slot::Zero)->GetDetails();
+
+        for (;;)
+        {
+            dafs::NetworkSender searcher(search_message.to);
+            searcher.Send(search_message);
+            auto response_message = searcher.Receive();
+            dafs::MetaDataParser parser(response_message.metadata);
+            auto d = parser.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
+            if (d.minus_details.identity < details.identity &&
+                details.identity < d.plus_details.identity)
+            {
+                break;
+            }
+            search_message.to = node.GetPartition(dafs::Node::Slot::Plus)
+                                     ->GetDetails().author;
+        }
+        dafs::NetworkSender joiner(search_message.to);
+        joiner.Send(
+            dafs::Message
+            {
+                details.author,
+                search_message.to,
+                dafs::MessageType::_RequestInitiation,
+                std::vector<dafs::MetaData>
+                {
+                    dafs::MetaData
+                    {
+                        dafs::IdentityKey,
+                        dafs::Serialize(details.identity)
+                    }
+                }
+            }
+        );
+
+        dafs::Message m;
+        return m;
+    }
+
+
+    dafs::Message
     HandleRequestInitiation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
+        dafs::MetaDataParser metadata)
     {
-        auto ip = metadata.GetValue<std::string>(dafs::AddressKey);
-        auto port = metadata.GetValue<short>(dafs::PortKey);
+        auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
         auto identity = dafs::Identity(metadata.GetValue<std::string>(
             dafs::IdentityKey));
 
-        node.GetPartition(Node::Slot::Zero)->AddNode(dafs::Address(ip, port));
+        node.GetPartition(Node::Slot::Zero)->AddNode(address);
         dafs::Message m;
         return m;
     }
@@ -98,8 +144,7 @@ namespace dafs
     dafs::Message
     HandleProcessInitation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
+        dafs::MetaDataParser metadata)
     {
         // initiate a node into a cluster
         dafs::Message m;
@@ -110,8 +155,7 @@ namespace dafs
     dafs::Message
     HandleConcludeInitation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
+        dafs::MetaDataParser metadata)
     {
         // initiate a node into a cluster
         dafs::Message m;

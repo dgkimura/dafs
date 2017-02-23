@@ -12,88 +12,81 @@ namespace dafs
                   dafs::MessageType::ReadBlock,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleReadBlock(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
                   }
               },
               {
                   dafs::MessageType::WriteBlock,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleWriteBlock(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
                   }
               },
               {
                   dafs::MessageType::DeleteBlock,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleDeleteBlock(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
                   }
               },
               {
                   dafs::MessageType::GetNodeDetails,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleGetNodeDetails(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
+                  }
+              },
+              {
+                  dafs::MessageType::_JoinCluster,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      return dafs::HandleJoinCluster(
+                          node,
+                          message.metadata);
                   }
               },
               {
                   dafs::MessageType::_RequestInitiation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleRequestInitiation(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
                   }
               },
               {
                   dafs::MessageType::_ProcessInitation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleProcessInitation(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
                   }
               },
               {
                   dafs::MessageType::_ConcludeInitation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleConcludeInitation(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
                   }
               },
               {
                   dafs::MessageType::_ConcludeInitation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender(message.from);
                       return dafs::HandleConcludeInitation(
                           node,
-                          message.metadata,
-                          sender);
+                          message.metadata);
                   }
               }
           },

@@ -10,48 +10,47 @@ namespace dafs
     dafs::Message
     HandleReadBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
+        dafs::MetaDataParser metadata);
 
 
     dafs::Message
     HandleWriteBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
+        dafs::MetaDataParser metadata);
 
 
     dafs::Message
     HandleDeleteBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
+        dafs::MetaDataParser metadata);
 
 
     dafs::Message
     HandleGetNodeDetails(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
+        dafs::MetaDataParser metadata);
+
+
+    dafs::Message
+    HandleJoinCluster(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata);
 
 
     dafs::Message
     HandleRequestInitiation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
+        dafs::MetaDataParser metadata);
 
 
     dafs::Message
     HandleProcessInitation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
+        dafs::MetaDataParser metadata);
 
 
     dafs::Message
     HandleConcludeInitation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
+        dafs::MetaDataParser metadata);
 }

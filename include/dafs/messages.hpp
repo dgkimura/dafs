@@ -31,6 +31,12 @@ namespace dafs
         GetNodeDetails,
 
         //
+        // Join cluster - message sent to a node to signal it to join a
+        // cluster.
+        //
+        _JoinCluster,
+
+        //
         // Request initation - message sent to a node to signal it to request
         // an initiation into a given cluster.
         //

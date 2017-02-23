@@ -28,9 +28,6 @@ namespace dafs
     const std::string AddressKey = "Address";
 
 
-    const std::string PortKey = "Port";
-
-
     const std::string IdentityKey = "Identity";
 
 
