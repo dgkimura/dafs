@@ -37,17 +37,23 @@ namespace dafs
         _JoinCluster,
 
         //
-        // Request initation - message sent to a node to signal it to request
-        // an initiation into a given cluster.
+        // Request initation - message sent to a node requesting to initiate
+        // into minus partition on given cluster node.
         //
-        _RequestInitiation,
+        _RequestMinusInitiation,
+
+        //
+        // Request initation - message sent to a node requesting to initiate
+        // into plus partition on given cluster node.
+        //
+        _RequestPlusInitiation,
 
         //
         // Processes initiation - message sent to node in a cluster to signal
         // that an outside node is attempting to initiate itself into this
         // cluster.
         //
-        _ProcessInitation,
+        _AcceptInitation,
 
         //
         // Conclude initation - message is sent to node to signal that the
@@ -90,5 +96,12 @@ namespace dafs
         Address to;
         dafs::MessageType type;
         std::vector<dafs::MetaData> metadata;
+    };
+
+
+    struct EmptyMessage : public Message
+    {
+        EmptyAddress from;
+        EmptyAddress to;
     };
 }

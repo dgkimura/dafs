@@ -38,13 +38,19 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestInitiation(
+    HandleRequestMinusInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata);
 
 
     dafs::Message
-    HandleProcessInitation(
+    HandleRequestPlusInitiation(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata);
+
+
+    dafs::Message
+    HandleAcceptInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata);
 

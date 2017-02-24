@@ -35,7 +35,8 @@ namespace dafs
                   boost::filesystem::path(Constant::AuthorName).string(),
                   dafs::Identity())),
           in_progress(),
-          root(root)
+          root(root),
+          replication_interface(address)
     {
     }
 
@@ -50,7 +51,8 @@ namespace dafs
           nodes(other.nodes),
           identity(other.identity),
           in_progress(),
-          root(other.root)
+          root(other.root),
+          replication_interface(other.replication_interface)
     {
     }
 
@@ -64,6 +66,7 @@ namespace dafs
         return dafs::PartitionDetails
         {
             dafs::Deserialize<dafs::Address>(author_block.contents),
+            replication_interface,
             dafs::Deserialize<dafs::Identity>(id_block.contents)
         };
     }

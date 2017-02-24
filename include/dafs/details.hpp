@@ -10,6 +10,8 @@ namespace dafs
     {
         dafs::Address author;
 
+        dafs::Address interface;
+
         dafs::Identity identity;
     };
 

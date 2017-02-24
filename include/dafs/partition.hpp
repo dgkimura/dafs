@@ -49,6 +49,7 @@ namespace dafs
         {
             return dafs::PartitionDetails
             {
+                dafs::Address("127.0.0.1", 9000),
                 dafs::Address("127.0.0.1", 8080),
                 identity
             };
@@ -154,5 +155,7 @@ namespace dafs
         dafs::Root root;
 
         dafs::BlockInfo rooted(dafs::BlockInfo info);
+
+        dafs::Address replication_interface;
     };
 }

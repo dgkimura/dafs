@@ -79,43 +79,32 @@ namespace dafs
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
-        dafs::Message search_message
-        {
-            node.GetPartition(dafs::Node::Slot::Zero)->GetDetails().author,
-            metadata.GetValue<dafs::Address>(dafs::AddressKey),
-            dafs::MessageType::GetNodeDetails
-        };
+        dafs::NetworkSender searcher(
+            metadata.GetValue<dafs::Address>(dafs::AddressKey));
 
-        auto details = node.GetPartition(dafs::Node::Slot::Zero)->GetDetails();
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
+        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
-        for (;;)
-        {
-            dafs::NetworkSender searcher(search_message.to);
-            searcher.Send(search_message);
-            auto response_message = searcher.Receive();
-            dafs::MetaDataParser parser(response_message.metadata);
-            auto d = parser.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
-            if (d.minus_details.identity < details.identity &&
-                details.identity < d.plus_details.identity)
-            {
-                break;
-            }
-            search_message.to = node.GetPartition(dafs::Node::Slot::Plus)
-                                     ->GetDetails().author;
-        }
-        dafs::NetworkSender joiner(search_message.to);
-        joiner.Send(
+        searcher.Send(
             dafs::Message
             {
-                details.author,
-                search_message.to,
-                dafs::MessageType::_RequestInitiation,
+                node.GetPartition(dafs::Node::Slot::Zero)->GetDetails().author,
+                metadata.GetValue<dafs::Address>(dafs::AddressKey),
+                dafs::MessageType::_RequestMinusInitiation,
                 std::vector<dafs::MetaData>
                 {
                     dafs::MetaData
                     {
-                        dafs::IdentityKey,
-                        dafs::Serialize(details.identity)
+                        dafs::NodeDetailsKey,
+                        dafs::Serialize(
+                            dafs::NodeDetails
+                            {
+                                p_minus->GetDetails(),
+                                p_zero->GetDetails(),
+                                p_plus->GetDetails()
+                            }
+                        )
                     }
                 }
             }
@@ -127,22 +116,144 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestInitiation(
+    HandleRequestMinusInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
         auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
         auto identity = dafs::Identity(metadata.GetValue<std::string>(
             dafs::IdentityKey));
+        auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
 
-        node.GetPartition(Node::Slot::Zero)->AddNode(address);
+
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
+        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+
+        dafs::NetworkSender sender(
+            metadata.GetValue<dafs::Address>(dafs::AddressKey));
+
+        if (identity < p_minus->GetDetails().identity ||
+            identity > p_zero->GetDetails().identity)
+        {
+            //
+            // Reject initiation request by telling node who to ask next.
+            //
+            sender.Send(
+                dafs::Message
+                {
+                    p_zero->GetDetails().author,
+                    address,
+                    dafs::MessageType::_JoinCluster,
+                    std::vector<dafs::MetaData>
+                    {
+                        dafs::MetaData
+                        {
+                            dafs::Serialize(address),
+                            dafs::Serialize(p_minus->GetDetails().author)
+                        }
+                    }
+                }
+            );
+        }
+        else
+        {
+            //
+            // Accept initiation request and update half of topology.
+            //
+
+            // Push replication onto initiated node.
+            p_minus->AddNode(details.minus_details.interface);
+
+            // Delete extra replications.
+            p_minus->RemoveNode(p_minus->GetDetails().interface);
+
+            // TODO: Remove artifacts in p_minus partition.
+
+            sender.Send(
+                dafs::Message
+                {
+                    p_zero->GetDetails().author,
+                    p_minus->GetDetails().author,
+                    dafs::MessageType::_RequestPlusInitiation,
+                    std::vector<dafs::MetaData>
+                    {
+                        dafs::MetaData
+                        {
+                            dafs::NodeDetailsKey,
+                            dafs::Serialize(details)
+                        }
+                    }
+                }
+            );
+        }
+
         dafs::Message m;
         return m;
     }
 
 
     dafs::Message
-    HandleProcessInitation(
+    HandleRequestPlusInitiation(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata)
+    {
+        auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
+        auto identity = dafs::Identity(metadata.GetValue<std::string>(
+            dafs::IdentityKey));
+        auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
+
+
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
+        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+
+        dafs::NetworkSender sender(
+            metadata.GetValue<dafs::Address>(dafs::AddressKey));
+
+        if (identity > p_plus->GetDetails().identity ||
+            identity < p_zero->GetDetails().identity)
+        {
+            //
+            // Foobar'd topology.
+            //
+        }
+        else
+        {
+            //
+            // Update second half of topology
+            //
+
+            // Push replication onto initiated node.
+            p_plus->AddNode(details.plus_details.interface);
+
+            // Delete extra replications.
+            p_plus->RemoveNode(p_plus->GetDetails().interface);
+
+            // TODO: Remove artifacts in p_plus partition.
+
+            // Send accepted messge to ndoe.
+            sender.Send(
+                dafs::Message
+                {
+                    p_zero->GetDetails().author,
+                    address,
+                    dafs::MessageType::_AcceptInitation,
+                    std::vector<dafs::MetaData>
+                    {
+                        dafs::MetaData
+                        {
+                        }
+                    }
+                }
+            );
+        }
+
+        dafs::Message m;
+        return m;
+    }
+
+
+    dafs::Message
+    HandleAcceptInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
