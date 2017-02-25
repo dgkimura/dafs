@@ -72,28 +72,19 @@ namespace dafs
                   }
               },
               {
-                  dafs::MessageType::_AcceptInitation,
+                  dafs::MessageType::_AcceptMinusInitation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      return dafs::HandleAcceptInitiation(
+                      return dafs::HandleAcceptMinusInitiation(
                           node,
                           message.metadata);
                   }
               },
               {
-                  dafs::MessageType::_ConcludeInitation,
+                  dafs::MessageType::_AcceptPlusInitation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      return dafs::HandleConcludeInitation(
-                          node,
-                          message.metadata);
-                  }
-              },
-              {
-                  dafs::MessageType::_ConcludeInitation,
-                  [&node](dafs::Message message) -> dafs::Message
-                  {
-                      return dafs::HandleConcludeInitation(
+                      return dafs::HandleAcceptPlusInitiation(
                           node,
                           message.metadata);
                   }

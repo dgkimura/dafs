@@ -169,7 +169,8 @@ namespace dafs
 
             // TODO: Remove artifacts in p_minus partition.
 
-            sender.Send(
+            dafs::NetworkSender forward_sender(p_minus->GetDetails().author);
+            forward_sender.Send(
                 dafs::Message
                 {
                     p_zero->GetDetails().author,
@@ -181,6 +182,25 @@ namespace dafs
                         {
                             dafs::NodeDetailsKey,
                             dafs::Serialize(details)
+                        }
+                    }
+                }
+            );
+
+            sender.Send(
+                dafs::Message
+                {
+                    p_zero->GetDetails().author,
+                    address,
+                    dafs::MessageType::_AcceptMinusInitation,
+                    std::vector<dafs::MetaData>
+                    {
+                        dafs::MetaData
+                        {
+                            dafs::AddressKey,
+                            dafs::Serialize(
+                                p_zero->GetDetails().interface
+                            )
                         }
                     }
                 }
@@ -202,9 +222,8 @@ namespace dafs
             dafs::IdentityKey));
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
 
-
-        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
         dafs::NetworkSender sender(
             metadata.GetValue<dafs::Address>(dafs::AddressKey));
@@ -213,7 +232,7 @@ namespace dafs
             identity < p_zero->GetDetails().identity)
         {
             //
-            // Foobar'd topology.
+            // Foobar'd topology. Rollback?
             //
         }
         else
@@ -236,11 +255,13 @@ namespace dafs
                 {
                     p_zero->GetDetails().author,
                     address,
-                    dafs::MessageType::_AcceptInitation,
+                    dafs::MessageType::_AcceptPlusInitation,
                     std::vector<dafs::MetaData>
                     {
                         dafs::MetaData
                         {
+                            dafs::AddressKey,
+                            dafs::Serialize(p_zero->GetDetails().interface)
                         }
                     }
                 }
@@ -253,22 +274,30 @@ namespace dafs
 
 
     dafs::Message
-    HandleAcceptInitiation(
+    HandleAcceptMinusInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
-        // initiate a node into a cluster
+        auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
+
+        p_plus->AddNode(address);
+
         dafs::Message m;
         return m;
     }
 
 
     dafs::Message
-    HandleConcludeInitation(
+    HandleAcceptPlusInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
-        // initiate a node into a cluster
+        auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
+
+        p_minus->AddNode(address);
+
         dafs::Message m;
         return m;
     }

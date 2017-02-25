@@ -49,18 +49,16 @@ namespace dafs
         _RequestPlusInitiation,
 
         //
-        // Processes initiation - message sent to node in a cluster to signal
-        // that an outside node is attempting to initiate itself into this
-        // cluster.
+        // Accepted inivitation - message sent to node to indicate that it
+        // was accepted as the minus partition.
         //
-        _AcceptInitation,
+        _AcceptMinusInitation,
 
         //
-        // Conclude initation - message is sent to node to signal that the
-        // initation process has finished and provide the result of the
-        // initation request.
+        // Accepted inivitation - message sent to node to indicate that it
+        // was accepted as the plus partition.
         //
-        _ConcludeInitation,
+        _AcceptPlusInitation,
     };
 
 
