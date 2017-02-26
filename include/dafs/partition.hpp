@@ -16,10 +16,6 @@ namespace dafs
 
         virtual dafs::PartitionDetails GetDetails() = 0;
 
-        virtual dafs::Identity GetIdentity() = 0;
-
-        virtual void SetIdentity(dafs::Identity id) = 0;
-
         virtual void CreateBlock(BlockInfo block) = 0;
 
         virtual void DeleteBlock(BlockInfo block) = 0;
@@ -53,16 +49,6 @@ namespace dafs
                 dafs::Address("127.0.0.1", 8080),
                 identity
             };
-        }
-
-        virtual dafs::Identity GetIdentity() override
-        {
-            return identity;
-        }
-
-        virtual void SetIdentity(dafs::Identity id) override
-        {
-            identity = id;
         }
 
         virtual void CreateBlock(BlockInfo block) override
@@ -115,10 +101,6 @@ namespace dafs
         );
 
         virtual dafs::PartitionDetails GetDetails() override;
-
-        virtual dafs::Identity GetIdentity() override;
-
-        virtual void SetIdentity(dafs::Identity id) override;
 
         virtual void CreateBlock(BlockInfo block) override;
 

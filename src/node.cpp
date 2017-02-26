@@ -46,18 +46,22 @@ namespace dafs
     std::shared_ptr<dafs::Partition>
     Node::GetPartition(Identity identity)
     {
-        if (slot_minus->GetIdentity() <= identity &&
-            identity < slot_minus->GetIdentity().Median(slot_zero->GetIdentity()))
+        auto minus_id = slot_minus->GetDetails().identity;
+        auto zero_id = slot_zero->GetDetails().identity;
+        auto plus_id = slot_plus->GetDetails().identity;
+
+        if (minus_id <= identity &&
+            identity < minus_id.Median(zero_id))
         {
             return slot_minus;
         }
-        else if (identity >= slot_minus->GetIdentity().Median(slot_zero->GetIdentity()) &&
-                 identity < slot_zero->GetIdentity().Median(slot_plus->GetIdentity()))
+        else if (identity >= minus_id.Median(zero_id) &&
+                 identity < zero_id.Median(plus_id))
         {
             return slot_zero;
         }
-        else if (identity < slot_plus->GetIdentity() &&
-                 identity >= slot_minus->GetIdentity().Median(slot_zero->GetIdentity()))
+        else if (identity < plus_id &&
+                 identity >= minus_id.Median(zero_id))
         {
             return slot_plus;
         }

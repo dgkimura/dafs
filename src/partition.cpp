@@ -72,22 +72,6 @@ namespace dafs
     }
 
 
-    dafs::Identity
-    ReplicatedPartition::GetIdentity()
-    {
-        dafs::BlockFormat b =  store.ReadBlock(rooted(identity));
-        return dafs::Deserialize<dafs::Identity>(b.contents);
-    }
-
-
-    void
-    ReplicatedPartition::SetIdentity(dafs::Identity id)
-    {
-        dafs::Delta delta = dafs::Set(rooted(identity), id.id);
-        store.Write(rooted(identity), delta);
-    }
-
-
     void
     ReplicatedPartition::CreateBlock(BlockInfo info)
     {
