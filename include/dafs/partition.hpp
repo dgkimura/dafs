@@ -29,6 +29,8 @@ namespace dafs
         virtual void AddNode(dafs::Address address) = 0;
 
         virtual void RemoveNode(dafs::Address address) = 0;
+
+        virtual void Clear() = 0;
     };
 
 
@@ -81,6 +83,10 @@ namespace dafs
         {
         }
 
+        virtual void Clear() override
+        {
+        }
+
     private:
 
         dafs::Identity identity;
@@ -115,6 +121,8 @@ namespace dafs
         virtual void AddNode(dafs::Address address) override;
 
         virtual void RemoveNode(dafs::Address address) override;
+
+        virtual void Clear() override;
 
     private:
 

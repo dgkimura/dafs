@@ -130,6 +130,21 @@ namespace dafs
     }
 
 
+    void
+    ReplicatedPartition::Clear()
+    {
+        if (boost::filesystem::exists(root.directory))
+        {
+            for (auto& entry : boost::make_iterator_range(
+                               boost::filesystem::directory_iterator(
+                                   root.directory), {}))
+            {
+                std::remove(entry.path().string().c_str());
+            }
+        }
+    }
+
+
     dafs::BlockInfo
     ReplicatedPartition::rooted(dafs::BlockInfo info)
     {

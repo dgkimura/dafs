@@ -167,7 +167,8 @@ namespace dafs
             // Delete extra replications.
             p_minus->RemoveNode(p_minus->GetDetails().interface);
 
-            // TODO: Remove artifacts in p_minus partition.
+            // Clear previous artifacts from partition.
+            p_minus->Clear();
 
             dafs::NetworkSender forward_sender(p_minus->GetDetails().author);
             forward_sender.Send(
@@ -247,7 +248,8 @@ namespace dafs
             // Delete extra replications.
             p_plus->RemoveNode(p_plus->GetDetails().interface);
 
-            // TODO: Remove artifacts in p_plus partition.
+            // Clear previous artifacts from partition.
+            p_plus->Clear();
 
             // Send accepted messge to ndoe.
             sender.Send(
