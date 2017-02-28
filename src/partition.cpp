@@ -60,8 +60,8 @@ namespace dafs
     dafs::PartitionDetails
     ReplicatedPartition::GetDetails()
     {
-        dafs::BlockFormat author_block =  store.ReadBlock(rooted(author));
-        dafs::BlockFormat id_block =  store.ReadBlock(rooted(identity));
+        auto author_block =  store.ReadBlock(rooted(author));
+        auto id_block =  store.ReadBlock(rooted(identity));
 
         return dafs::PartitionDetails
         {
@@ -142,6 +142,17 @@ namespace dafs
                 std::remove(entry.path().string().c_str());
             }
         }
+    }
+
+
+    bool
+    ReplicatedPartition::IsActive()
+    {
+        auto block =  store.ReadBlock(rooted(author));
+        auto address = dafs::Deserialize<dafs::Address>(block.contents);
+
+        return address.ip != dafs::EmptyAddress().ip &&
+               address.port != dafs::EmptyAddress().port;
     }
 
 

@@ -3,19 +3,13 @@
 namespace dafs
 {
     Node::Node(
-        dafs::Address partition_minus_address,
-        dafs::Address partition_zero_address,
-        dafs::Address partition_plus_address
+        std::shared_ptr<dafs::Partition> pminus,
+        std::shared_ptr<dafs::Partition> pzero,
+        std::shared_ptr<dafs::Partition> pplus
     )
-        : slot_minus(std::make_shared<dafs::ReplicatedPartition>(
-              partition_minus_address,
-              dafs::Root("p-minus"))),
-          slot_zero(std::make_shared<dafs::ReplicatedPartition>(
-              partition_zero_address,
-              dafs::Root("p-zero"))),
-          slot_plus(std::make_shared<dafs::ReplicatedPartition>(
-              partition_plus_address,
-              dafs::Root("p-plus"))),
+        : slot_minus(pminus),
+          slot_zero(pzero),
+          slot_plus(pplus),
           slot_empty(std::make_shared<dafs::EmptyPartition>(
               dafs::Identity("00000000-0000-0000-0000-000000000000")))
     {
@@ -51,17 +45,20 @@ namespace dafs
         auto plus_id = slot_plus->GetDetails().identity;
 
         if (minus_id <= identity &&
-            identity < minus_id.Median(zero_id))
+            identity < minus_id.Median(zero_id) &&
+            slot_minus->IsActive())
         {
             return slot_minus;
         }
         else if (identity >= minus_id.Median(zero_id) &&
-                 identity < zero_id.Median(plus_id))
+                 identity < zero_id.Median(plus_id) &&
+                 slot_zero->IsActive())
         {
             return slot_zero;
         }
         else if (identity < plus_id &&
-                 identity >= minus_id.Median(zero_id))
+                 identity >= minus_id.Median(zero_id) &&
+                 slot_plus->IsActive())
         {
             return slot_plus;
         }

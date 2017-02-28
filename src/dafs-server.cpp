@@ -12,7 +12,22 @@
 
 
 void
-SetupPartition(
+CreateReplicatedFile(
+    std::string directory,
+    std::string filename,
+    std::string content)
+{
+    boost::filesystem::path replicated_file(directory);
+    replicated_file /= filename;
+    std::fstream replicated_file_stream(
+        replicated_file.string(),
+        std::ios::in | std::ios::out | std::ios::trunc);
+    replicated_file_stream << content << std::endl;
+}
+
+
+void
+SetupReplicatedFiles(
     std::string directory,
     dafs::Address management_interface,
     dafs::Address replication_interface,
@@ -20,26 +35,49 @@ SetupPartition(
 {
     if (!boost::filesystem::exists(directory))
     {
-        // write out replicaset file
         boost::filesystem::create_directory(directory);
-        boost::filesystem::path replicasetfile(directory);
-        replicasetfile /= ReplicasetFilename;
-        std::fstream rs(replicasetfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
-        rs << replication_interface.ip << ":"
-           << std::to_string(replication_interface.port) << std::endl;
+
+        // write out replicaset file
+        CreateReplicatedFile(
+            directory,
+            ReplicasetFilename,
+            replication_interface.ip + ":" + std::to_string(
+                replication_interface.port)
+        );
 
         // write out identity file
-        boost::filesystem::path identityfile(directory);
-        identityfile /= Constant::IdentityFilename;
-        std::fstream id_stream(identityfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
-        id_stream << dafs::Serialize(identity) << std::endl;
+        CreateReplicatedFile(
+            directory,
+            Constant::IdentityFilename,
+            dafs::Serialize(identity)
+        );
 
-        // write out identity file
-        boost::filesystem::path authorfile(directory);
-        authorfile /= Constant::AuthorFilename;
-        std::fstream author_stream(authorfile.string(), std::ios::in | std::ios::out | std::ios::trunc);
-        author_stream << dafs::Serialize(management_interface) << std::endl;
+        // write out author file
+        CreateReplicatedFile(
+            directory,
+            Constant::AuthorFilename,
+            dafs::Serialize(management_interface)
+        );
     }
+}
+
+
+std::shared_ptr<dafs::ReplicatedPartition>
+SetupPartition(
+    std::string directory,
+    dafs::Address management_interface,
+    dafs::Address replication_interface,
+    dafs::Identity identity)
+{
+    SetupReplicatedFiles(
+        directory,
+        management_interface,
+        replication_interface,
+        identity);
+
+    return std::make_shared<dafs::ReplicatedPartition>(
+        replication_interface,
+        dafs::Root(directory));
 }
 
 
@@ -108,7 +146,7 @@ int main(int argc, char** argv)
     desc_settings.add_options()
         ("partition-minus.port",
          boost::program_options::value(&options.minus_port),
-         "port of the plus partition")
+         "port of the minus partition")
         ("partition-zero.port",
          boost::program_options::value(&options.zero_port),
          "port of the zero partition")
@@ -126,41 +164,34 @@ int main(int argc, char** argv)
         config_vm);
     boost::program_options::notify(config_vm);
 
-
     //
     // Setup the partitions
     //
-    if (cli_vm.count("identity"))
-    {
-        SetupPartition(
-            "p-minus",
-            dafs::EmptyAddress(),
-            dafs::Address(options.address, options.minus_port),
-            dafs::Identity(boost::uuids::to_string(options.identity)) -
-            dafs::Identity("00000000-0000-0000-0000-0000000000ff")
-        );
-        SetupPartition(
-            "p-zero",
-            dafs::Address(options.address, options.port),
-            dafs::Address(options.address, options.zero_port),
-            dafs::Identity(boost::uuids::to_string(options.identity))
-        );
-        SetupPartition(
-            "p-plus",
-            dafs::EmptyAddress(),
-            dafs::Address(options.address, options.plus_port),
-            dafs::Identity(boost::uuids::to_string(options.identity)) +
-            dafs::Identity("00000000-0000-0000-0000-0000000000ff")
-        );
-    }
+    auto pminus = SetupPartition(
+        "p-minus",
+        dafs::EmptyAddress(),
+        dafs::Address(options.address, options.minus_port),
+        dafs::Identity(boost::uuids::to_string(options.identity)) -
+        dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+    );
+    auto pzero = SetupPartition(
+        "p-zero",
+        dafs::Address(options.address, options.port),
+        dafs::Address(options.address, options.zero_port),
+        dafs::Identity(boost::uuids::to_string(options.identity))
+    );
+    auto pplus = SetupPartition(
+        "p-plus",
+        dafs::EmptyAddress(),
+        dafs::Address(options.address, options.plus_port),
+        dafs::Identity(boost::uuids::to_string(options.identity)) +
+        dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+    );
 
     //
     // Start node and server.
     //
-    dafs::Node n(
-        dafs::Address(options.address, options.minus_port),
-        dafs::Address(options.address, options.zero_port),
-        dafs::Address(options.address, options.plus_port));
+    dafs::Node n(pminus, pzero, pplus);
     dafs::Dispatcher dispatcher(n);
 
     auto server = boost::make_shared<dafs::Server>(

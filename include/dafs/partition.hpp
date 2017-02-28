@@ -31,6 +31,8 @@ namespace dafs
         virtual void RemoveNode(dafs::Address address) = 0;
 
         virtual void Clear() = 0;
+
+        virtual bool IsActive() = 0;
     };
 
 
@@ -63,7 +65,7 @@ namespace dafs
 
         virtual bool ContainsBlock(BlockInfo block) override
         {
-            return true;
+            return false;
         }
 
         virtual BlockFormat ReadBlock(BlockInfo block) override
@@ -85,6 +87,11 @@ namespace dafs
 
         virtual void Clear() override
         {
+        }
+
+        virtual bool IsActive() override
+        {
+            return false;
         }
 
     private:
@@ -123,6 +130,8 @@ namespace dafs
         virtual void RemoveNode(dafs::Address address) override;
 
         virtual void Clear() override;
+
+        virtual bool IsActive() override;
 
     private:
 

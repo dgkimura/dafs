@@ -125,7 +125,7 @@ int main(void)
             dafs::BlockInfo info
             {
                 "path_to_block_info",
-                dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                dafs::Identity("11111111-1111-1111-1111-111111111110"),
                 0 // revision
             };
 
@@ -144,7 +144,7 @@ int main(void)
             dafs::BlockInfo info
             {
                 "path_to_block_info",
-                dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                dafs::Identity("11111111-1111-1111-1111-111111111110"),
                 0 // revision
             };
             dafs::Message m = CreateReadBlockMessage(creds, info);
@@ -159,7 +159,7 @@ int main(void)
             dafs::BlockInfo info
             {
                 "path_to_block_info",
-                dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                dafs::Identity("11111111-1111-1111-1111-111111111110"),
                 0 // revision
             };
             dafs::Message m = CreateDeleteBlockMessage(creds, info);
@@ -172,7 +172,7 @@ int main(void)
             dafs::BlockInfo info
             {
                 "path_to_block_info",
-                dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                dafs::Identity("11111111-1111-1111-1111-111111111110"),
                 0 // revision
             };
             dafs::Message m = CreateGetNodeDetailsMessage(creds, info);
