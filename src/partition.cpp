@@ -117,9 +117,9 @@ namespace dafs
 
 
     void
-    ReplicatedPartition::AddNode(dafs::Address address)
+    ReplicatedPartition::AddNode(dafs::Address address, std::string location)
     {
-        nodeset.AddNode(address);
+        nodeset.AddNode(address, location);
     }
 
 

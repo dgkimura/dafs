@@ -84,6 +84,14 @@ SetupPartition(
 void
 SetupNode(std::string settings_file)
 {
+    //[partition-minus]
+    //port = 8070
+    //
+    //[partition-zero]
+    //port = 8080
+    //
+    //[partition-plus]
+    //port = 8090
     // write out node config file
     std::fstream config(settings_file, std::ios::out | std::ios::trunc);
     config << "[partition-minus]" << std::endl;
@@ -134,11 +142,6 @@ int main(int argc, char** argv)
         std::exit(EXIT_FAILURE);
     }
 
-    if (cli_vm.count("identity"))
-    {
-        SetupNode(options.settings_file);
-    }
-
     //
     // Parse the configuration file.
     //
@@ -168,20 +171,20 @@ int main(int argc, char** argv)
     // Setup the partitions
     //
     auto pminus = SetupPartition(
-        "p-minus",
+        Constant::PartitionMinusName,
         dafs::EmptyAddress(),
         dafs::Address(options.address, options.minus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) -
         dafs::Identity("00000000-0000-0000-0000-0000000000ff")
     );
     auto pzero = SetupPartition(
-        "p-zero",
+        Constant::PartitionZeroName,
         dafs::Address(options.address, options.port),
         dafs::Address(options.address, options.zero_port),
         dafs::Identity(boost::uuids::to_string(options.identity))
     );
     auto pplus = SetupPartition(
-        "p-plus",
+        Constant::PartitionPlusName,
         dafs::EmptyAddress(),
         dafs::Address(options.address, options.plus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) +

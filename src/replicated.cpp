@@ -115,10 +115,9 @@ namespace dafs
 
 
     void
-    ReplicatedNodeSet::AddNode(dafs::Address address)
+    ReplicatedNodeSet::AddNode(dafs::Address address, std::string location)
     {
-        parliament.AddLegislator(address.ip, address.port);
-        in_progress.Wait();
+        parliament.AddLegislator(address.ip, address.port, location);
     }
 
 

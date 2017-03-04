@@ -18,5 +18,11 @@ namespace
         static constexpr const char* IdentityFilename = "identity";
 
         static constexpr const char* AuthorFilename = "author";
+
+        static constexpr const char* PartitionMinusName = "p-minus";
+
+        static constexpr const char* PartitionZeroName = "p-zero";
+
+        static constexpr const char* PartitionPlusName = "p-plus";
     };
 };

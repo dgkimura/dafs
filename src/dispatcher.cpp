@@ -72,7 +72,7 @@ namespace dafs
                   }
               },
               {
-                  dafs::MessageType::_AcceptMinusInitation,
+                  dafs::MessageType::_AcceptMinusInitiation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
                       return dafs::HandleAcceptMinusInitiation(
@@ -81,7 +81,7 @@ namespace dafs
                   }
               },
               {
-                  dafs::MessageType::_AcceptPlusInitation,
+                  dafs::MessageType::_AcceptPlusInitiation,
                   [&node](dafs::Message message) -> dafs::Message
                   {
                       return dafs::HandleAcceptPlusInitiation(

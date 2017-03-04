@@ -52,13 +52,13 @@ namespace dafs
         // Accepted inivitation - message sent to node to indicate that it
         // was accepted as the minus partition.
         //
-        _AcceptMinusInitation,
+        _AcceptMinusInitiation,
 
         //
         // Accepted inivitation - message sent to node to indicate that it
         // was accepted as the plus partition.
         //
-        _AcceptPlusInitation,
+        _AcceptPlusInitiation,
     };
 
 
