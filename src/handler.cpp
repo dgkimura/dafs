@@ -138,8 +138,9 @@ namespace dafs
             metadata.GetValue<dafs::Address>(dafs::AddressKey));
 
         if (p_minus->IsActive() &&
-            (identity < p_minus->GetDetails().identity ||
-             identity > p_zero->GetDetails().identity))
+            (!IsLogicallyOrdered(p_minus->GetDetails().identity,
+                                 identity,
+                                 p_zero->GetDetails().identity)))
         {
             //
             // Reject initiation request by telling node who to ask next.
@@ -273,8 +274,9 @@ namespace dafs
         dafs::NetworkSender reply(
             metadata.GetValue<dafs::Address>(dafs::AddressKey));
 
-        if (identity > p_plus->GetDetails().identity ||
-            identity < p_zero->GetDetails().identity)
+        if (!IsLogicallyOrdered(p_zero->GetDetails().identity,
+                                identity,
+                                p_plus->GetDetails().identity))
         {
             //
             // Foobar'd topology. Rollback?

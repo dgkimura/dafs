@@ -279,4 +279,9 @@ namespace dafs
     //
     BlockInfo CreateBlockInfo(const std::string& path,
                               const dafs::Identity identity);
+
+
+    bool IsLogicallyOrdered(dafs::Identity first,
+                           dafs::Identity second,
+                           dafs::Identity third);
 }

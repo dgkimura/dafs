@@ -22,5 +22,17 @@ namespace dafs
         blockinfo.identity = identity;
         return blockinfo;
     }
+
+
+    bool
+    IsLogicallyOrdered(
+        dafs::Identity first,
+        dafs::Identity second,
+        dafs::Identity third)
+    {
+        return ((first < second) && (second < third)) ||
+               ((third < first) && (first < second)) ||
+               ((second < third) && (third < first));
+    }
 }
 
