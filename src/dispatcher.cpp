@@ -72,15 +72,6 @@ namespace dafs
                   }
               },
               {
-                  dafs::MessageType::_AcceptMinusInitiation,
-                  [&node](dafs::Message message) -> dafs::Message
-                  {
-                      return dafs::HandleAcceptMinusInitiation(
-                          node,
-                          message.metadata);
-                  }
-              },
-              {
                   dafs::MessageType::_AcceptPlusInitiation,
                   [&node](dafs::Message message) -> dafs::Message
                   {

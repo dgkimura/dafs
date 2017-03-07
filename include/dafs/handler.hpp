@@ -50,12 +50,6 @@ namespace dafs
 
 
     dafs::Message
-    HandleAcceptMinusInitiation(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata);
-
-
-    dafs::Message
     HandleAcceptPlusInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata);

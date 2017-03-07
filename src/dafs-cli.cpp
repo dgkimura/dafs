@@ -192,6 +192,7 @@ namespace dafs
                 }
             }
         };
+        std::cout << "JoinNodeToCluster: ip:" << address.ip << " port:"<< address.port<<"\n";
         auto sender = boost::make_shared<dafs::NetworkSender>(address);
         sender->Send(message);
     }

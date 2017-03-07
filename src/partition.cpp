@@ -15,9 +15,9 @@ namespace dafs
     )
         : parliament(Replica(address.ip, address.port),
                      root.directory,
-                     DecreeHandler(dafs::Commit(parliament, in_progress))),
+                     dafs::Commit(parliament, in_progress)),
           store(parliament, in_progress),
-          nodeset(parliament, in_progress),
+          nodeset(parliament),
           blocks(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::BlockListName).string(),

@@ -76,11 +76,7 @@ namespace dafs
     public:
 
         ReplicatedNodeSet(
-            Parliament& parliament,
-            dafs::Signal& in_progress);
-
-        ReplicatedNodeSet(
-            const ReplicatedNodeSet& other);
+            Parliament& parliament);
 
         virtual void AddNode(dafs::Address address, std::string location) override;
 
@@ -89,8 +85,6 @@ namespace dafs
     private:
 
         Parliament& parliament;
-
-        dafs::Signal& in_progress;
     };
 }
 

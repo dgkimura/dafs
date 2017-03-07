@@ -98,18 +98,8 @@ namespace dafs
 
 
     ReplicatedNodeSet::ReplicatedNodeSet(
-        Parliament& parliament,
-        dafs::Signal& in_progress)
-    : parliament(parliament),
-      in_progress(in_progress)
-    {
-    }
-
-
-    ReplicatedNodeSet::ReplicatedNodeSet(
-        const ReplicatedNodeSet& other)
-    : parliament(other.parliament),
-      in_progress(other.in_progress)
+        Parliament& parliament)
+    : parliament(parliament)
     {
     }
 
@@ -125,6 +115,5 @@ namespace dafs
     ReplicatedNodeSet::RemoveNode(dafs::Address address)
     {
         parliament.RemoveLegislator(address.ip, address.port);
-        in_progress.Wait();
     }
 }
