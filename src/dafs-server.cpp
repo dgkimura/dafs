@@ -1,4 +1,5 @@
 #include <iostream>
+#include <future>
 
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
@@ -203,6 +204,5 @@ int main(int argc, char** argv)
         dispatcher);
 
     server->Start();
-
-    for (;;);
+    std::promise<void>().get_future().wait();
 }
