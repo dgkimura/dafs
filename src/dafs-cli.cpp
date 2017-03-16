@@ -27,7 +27,7 @@ namespace dafs
             {
             }
         };
-        auto sender = boost::make_shared<dafs::NetworkSender>(address);
+        auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
         auto result = sender->Receive();
         auto parser = dafs::MetaDataParser(result.metadata);
@@ -93,7 +93,7 @@ namespace dafs
                 }
             }
         };
-        auto sender = boost::make_shared<dafs::NetworkSender>(address);
+        auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
     }
 
@@ -124,7 +124,7 @@ namespace dafs
                 }
             }
         };
-        auto sender = boost::make_shared<dafs::NetworkSender>(address);
+        auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
         auto result = sender->Receive();
         std::cout << dafs::Serialize(result);
@@ -157,7 +157,7 @@ namespace dafs
                 }
             }
         };
-        auto sender = boost::make_shared<dafs::NetworkSender>(address);
+        auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
     }
 
@@ -193,7 +193,7 @@ namespace dafs
             }
         };
         std::cout << "JoinNodeToCluster: ip:" << address.ip << " port:"<< address.port<<"\n";
-        auto sender = boost::make_shared<dafs::NetworkSender>(address);
+        auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
     }
 }

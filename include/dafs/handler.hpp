@@ -34,19 +34,22 @@ namespace dafs
     dafs::Message
     HandleJoinCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata);
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
 
 
     dafs::Message
     HandleRequestMinusInitiation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata);
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
 
 
     dafs::Message
     HandleRequestPlusInitiation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata);
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
 
 
     dafs::Message

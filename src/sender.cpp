@@ -9,17 +9,10 @@ namespace dafs
     using boost::asio::ip::tcp;
 
 
-    NetworkSender::NetworkSender(dafs::Address destination)
+    NetworkSender::NetworkSender()
         : io_service(),
           socket(io_service)
     {
-        tcp::resolver resolver(io_service);
-        auto endpoint = resolver.resolve(
-                            {
-                                destination.ip,
-                                std::to_string(destination.port)
-                            });
-        boost::asio::connect(socket, endpoint);
     }
 
 
@@ -32,6 +25,14 @@ namespace dafs
     void
     NetworkSender::Send(dafs::Message message)
     {
+        tcp::resolver resolver(io_service);
+        auto endpoint = resolver.resolve(
+                            {
+                                message.to.ip,
+                                std::to_string(message.to.port)
+                            });
+        boost::asio::connect(socket, endpoint);
+
         // 1. serialize message
         std::string message_str = dafs::Serialize(message);
 

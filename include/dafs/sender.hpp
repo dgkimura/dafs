@@ -23,7 +23,7 @@ namespace dafs
     {
     public:
 
-        NetworkSender(dafs::Address destination);
+        NetworkSender();
 
         ~NetworkSender();
 

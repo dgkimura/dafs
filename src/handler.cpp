@@ -77,16 +77,14 @@ namespace dafs
     dafs::Message
     HandleJoinCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
     {
-        dafs::NetworkSender reply(
-            metadata.GetValue<dafs::Address>(dafs::AddressKey));
-
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
-        reply.Send(
+        sender.Send(
             dafs::Message
             {
                 node.GetPartition(dafs::Node::Slot::Zero)->GetDetails().author,
@@ -123,7 +121,8 @@ namespace dafs
     dafs::Message
     HandleRequestMinusInitiation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
     {
         auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
@@ -134,9 +133,6 @@ namespace dafs
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
-        dafs::NetworkSender reply(
-            metadata.GetValue<dafs::Address>(dafs::AddressKey));
-
         if (p_minus->IsActive() &&
             (!IsLogicallyOrdered(p_minus->GetDetails().identity,
                                  identity,
@@ -145,7 +141,7 @@ namespace dafs
             //
             // Reject initiation request by telling node who to ask next.
             //
-            reply.Send(
+            sender.Send(
                 dafs::Message
                 {
                     p_zero->GetDetails().author,
@@ -178,8 +174,7 @@ namespace dafs
                 // Delete extra replications.
                 p_minus->RemoveNode(p_minus->GetDetails().interface);
 
-                dafs::NetworkSender forwarder(p_minus->GetDetails().author);
-                forwarder.Send(
+                sender.Send(
                     dafs::Message
                     {
                         p_zero->GetDetails().author,
@@ -220,9 +215,7 @@ namespace dafs
                 p_zero->AddNode(
                     details.minus_details.interface,
                     Constant::PartitionMinusName);
-                dafs::NetworkSender prereply(
-                    metadata.GetValue<dafs::Address>(dafs::AddressKey));
-                prereply.Send(
+                sender.Send(
                     dafs::Message
                     {
                         p_zero->GetDetails().author,
@@ -258,7 +251,8 @@ namespace dafs
     dafs::Message
     HandleRequestPlusInitiation(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
     {
         auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
@@ -267,9 +261,6 @@ namespace dafs
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
         auto p_minus_address = metadata.GetValue<dafs::Address>(dafs::PartitionMinusAddressKey);
-
-        dafs::NetworkSender reply(
-            metadata.GetValue<dafs::Address>(dafs::AddressKey));
 
         if (!IsLogicallyOrdered(p_zero->GetDetails().identity,
                                 details.zero_details.identity,
@@ -294,7 +285,7 @@ namespace dafs
             p_plus->RemoveNode(p_plus->GetDetails().interface);
 
             // Send accepted messge to ndoe.
-            reply.Send(
+            sender.Send(
                 dafs::Message
                 {
                     p_zero->GetDetails().author,
