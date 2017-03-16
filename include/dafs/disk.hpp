@@ -19,12 +19,6 @@ namespace dafs
     Write(dafs::BlockInfo info, dafs::Delta delta);
 
 
-    dafs::Delta
-    Set(dafs::BlockInfo info,
-        std::string content,
-        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock);
-
-
     template <typename T>
     bool Contains(
         dafs::BlockInfo info,

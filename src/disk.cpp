@@ -47,30 +47,4 @@ namespace dafs
                             std::ios::out | std::ios::binary);
         output << apply_delta_content;
     }
-
-
-    dafs::Delta
-    Set(dafs::BlockInfo info, std::string content,
-        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block)
-    {
-        dafs::BlockFormat block = get_block(info);
-
-        if (!block.contents.empty())
-        {
-            dafs::Delta delta = dafs::CreateDelta(
-                info.path,
-                block.contents,
-                content);
-            return delta;
-        }
-        else
-        {
-            dafs::Delta delta = dafs::CreateDelta(
-                info.path,
-                "",
-                content);
-            return delta;
-        }
-    }
-
 }

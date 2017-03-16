@@ -106,23 +106,6 @@ TEST(DiskTest, testAddBlockInEmptyBlockFormat)
 }
 
 
-TEST(DiskTest, testSetBlockInEmptyBlockFormat)
-{
-    auto get_empty_block = [](dafs::BlockInfo info) {
-        dafs::BlockFormat b;
-        b.contents = dafs::Serialize(1);
-        return b;
-    };
-
-    std::string i = "3";
-    dafs::Delta delta = dafs::Set(the_blocklist, i, get_empty_block);
-    ASSERT_EQ(
-        delta.difference,
-        "\x9D@3"
-    );
-}
-
-
 TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
 {
     auto get_block = [](dafs::BlockInfo info) -> dafs::BlockFormat {
