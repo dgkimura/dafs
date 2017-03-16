@@ -17,7 +17,7 @@ namespace dafs
     {
     public:
 
-        Commit(Parliament& parliament, dafs::Signal& condition);
+        Commit(Parliament& parliament, dafs::Root root, dafs::Signal& condition);
 
         void operator()(std::string proposal);
 
@@ -33,6 +33,8 @@ namespace dafs
             dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>,
             dafs::ProposalTypeHash
         > proposal_map;
+
+        dafs::Root root;
 
         dafs::Signal& condition;
     };

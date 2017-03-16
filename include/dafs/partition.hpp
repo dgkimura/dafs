@@ -16,11 +16,8 @@ namespace dafs
 
         virtual dafs::PartitionDetails GetDetails() = 0;
 
-        virtual void CreateBlock(BlockInfo block) = 0;
-
         virtual void DeleteBlock(BlockInfo block) = 0;
 
-        virtual bool ContainsBlock(BlockInfo block) = 0;
 
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
 
@@ -29,8 +26,6 @@ namespace dafs
         virtual void AddNode(dafs::Address address, std::string location) = 0;
 
         virtual void RemoveNode(dafs::Address address) = 0;
-
-        virtual void Clear() = 0;
 
         virtual bool IsActive() = 0;
     };
@@ -55,17 +50,8 @@ namespace dafs
             };
         }
 
-        virtual void CreateBlock(BlockInfo block) override
-        {
-        }
-
         virtual void DeleteBlock(BlockInfo block) override
         {
-        }
-
-        virtual bool ContainsBlock(BlockInfo block) override
-        {
-            return false;
         }
 
         virtual BlockFormat ReadBlock(BlockInfo block) override
@@ -82,10 +68,6 @@ namespace dafs
         }
 
         virtual void RemoveNode(dafs::Address address) override
-        {
-        }
-
-        virtual void Clear() override
         {
         }
 
@@ -115,11 +97,7 @@ namespace dafs
 
         virtual dafs::PartitionDetails GetDetails() override;
 
-        virtual void CreateBlock(BlockInfo block) override;
-
         virtual void DeleteBlock(BlockInfo block) override;
-
-        virtual bool ContainsBlock(BlockInfo block) override;
 
         virtual BlockFormat ReadBlock(BlockInfo block) override;
 
@@ -128,8 +106,6 @@ namespace dafs
         virtual void AddNode(dafs::Address address, std::string location) override;
 
         virtual void RemoveNode(dafs::Address address) override;
-
-        virtual void Clear() override;
 
         virtual bool IsActive() override;
 
@@ -141,19 +117,11 @@ namespace dafs
 
         ReplicatedNodeSet nodeset;
 
-        dafs::BlockInfo blocks;
-
-        dafs::BlockInfo nodes;
-
         dafs::BlockInfo identity;
 
         dafs::BlockInfo author;
 
         dafs::Signal in_progress;
-
-        dafs::Root root;
-
-        dafs::BlockInfo rooted(dafs::BlockInfo info);
 
         dafs::Address replication_interface;
     };

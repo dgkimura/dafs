@@ -44,6 +44,15 @@ namespace dafs
         auto zero_id = slot_zero->GetDetails().identity;
         auto plus_id = slot_plus->GetDetails().identity;
 
+        if (minus_id > zero_id)
+        {
+            minus_id = Identity();
+        }
+        if (zero_id > plus_id)
+        {
+            zero_id = Identity();
+        }
+
         if (minus_id <= identity &&
             identity < minus_id.Median(zero_id) &&
             slot_minus->IsActive())

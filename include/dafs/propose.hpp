@@ -68,5 +68,6 @@ namespace dafs
         ProposalType type,
         std::string item,
         BlockInfo block,
-        int revision);
+        int revision,
+        size_t hash);
 }

@@ -24,6 +24,12 @@ namespace dafs
 
         virtual void DeleteBlock(BlockInfo info) = 0;
 
+        virtual void InsertIndex(BlockInfo info) = 0;
+
+        virtual void RemoveIndex(BlockInfo info) = 0;
+
+        virtual bool ContainsIndex(BlockInfo info) = 0;
+
         virtual void WriteBlock(BlockInfo info, BlockFormat data) = 0;
 
         virtual void Write(BlockInfo info, Delta delta) = 0;
@@ -36,6 +42,7 @@ namespace dafs
 
         ReplicatedStorage(
             Parliament& parliament,
+            dafs::Root root,
             dafs::Signal& in_progress);
 
         ReplicatedStorage(
@@ -45,11 +52,19 @@ namespace dafs
 
         virtual void DeleteBlock(BlockInfo info) override;
 
+        virtual void InsertIndex(BlockInfo info) override;
+
+        virtual void RemoveIndex(BlockInfo info) override;
+
+        virtual bool ContainsIndex(BlockInfo info) override;
+
         virtual void WriteBlock(BlockInfo info, BlockFormat data) override;
 
         virtual void Write(BlockInfo info, Delta delta) override;
 
     private:
+
+        virtual BlockInfo rooted(BlockInfo info);
 
         virtual void do_write(
             BlockInfo info,
@@ -57,7 +72,13 @@ namespace dafs
 
         Parliament parliament;
 
+        dafs::Root root;
+
         Signal& in_progress;
+
+        dafs::BlockInfo blocks;
+
+        dafs::BlockInfo nodes;
     };
 
 

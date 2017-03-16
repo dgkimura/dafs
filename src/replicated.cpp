@@ -16,9 +16,19 @@ namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(
         Parliament& parliament,
+        dafs::Root root,
         dafs::Signal& in_progress)
     : parliament(parliament),
-      in_progress(in_progress)
+      root(root),
+      in_progress(in_progress),
+      blocks(
+          dafs::CreateBlockInfo(
+              boost::filesystem::path(Constant::BlockListName).string(),
+              dafs::Identity())),
+      nodes(
+          dafs::CreateBlockInfo(
+              boost::filesystem::path(Constant::NodeSetName).string(),
+              dafs::Identity()))
     {
     }
 
@@ -26,7 +36,10 @@ namespace dafs
     ReplicatedStorage::ReplicatedStorage(
         const ReplicatedStorage& other)
     : parliament(other.parliament),
-      in_progress(other.in_progress)
+      root(other.root),
+      in_progress(other.in_progress),
+      blocks(other.blocks),
+      nodes(other.nodes)
     {
     }
 
@@ -34,7 +47,7 @@ namespace dafs
     BlockFormat
     ReplicatedStorage::ReadBlock(BlockInfo info)
     {
-        return dafs::ReadBlock(info);
+        return dafs::ReadBlock(rooted(info));
     }
 
 
@@ -50,7 +63,8 @@ namespace dafs
                     dafs::ProposalType::DeleteBlock,
                     "",
                     info,
-                    info.revision
+                    info.revision,
+                    std::hash<dafs::BlockInfo>{}(rooted(info))
                 )
             )
         );
@@ -59,9 +73,34 @@ namespace dafs
 
 
     void
+    ReplicatedStorage::InsertIndex(BlockInfo info)
+    {
+        Delta delta = dafs::Insert(rooted(blocks), info);
+        delta.filename = blocks.path;
+        Write(blocks, delta);
+    }
+
+
+    void
+    ReplicatedStorage::RemoveIndex(BlockInfo info)
+    {
+        Delta delta = dafs::Remove(rooted(blocks), info);
+        delta.filename = blocks.path;
+        Write(blocks, delta);
+    }
+
+
+    bool
+    ReplicatedStorage::ContainsIndex(BlockInfo info)
+    {
+        return dafs::Contains(rooted(blocks), info);
+    }
+
+
+    void
     ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
     {
-        BlockFormat was = dafs::ReadBlock(info);
+        BlockFormat was = dafs::ReadBlock(rooted(info));
         Delta delta = CreateDelta(info.path, was.contents, data.contents);
 
         do_write(info, dafs::Serialize(delta));
@@ -89,11 +128,22 @@ namespace dafs
                     dafs::ProposalType::WriteBlock,
                     data,
                     info,
-                    info.revision
+                    info.revision,
+                    std::hash<dafs::BlockInfo>{}(rooted(info))
                 )
             )
         );
         in_progress.Wait();
+    }
+
+
+    BlockInfo
+    ReplicatedStorage::rooted(
+        BlockInfo info)
+    {
+        info.path = (boost::filesystem::path(root.directory) /
+                     boost::filesystem::path(info.path)).string();
+        return info;
     }
 
 

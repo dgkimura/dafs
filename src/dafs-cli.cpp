@@ -66,7 +66,7 @@ namespace dafs
         dafs::BlockInfo info
         {
             "path_to_block_info",
-            dafs::Identity("11111111-1111-1111-1111-111111111110"),
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
             0 // revision
         };
 
@@ -106,7 +106,7 @@ namespace dafs
         dafs::BlockInfo info
         {
             "path_to_block_info",
-            dafs::Identity("11111111-1111-1111-1111-111111111110"),
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
             0 // revision
         };
 
@@ -139,7 +139,7 @@ namespace dafs
         dafs::BlockInfo info
         {
             "path_to_block_info",
-            dafs::Identity("11111111-1111-1111-1111-111111111110"),
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
             0 // revision
         };
 

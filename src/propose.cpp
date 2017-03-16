@@ -10,12 +10,13 @@ namespace dafs
         ProposalType type,
         std::string item,
         BlockInfo info,
-        int revision)
+        int revision,
+        size_t hash)
     {
         ProposalContent edit;
         edit.info = info;
         edit.change = item;
-        edit.hash = std::hash<dafs::BlockInfo>{}(info);
+        edit.hash = hash;
 
         Proposal p;
         p.type = type;

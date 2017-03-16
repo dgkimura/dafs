@@ -10,7 +10,7 @@
 
 namespace dafs
 {
-    Commit::Commit(Parliament& parliament, dafs::Signal& condition)
+    Commit::Commit(Parliament& parliament, dafs::Root root, dafs::Signal& condition)
         : proposal_map
           {
               {
@@ -34,6 +34,7 @@ namespace dafs
                    )
               }
           },
+          root(root),
           condition(condition)
     {
     }
@@ -45,6 +46,8 @@ namespace dafs
         Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
         dafs::ProposalContent edit = dafs::Deserialize<dafs::ProposalContent>(p.content);
 
+        edit.info.path = (boost::filesystem::path(root.directory) /
+                         boost::filesystem::path(edit.info.path)).string();
         proposal_map[p.type](edit);
         condition.Set();
     }

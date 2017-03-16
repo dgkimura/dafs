@@ -15,17 +15,9 @@ namespace dafs
     )
         : parliament(Replica(address.ip, address.port),
                      root.directory,
-                     dafs::Commit(parliament, in_progress)),
-          store(parliament, in_progress),
+                     dafs::Commit(parliament, root, in_progress)),
+          store(parliament, root, in_progress),
           nodeset(parliament),
-          blocks(
-              dafs::CreateBlockInfo(
-                  boost::filesystem::path(Constant::BlockListName).string(),
-                  dafs::Identity())),
-          nodes(
-              dafs::CreateBlockInfo(
-                  boost::filesystem::path(Constant::NodeSetName).string(),
-                  dafs::Identity())),
           identity(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
@@ -35,7 +27,6 @@ namespace dafs
                   boost::filesystem::path(Constant::AuthorName).string(),
                   dafs::Identity())),
           in_progress(),
-          root(root),
           replication_interface(address)
     {
     }
@@ -47,11 +38,8 @@ namespace dafs
         : parliament(other.parliament),
           store(other.store),
           nodeset(other.nodeset),
-          blocks(other.blocks),
-          nodes(other.nodes),
           identity(other.identity),
           in_progress(),
-          root(other.root),
           replication_interface(other.replication_interface)
     {
     }
@@ -60,8 +48,8 @@ namespace dafs
     dafs::PartitionDetails
     ReplicatedPartition::GetDetails()
     {
-        auto author_block =  store.ReadBlock(rooted(author));
-        auto id_block =  store.ReadBlock(rooted(identity));
+        auto author_block =  store.ReadBlock(author);
+        auto id_block =  store.ReadBlock(identity);
 
         return dafs::PartitionDetails
         {
@@ -73,45 +61,26 @@ namespace dafs
 
 
     void
-    ReplicatedPartition::CreateBlock(BlockInfo info)
-    {
-        Delta delta = dafs::Insert(rooted(blocks), info);
-        store.Write(rooted(blocks), delta);
-    }
-
-
-    void
     ReplicatedPartition::DeleteBlock(BlockInfo info)
     {
-        store.DeleteBlock(rooted(info));
-
-        Delta delta = dafs::Remove(rooted(blocks), info);
-        store.Write(rooted(blocks), delta);
-    }
-
-
-    bool
-    ReplicatedPartition::ContainsBlock(BlockInfo info)
-    {
-        return dafs::Contains(rooted(blocks), info);
+        store.DeleteBlock(info);
     }
 
 
     BlockFormat
     ReplicatedPartition::ReadBlock(BlockInfo block)
     {
-        return store.ReadBlock(rooted(block));
+        return store.ReadBlock(block);
     }
 
 
     void
     ReplicatedPartition::WriteBlock(BlockInfo block, BlockFormat format)
     {
-        dafs::Delta delta = dafs::Set(rooted(block), format.contents);
-        store.Write(rooted(block), delta);
-        if (!ContainsBlock(block))
+        store.WriteBlock(block, format);
+        if (!store.ContainsIndex(block))
         {
-            CreateBlock(block);
+            store.InsertIndex(block);
         }
     }
 
@@ -130,37 +99,13 @@ namespace dafs
     }
 
 
-    void
-    ReplicatedPartition::Clear()
-    {
-        if (boost::filesystem::exists(root.directory))
-        {
-            for (auto& entry : boost::make_iterator_range(
-                               boost::filesystem::directory_iterator(
-                                   root.directory), {}))
-            {
-                std::remove(entry.path().string().c_str());
-            }
-        }
-    }
-
-
     bool
     ReplicatedPartition::IsActive()
     {
-        auto block =  store.ReadBlock(rooted(author));
+        auto block =  store.ReadBlock(author);
         auto address = dafs::Deserialize<dafs::Address>(block.contents);
 
         return address.ip != dafs::EmptyAddress().ip &&
                address.port != dafs::EmptyAddress().port;
-    }
-
-
-    dafs::BlockInfo
-    ReplicatedPartition::rooted(dafs::BlockInfo info)
-    {
-        info.path = (boost::filesystem::path(root.directory) /
-                     boost::filesystem::path(info.path)).string();
-        return info;
     }
 }
