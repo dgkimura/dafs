@@ -20,7 +20,7 @@ set(SOURCES
     disk_unittest.cpp
 )
 
-add_executable(all_unittests ${SOURCES} ${DAFS_SOURCES})
+add_executable(all_unittests ${SOURCES})
 
 set_property(TARGET all_unittests PROPERTY CXX_STANDARD 11)
 
@@ -39,11 +39,13 @@ target_link_libraries(all_unittests
         ${diflib_LIB}
         Threads::Threads
         ${PLATFORM_LIBRARIES}
+        dafs-library
 )
 
 add_dependencies(all_unittests gtest)
 add_dependencies(all_unittests diflib)
 add_dependencies(all_unittests paxos)
+add_dependencies(all_unittests dafs-library)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest/include)
 include_directories(${CMAKE_SOURCE_DIR}/include)

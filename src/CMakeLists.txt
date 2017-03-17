@@ -17,8 +17,6 @@ set(SOURCES
     signal.cpp
     replicated.cpp
 )
-add_executable(dafs-server dafs-server.cpp ${SOURCES})
-add_executable(dafs-cli dafs-cli.cpp ${SOURCES})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -27,38 +25,37 @@ if (UNIX AND NOT APPLE)
     set(PLATFORM_LIBRARIES rt)
 endif()
 
-target_link_libraries(dafs-server
+add_library(dafs-library ${SOURCES})
+target_link_libraries(dafs-library
     PRIVATE
         ${paxos_LIBS}
         ${diflib_LIB}
         Threads::Threads
         ${PLATFORM_LIBRARIES}
 )
+add_dependencies(dafs-library diflib)
+add_dependencies(dafs-library paxos)
 
-add_dependencies(dafs-server diflib)
-add_dependencies(dafs-server paxos)
+add_executable(dafs-server dafs-server.cpp)
+target_link_libraries(dafs-server
+    PRIVATE
+        dafs-library
+)
+add_dependencies(dafs-server dafs-library)
+
+add_executable(dafs-cli dafs-cli.cpp)
+target_link_libraries(dafs-cli
+    PRIVATE
+        dafs-library
+)
+add_dependencies(dafs-cli dafs-library)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
 
-
-target_link_libraries(dafs-cli
-    PRIVATE
-        ${paxos_LIBS}
-        ${diflib_LIB}
-        Threads::Threads
-        ${PLATFORM_LIBRARIES}
-)
-
-add_dependencies(dafs-cli dafs-server)
-
+set_property(TARGET dafs-library PROPERTY CXX_STANDARD 11)
 set_property(TARGET dafs-server PROPERTY CXX_STANDARD 11)
 set_property(TARGET dafs-cli PROPERTY CXX_STANDARD 11)
-
-foreach(source ${SOURCES})
-    set(DAFS_SOURCES ${DAFS_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${source})
-endforeach()
-set(DAFS_SOURCES ${DAFS_SOURCES} PARENT_SCOPE)
 
 set(CMAKE_INSTALL_RPATH ${paxos_LIBS} ${diflib_LIB})
