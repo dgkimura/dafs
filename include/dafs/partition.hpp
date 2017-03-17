@@ -18,7 +18,6 @@ namespace dafs
 
         virtual void DeleteBlock(BlockInfo block) = 0;
 
-
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) = 0;
