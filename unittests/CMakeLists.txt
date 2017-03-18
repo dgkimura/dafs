@@ -15,7 +15,9 @@ set(SOURCES
     customhash_unittest.cpp
     delta_unittest.cpp
     filesystem_unittest.cpp
+    handler_unittest.cpp
     metadataparser_unittest.cpp
+    node_unittest.cpp
     serialization_unittest.cpp
     disk_unittest.cpp
 )
