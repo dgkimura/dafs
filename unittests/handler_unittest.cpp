@@ -76,3 +76,139 @@ TEST_F(HandlerTest, testHandleReadBlock)
 
     ASSERT_EQ(format.contents, result.contents);
 }
+
+
+TEST_F(HandlerTest, testHandleWriteBlock)
+{
+    dafs::BlockInfo info
+    {
+        "path/to/blockinfo",
+        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        0
+    };
+    dafs::BlockFormat format
+    {
+        "this is the content of the block format.",
+    };
+
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::BlockInfoKey,
+                dafs::Serialize(info)
+            },
+            dafs::MetaData
+            {
+                dafs::BlockFormatKey,
+                dafs::Serialize(format)
+            }
+        }
+    );
+    HandleWriteBlock(GetNode(), parser);
+
+    ASSERT_EQ(
+        format.contents,
+        GetNode().GetPartition(dafs::Identity("22222222-2222-2222-2222-222222222222"))
+                 ->ReadBlock(info).contents);
+}
+
+
+TEST_F(HandlerTest, testHandleDeleteBlock)
+{
+    dafs::BlockInfo info
+    {
+        "path/to/blockinfo",
+        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        0
+    };
+    dafs::BlockFormat format
+    {
+        "this is the content of the block format.",
+    };
+
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::BlockInfoKey,
+                dafs::Serialize(info)
+            },
+            dafs::MetaData
+            {
+                dafs::BlockFormatKey,
+                dafs::Serialize(format)
+            }
+        }
+    );
+    HandleWriteBlock(GetNode(), parser);
+    HandleDeleteBlock(GetNode(), parser);
+
+    ASSERT_EQ(
+        "",
+        GetNode().GetPartition(dafs::Identity("22222222-2222-2222-2222-222222222222"))
+                 ->ReadBlock(info).contents);
+}
+
+
+TEST_F(HandlerTest, testHandleGetNodeDetails)
+{
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+        }
+    );
+    dafs::Message m = HandleGetNodeDetails(GetNode(), parser);
+
+    dafs::NodeDetails result(
+        dafs::MetaDataParser(m.metadata).GetValue<dafs::NodeDetails>(
+            dafs::NodeDetailsKey));
+
+    ASSERT_EQ(
+        dafs::Identity("11111111-1111-1111-1111-111111111111"),
+        result.minus_details.identity);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1000).ip,
+        result.minus_details.author.ip);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1000).port,
+        result.minus_details.author.port);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1001).ip,
+        result.minus_details.interface.ip);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1001).port,
+        result.minus_details.interface.port);
+    ASSERT_EQ(
+        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        result.zero_details.identity);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1000).ip,
+        result.zero_details.author.ip);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1000).port,
+        result.zero_details.author.port);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1001).ip,
+        result.zero_details.interface.ip);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1001).port,
+        result.zero_details.interface.port);
+    ASSERT_EQ(
+        dafs::Identity("33333333-3333-3333-3333-333333333333"),
+        result.plus_details.identity);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1000).ip,
+        result.plus_details.author.ip);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1000).port,
+        result.plus_details.author.port);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1001).ip,
+        result.plus_details.interface.ip);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1001).port,
+        result.plus_details.interface.port);
+}
