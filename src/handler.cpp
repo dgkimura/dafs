@@ -103,11 +103,6 @@ namespace dafs
                                 p_plus->GetDetails()
                             }
                         )
-                    },
-                    dafs::MetaData
-                    {
-                        dafs::AddressKey,
-                        dafs::Serialize(p_zero->GetDetails().author)
                     }
                 }
             }
@@ -124,7 +119,6 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
         auto identity = details.zero_details.identity;
 
@@ -145,7 +139,7 @@ namespace dafs
                 dafs::Message
                 {
                     p_zero->GetDetails().author,
-                    address,
+                    details.zero_details.author,
                     dafs::MessageType::_JoinCluster,
                     std::vector<dafs::MetaData>
                     {
@@ -193,11 +187,6 @@ namespace dafs
                             {
                                 dafs::NodeDetailsKey,
                                 dafs::Serialize(details)
-                            },
-                            dafs::MetaData
-                            {
-                                dafs::AddressKey,
-                                dafs::Serialize(address)
                             }
                         }
                     }
@@ -219,7 +208,7 @@ namespace dafs
                     dafs::Message
                     {
                         p_zero->GetDetails().author,
-                        address,
+                        details.zero_details.author,
                         dafs::MessageType::_AcceptPlusInitiation,
                         std::vector<dafs::MetaData>
                         {
@@ -254,7 +243,6 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
 
         auto p_minus = node.GetPartition(dafs::Node::Slot::Plus);
@@ -289,7 +277,7 @@ namespace dafs
                 dafs::Message
                 {
                     p_zero->GetDetails().author,
-                    address,
+                    details.zero_details.author,
                     dafs::MessageType::_AcceptPlusInitiation,
                     std::vector<dafs::MetaData>
                     {
