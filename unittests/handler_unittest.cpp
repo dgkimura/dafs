@@ -5,6 +5,7 @@
 #include <gtest/gtest.h>
 
 #include "mock_partition.hpp"
+#include "mock_sender.hpp"
 
 
 class HandlerTest: public testing::Test
@@ -165,6 +166,79 @@ TEST_F(HandlerTest, testHandleGetNodeDetails)
     dafs::NodeDetails result(
         dafs::MetaDataParser(m.metadata).GetValue<dafs::NodeDetails>(
             dafs::NodeDetailsKey));
+
+    ASSERT_EQ(
+        dafs::Identity("11111111-1111-1111-1111-111111111111"),
+        result.minus_details.identity);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1000).ip,
+        result.minus_details.author.ip);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1000).port,
+        result.minus_details.author.port);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1001).ip,
+        result.minus_details.interface.ip);
+    ASSERT_EQ(
+        dafs::Address("1.1.1.1", 1001).port,
+        result.minus_details.interface.port);
+    ASSERT_EQ(
+        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        result.zero_details.identity);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1000).ip,
+        result.zero_details.author.ip);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1000).port,
+        result.zero_details.author.port);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1001).ip,
+        result.zero_details.interface.ip);
+    ASSERT_EQ(
+        dafs::Address("2.2.2.2", 1001).port,
+        result.zero_details.interface.port);
+    ASSERT_EQ(
+        dafs::Identity("33333333-3333-3333-3333-333333333333"),
+        result.plus_details.identity);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1000).ip,
+        result.plus_details.author.ip);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1000).port,
+        result.plus_details.author.port);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1001).ip,
+        result.plus_details.interface.ip);
+    ASSERT_EQ(
+        dafs::Address("3.3.3.3", 1001).port,
+        result.plus_details.interface.port);
+}
+
+
+TEST_F(HandlerTest, testHandleJoinCluster)
+{
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::AddressKey,
+                dafs::Serialize(dafs::Address("A.B.C.D", 1234))
+            }
+        }
+    );
+    MockSender mock_sender;
+    HandleJoinCluster(GetNode(), parser, mock_sender);
+
+    dafs::Message sent_message = mock_sender.sentMessages()[0];
+
+    ASSERT_EQ("2.2.2.2", sent_message.from.ip);
+    ASSERT_EQ(1000, sent_message.from.port);
+    ASSERT_EQ("A.B.C.D", sent_message.to.ip);
+    ASSERT_EQ(1234, sent_message.to.port);
+    ASSERT_EQ(dafs::MessageType::_RequestMinusInitiation, sent_message.type);
+
+    auto result = dafs::MetaDataParser(sent_message.metadata).GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
 
     ASSERT_EQ(
         dafs::Identity("11111111-1111-1111-1111-111111111111"),
