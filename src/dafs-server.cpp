@@ -1,5 +1,6 @@
-#include <iostream>
+#include <chrono>
 #include <future>
+#include <iostream>
 
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
@@ -68,7 +69,8 @@ SetupPartition(
     std::string directory,
     dafs::Address management_interface,
     dafs::Address replication_interface,
-    dafs::Identity identity)
+    dafs::Identity identity,
+    std::chrono::seconds ping_interval)
 {
     SetupReplicatedFiles(
         directory,
@@ -87,24 +89,31 @@ SetupNode(std::string settings_file)
 {
     //[partition-minus]
     //port = 8070
+    //ping-interval-in-seconds = 5
     //
     //[partition-zero]
     //port = 8080
+    //ping-interval-in-seconds = 5
     //
     //[partition-plus]
     //port = 8090
+    //ping-interval-in-seconds = 5
     // write out node config file
     std::fstream config(settings_file, std::ios::out | std::ios::trunc);
+
     config << "[partition-minus]" << std::endl;
     config << "port = 8070" << std::endl;
+    config << "ping-interval-in-seconds = 5" << std::endl;
     config << "" << std::endl;
 
     config << "[partition-zero]" << std::endl;
     config << "port = 8080" << std::endl;
+    config << "ping-interval-in-seconds = 5" << std::endl;
     config << "" << std::endl;
 
     config << "[partition-plus]" << std::endl;
     config << "port = 8090" << std::endl;
+    config << "ping-interval-in-seconds = 5" << std::endl;
 }
 
 
@@ -157,6 +166,15 @@ int main(int argc, char** argv)
         ("partition-plus.port",
          boost::program_options::value(&options.plus_port),
          "port of the plus partition")
+        ("partition-minus.ping-interval-in-seconds",
+         boost::program_options::value(&options.minus_ping_interval)->default_value(3600),
+         "ping interval of the minus partition")
+        ("partition-zero.ping-interval-in-seconds",
+         boost::program_options::value(&options.zero_ping_interval)->default_value(3600),
+         "ping interval of the zero partition")
+        ("partition-plus.ping-interval-in-seconds",
+         boost::program_options::value(&options.plus_ping_interval)->default_value(3600),
+         "ping interval of the plus partition")
     ;
 
     std::ifstream config(options.settings_file);
@@ -176,20 +194,23 @@ int main(int argc, char** argv)
         dafs::EmptyAddress(),
         dafs::Address(options.address, options.minus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) -
-        dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+        dafs::Identity("00000000-0000-0000-0000-0000000000ff"),
+        std::chrono::seconds(options.minus_ping_interval)
     );
     auto pzero = SetupPartition(
         Constant::PartitionZeroName,
         dafs::Address(options.address, options.port),
         dafs::Address(options.address, options.zero_port),
-        dafs::Identity(boost::uuids::to_string(options.identity))
+        dafs::Identity(boost::uuids::to_string(options.identity)),
+        std::chrono::seconds(options.zero_ping_interval)
     );
     auto pplus = SetupPartition(
         Constant::PartitionPlusName,
         dafs::EmptyAddress(),
         dafs::Address(options.address, options.plus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) +
-        dafs::Identity("00000000-0000-0000-0000-0000000000ff")
+        dafs::Identity("00000000-0000-0000-0000-0000000000ff"),
+        std::chrono::seconds(options.plus_ping_interval)
     );
 
     //

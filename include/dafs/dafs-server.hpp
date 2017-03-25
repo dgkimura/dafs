@@ -20,4 +20,10 @@ struct Options
     short zero_port;
 
     short plus_port;
+
+    long long int minus_ping_interval;
+
+    long long int zero_ping_interval;
+
+    long long int plus_ping_interval;
 };
