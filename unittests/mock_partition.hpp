@@ -54,6 +54,12 @@ public:
     {
     }
 
+    virtual std::vector<dafs::Address> NonresponsiveMembers(
+        int minimum_elections) override
+    {
+        return std::vector<dafs::Address>{};
+    }
+
     virtual bool IsActive() override
     {
         return is_active;

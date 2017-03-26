@@ -26,6 +26,10 @@ namespace dafs
 
         virtual void RemoveNode(dafs::Address address) = 0;
 
+        virtual std::vector<dafs::Address> NonresponsiveMembers(
+            int minimum_elections
+        ) = 0;
+
         virtual bool IsActive() = 0;
     };
 
@@ -70,6 +74,12 @@ namespace dafs
         {
         }
 
+        virtual std::vector<dafs::Address> NonresponsiveMembers(
+            int minimum_elections) override
+        {
+            return std::vector<dafs::Address>{};
+        }
+
         virtual bool IsActive() override
         {
             return false;
@@ -105,6 +115,10 @@ namespace dafs
         virtual void AddNode(dafs::Address address, std::string location) override;
 
         virtual void RemoveNode(dafs::Address address) override;
+
+        virtual std::vector<dafs::Address> NonresponsiveMembers(
+            int minimum_elections
+        ) override;
 
         virtual bool IsActive() override;
 
