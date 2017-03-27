@@ -80,7 +80,8 @@ SetupPartition(
 
     return std::make_shared<dafs::ReplicatedPartition>(
         replication_interface,
-        dafs::Root(directory));
+        dafs::Root(directory),
+        ping_interval);
 }
 
 
@@ -167,13 +168,13 @@ int main(int argc, char** argv)
          boost::program_options::value(&options.plus_port),
          "port of the plus partition")
         ("partition-minus.ping-interval-in-seconds",
-         boost::program_options::value(&options.minus_ping_interval)->default_value(3600),
+         boost::program_options::value(&options.minus_ping_interval)->default_value(3),
          "ping interval of the minus partition")
         ("partition-zero.ping-interval-in-seconds",
-         boost::program_options::value(&options.zero_ping_interval)->default_value(3600),
+         boost::program_options::value(&options.zero_ping_interval)->default_value(3),
          "ping interval of the zero partition")
         ("partition-plus.ping-interval-in-seconds",
-         boost::program_options::value(&options.plus_ping_interval)->default_value(3600),
+         boost::program_options::value(&options.plus_ping_interval)->default_value(3),
          "ping interval of the plus partition")
     ;
 

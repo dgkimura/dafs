@@ -1,3 +1,4 @@
+#include <chrono>
 #include <cstring>
 
 #include <boost/algorithm/string.hpp>
@@ -165,5 +166,40 @@ namespace dafs
     ReplicatedNodeSet::RemoveNode(dafs::Address address)
     {
         parliament.RemoveLegislator(address.ip, address.port);
+    }
+
+
+    ReplicatedPing::ReplicatedPing(
+        Parliament& parliament,
+        std::chrono::seconds ping_interval,
+        Signal& in_progress)
+    : parliament(parliament),
+      ping_interval(ping_interval),
+      in_progress(in_progress),
+      should_continue(true)
+    {
+        std::thread([this]() { send_ping(); }).detach();
+    }
+
+
+    void
+    ReplicatedPing::send_ping()
+    {
+        while (should_continue)
+        {
+            parliament.SendProposal
+            (
+                dafs::Serialize<dafs::Proposal>
+                (
+                    Proposal
+                    {
+                        dafs::ProposalType::Ping,
+                        dafs::Serialize(dafs::ProposalContent{})
+                    }
+                )
+            );
+            in_progress.Wait();
+            std::this_thread::sleep_for(ping_interval);
+        }
     }
 }

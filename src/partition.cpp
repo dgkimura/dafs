@@ -11,13 +11,15 @@ namespace dafs
 {
     ReplicatedPartition::ReplicatedPartition(
         Address address,
-        Root root
+        Root root,
+        std::chrono::seconds ping_interval
     )
         : parliament(Replica(address.ip, address.port),
                      root.directory,
                      dafs::Commit(parliament, root, in_progress)),
           store(parliament, root, in_progress),
           nodeset(parliament),
+          ping(parliament, ping_interval, in_progress),
           identity(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
@@ -38,6 +40,7 @@ namespace dafs
         : parliament(other.parliament),
           store(other.store),
           nodeset(other.nodeset),
+          ping(other.ping),
           identity(other.identity),
           in_progress(),
           replication_interface(other.replication_interface)

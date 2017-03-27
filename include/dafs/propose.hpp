@@ -18,7 +18,9 @@ namespace dafs
         DeleteBlock,
 
         AddNode,
-        RemoveNode
+        RemoveNode,
+
+        Ping
     };
 
 

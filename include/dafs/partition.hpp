@@ -97,7 +97,8 @@ namespace dafs
 
         ReplicatedPartition(
             Address address,
-            Root root
+            Root root,
+            std::chrono::seconds ping_interval
         );
 
         ReplicatedPartition(
@@ -129,6 +130,8 @@ namespace dafs
         ReplicatedStorage store;
 
         ReplicatedNodeSet nodeset;
+
+        ReplicatedPing ping;
 
         dafs::BlockInfo identity;
 

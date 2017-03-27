@@ -70,7 +70,7 @@ namespace dafs
             BlockInfo info,
             std::string data);
 
-        Parliament parliament;
+        Parliament& parliament;
 
         dafs::Root root;
 
@@ -106,6 +106,34 @@ namespace dafs
     private:
 
         Parliament& parliament;
+    };
+
+
+    class Ping
+    {
+    };
+
+
+    class ReplicatedPing : public Ping
+    {
+    public:
+
+        ReplicatedPing(
+            Parliament& parliament,
+            std::chrono::seconds ping_interval,
+            dafs::Signal& in_progress);
+
+    private:
+
+        void send_ping();
+
+        Parliament& parliament;
+
+        std::chrono::seconds ping_interval;
+
+        Signal& in_progress;
+
+        bool should_continue;
     };
 }
 

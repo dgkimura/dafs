@@ -32,6 +32,17 @@ namespace dafs
                            return dafs::DeleteBlock(context);
                        }
                    )
+                },
+                {
+                   ProposalType::Ping,
+                   dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>
+                   (
+                       [](dafs::ProposalContent& context) -> dafs::Commit::Result
+                       {
+                            dafs::Commit::Result r;
+                            return r;
+                       }
+                   )
               }
           },
           root(root),
