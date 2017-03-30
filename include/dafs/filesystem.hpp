@@ -133,7 +133,7 @@ namespace dafs
             std::string raw_result;
 
             bool borrow = false;
-            for (int i = id.size(); i >= 0; i--)
+            for (int i = id.size() - 1; i >= 0; i--)
             {
                 if (id[i] == '-')
                 {

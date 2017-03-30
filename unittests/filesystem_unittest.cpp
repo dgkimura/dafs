@@ -76,6 +76,24 @@ TEST(FileSystemTest, testsIdentityArithmatic)
 }
 
 
+TEST(FileSystemTest, testsIdentityArithmaticStringRepresentation)
+{
+    dafs::Identity a = dafs::Identity("33333333-3333-3333-3333-333333333333");
+    dafs::Identity b = dafs::Identity("11111111-1111-1111-1111-111111111111");
+
+    // test arithmatic
+    ASSERT_EQ("44444444-4444-4444-4444-444444444444", (a + b).id);
+    ASSERT_EQ("22222222-2222-2222-2222-222222222222", (a - b).id);
+
+    a = dafs::Identity("00000000-0000-0000-0000-000000000991");
+    b = dafs::Identity("00000000-0000-0000-0000-000000000088");
+
+    // test carrying arithmatic
+    ASSERT_EQ("00000000-0000-0000-0000-000000000a19", (a + b).id);
+    ASSERT_EQ("00000000-0000-0000-0000-000000000909", (a - b).id);
+}
+
+
 TEST(FileSystemTest, testsIdentityMedian)
 {
     dafs::Identity a = dafs::Identity("33333333-3333-3333-3333-333333333333");
