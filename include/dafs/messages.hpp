@@ -88,6 +88,9 @@ namespace dafs
     };
 
 
+    static constexpr int MessageHeaderSize = 12;
+
+
     struct Message
     {
         Address from;

@@ -34,12 +34,18 @@ namespace dafs
         boost::asio::connect(socket, endpoint);
 
         // 1. serialize message
-        std::string message_str = dafs::Serialize(message);
+        std::string message_data = dafs::Serialize(message);
+        std::stringstream ss;
+        ss << std::setw(dafs::MessageHeaderSize)
+           << std::to_string(message_data.size());
+        std::string message_header = ss.str();
+
+        std::string message_full = message_header + message_data;
 
         // 2. write message
         boost::asio::write(
             socket,
-            boost::asio::buffer(message_str.c_str(), message_str.size()));
+            boost::asio::buffer(message_full.c_str(), message_full.size()));
     }
 
 

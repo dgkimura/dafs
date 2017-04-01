@@ -45,6 +45,10 @@ namespace dafs
 
         private:
 
+            void handle_read_header(
+                Dispatcher& dispatcher,
+                const boost::system::error_code& err);
+
             void handle_read_message(
                 Dispatcher& dispatcher,
                 const boost::system::error_code& err);
@@ -52,6 +56,8 @@ namespace dafs
             boost::asio::streambuf response;
 
             boost::asio::ip::tcp::socket socket;
+
+            char header[dafs::MessageHeaderSize + 1];
         };
     };
 }
