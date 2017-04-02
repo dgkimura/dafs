@@ -13,3 +13,29 @@ generate MakeFiles for this project.
 $ mkdir build && cd build
 $ cmake ..
 $ make && ./unittests/all_unittests
+```
+
+
+# Setup
+Create a `config.ini` file describing the partitions on the node. Each node
+references 3 partitions.
+
+```
+    [partition-minus]
+    port = 8070
+    ping-interval-in-seconds = 5
+
+    [partition-zero]
+    port = 8080
+    ping-interval-in-seconds = 5
+
+    [partition-plus]
+    port = 8090
+    ping-interval-in-seconds = 5
+```
+
+Now start the server specifying an identity and a management endpoint.
+
+```
+$ dafs-server --identity=11111111-1111-1111-1111-111111111111 --port=9000
+```
