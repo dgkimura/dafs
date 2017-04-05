@@ -23,19 +23,16 @@ references 3 partitions.
 ```
     [partition-minus]
     port = 8070
-    ping-interval-in-seconds = 5
 
     [partition-zero]
     port = 8080
-    ping-interval-in-seconds = 5
 
     [partition-plus]
     port = 8090
-    ping-interval-in-seconds = 5
 ```
 
 Now start the server specifying an identity and a management endpoint.
 
 ```
-$ dafs-server --identity=11111111-1111-1111-1111-111111111111 --port=9000
+$ dafs-server --identity=11111111-1111-1111-1111-111111111111 --address=127.0.0.1 --port=9000
 ```
