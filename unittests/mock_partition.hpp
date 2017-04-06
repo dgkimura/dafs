@@ -31,6 +31,13 @@ public:
         };
     }
 
+    virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override
+    {
+        return dafs::ReplicatedEndpoints
+        {
+        };
+    }
+
     virtual void DeleteBlock(dafs::BlockInfo block) override
     {
         block_map.erase(block.identity.id);
@@ -51,6 +58,27 @@ public:
     }
 
     virtual void RemoveNode(dafs::Address address) override
+    {
+    }
+
+    virtual void SetMinus(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location) override
+    {
+    }
+
+    virtual void SetZero(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location) override
+    {
+    }
+
+    virtual void SetPlus(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location) override
     {
     }
 

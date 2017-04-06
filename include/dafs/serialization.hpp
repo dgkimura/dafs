@@ -125,6 +125,23 @@ namespace dafs
 
 
     template <typename Archive>
+    void serialize(Archive& ar, dafs::Endpoint& obj, const unsigned int version)
+    {
+        ar & obj.management;
+        ar & obj.replication;
+    }
+
+
+    template <typename Archive>
+    void serialize(Archive& ar, dafs::ReplicatedEndpoints& obj, const unsigned int version)
+    {
+        ar & obj.minus;
+        ar & obj.zero;
+        ar & obj.plus;
+    }
+
+
+    template <typename Archive>
     void serialize(Archive& ar, dafs::PartitionDetails& obj, const unsigned int version)
     {
         ar & obj.author;

@@ -28,6 +28,10 @@ namespace dafs
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::AuthorName).string(),
                   dafs::Identity())),
+          details(
+              dafs::CreateBlockInfo(
+                  boost::filesystem::path(Constant::DetailsName).string(),
+                  dafs::Identity())),
           in_progress(),
           replication_interface(address)
     {
@@ -60,6 +64,14 @@ namespace dafs
             replication_interface,
             dafs::Deserialize<dafs::Identity>(id_block.contents)
         };
+    }
+
+
+    dafs::ReplicatedEndpoints
+    ReplicatedPartition::GetNodeSetDetails()
+    {
+        auto details_block =  store.ReadBlock(details);
+        return dafs::Deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
     }
 
 
@@ -99,6 +111,57 @@ namespace dafs
     ReplicatedPartition::RemoveNode(dafs::Address address)
     {
         nodeset.RemoveNode(address);
+    }
+
+    void
+    ReplicatedPartition::SetMinus(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location)
+    {
+        dafs::ReplicatedEndpoints nodesetdetails = GetNodeSetDetails();
+        nodeset.SetMinus(management, replication, location, nodesetdetails);
+        WriteBlock(
+            details,
+            BlockFormat
+            {
+                dafs::Serialize(nodesetdetails)
+            }
+        );
+    }
+
+    void
+    ReplicatedPartition::SetZero(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location)
+    {
+        dafs::ReplicatedEndpoints nodesetdetails = GetNodeSetDetails();
+        nodeset.SetZero(management, replication, location, nodesetdetails);
+        WriteBlock(
+            details,
+            BlockFormat
+            {
+                dafs::Serialize(nodesetdetails)
+            }
+        );
+    }
+
+    void
+    ReplicatedPartition::SetPlus(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location)
+    {
+        dafs::ReplicatedEndpoints nodesetdetails = GetNodeSetDetails();
+        nodeset.SetPlus(management, replication, location, nodesetdetails);
+        WriteBlock(
+            details,
+            BlockFormat
+            {
+                dafs::Serialize(nodesetdetails)
+            }
+        );
     }
 
     std::vector<dafs::Address>

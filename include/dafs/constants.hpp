@@ -15,9 +15,7 @@ namespace
 
         static constexpr const char* AuthorName = "author";
 
-        static constexpr const char* IdentityFilename = "identity";
-
-        static constexpr const char* AuthorFilename = "author";
+        static constexpr const char* DetailsName = "details";
 
         static constexpr const char* PartitionMinusName = "p-minus";
 

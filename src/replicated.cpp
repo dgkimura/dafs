@@ -169,6 +169,48 @@ namespace dafs
     }
 
 
+    dafs::ReplicatedEndpoints
+    ReplicatedNodeSet::SetMinus(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location,
+        dafs::ReplicatedEndpoints& details)
+    {
+        parliament.AddLegislator(replication.ip, replication.port, location);
+        details.minus.management = management;
+        details.minus.replication = replication;
+        return details;
+    }
+
+
+    dafs::ReplicatedEndpoints
+    ReplicatedNodeSet::SetZero(
+        dafs::Address management,
+        dafs::Address replication,
+        std::string location,
+        dafs::ReplicatedEndpoints& details)
+    {
+        parliament.AddLegislator(replication.ip, replication.port, location);
+        details.zero.management = management;
+        details.zero.replication = replication;
+        return details;
+    }
+
+
+    dafs::ReplicatedEndpoints
+    ReplicatedNodeSet::SetPlus(
+        const dafs::Address management,
+        const dafs::Address replication,
+        const std::string location,
+        dafs::ReplicatedEndpoints& details)
+    {
+        parliament.AddLegislator(replication.ip, replication.port, location);
+        details.plus.management = management;
+        details.plus.replication = replication;
+        return details;
+    }
+
+
     ReplicatedPing::ReplicatedPing(
         Parliament& parliament,
         std::chrono::seconds ping_interval,

@@ -6,6 +6,22 @@
 
 namespace dafs
 {
+    struct Endpoint
+    {
+        dafs::Address management;
+
+        dafs::Address replication;
+    };
+
+    struct ReplicatedEndpoints
+    {
+        dafs::Endpoint minus;
+
+        dafs::Endpoint zero;
+
+        dafs::Endpoint plus;
+    };
+
     struct PartitionDetails
     {
         //

@@ -16,6 +16,8 @@ namespace dafs
 
         virtual dafs::PartitionDetails GetDetails() = 0;
 
+        virtual dafs::ReplicatedEndpoints GetNodeSetDetails() = 0;
+
         virtual void DeleteBlock(BlockInfo block) = 0;
 
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
@@ -25,6 +27,21 @@ namespace dafs
         virtual void AddNode(dafs::Address address, std::string location) = 0;
 
         virtual void RemoveNode(dafs::Address address) = 0;
+
+        virtual void SetMinus(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) = 0;
+
+        virtual void SetZero(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) = 0;
+
+        virtual void SetPlus(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) = 0;
 
         virtual std::vector<dafs::Address> NonresponsiveMembers(
             int minimum_elections
@@ -53,6 +70,13 @@ namespace dafs
             };
         }
 
+        virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override
+        {
+            return dafs::ReplicatedEndpoints
+            {
+            };
+        }
+
         virtual void DeleteBlock(BlockInfo block) override
         {
         }
@@ -73,6 +97,28 @@ namespace dafs
         virtual void RemoveNode(dafs::Address address) override
         {
         }
+
+        virtual void SetMinus(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) override
+        {
+        }
+
+        virtual void SetZero(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) override
+        {
+        }
+
+        virtual void SetPlus(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) override
+        {
+        }
+
 
         virtual std::vector<dafs::Address> NonresponsiveMembers(
             int minimum_elections) override
@@ -107,6 +153,8 @@ namespace dafs
 
         virtual dafs::PartitionDetails GetDetails() override;
 
+        virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override;
+
         virtual void DeleteBlock(BlockInfo block) override;
 
         virtual BlockFormat ReadBlock(BlockInfo block) override;
@@ -114,6 +162,21 @@ namespace dafs
         virtual void WriteBlock(BlockInfo block, BlockFormat format) override;
 
         virtual void AddNode(dafs::Address address, std::string location) override;
+
+        virtual void SetMinus(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) override;
+
+        virtual void SetZero(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) override;
+
+        virtual void SetPlus(
+            dafs::Address management,
+            dafs::Address replication,
+            std::string location) override;
 
         virtual void RemoveNode(dafs::Address address) override;
 
@@ -136,6 +199,8 @@ namespace dafs
         dafs::BlockInfo identity;
 
         dafs::BlockInfo author;
+
+        dafs::BlockInfo details;
 
         dafs::Signal in_progress;
 

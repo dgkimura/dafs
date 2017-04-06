@@ -89,6 +89,24 @@ namespace dafs
         virtual void AddNode(dafs::Address address, std::string location) = 0;
 
         virtual void RemoveNode(dafs::Address address) = 0;
+
+        virtual dafs::ReplicatedEndpoints SetMinus(
+            const dafs::Address management,
+            const dafs::Address replication,
+            const std::string location,
+            dafs::ReplicatedEndpoints& details) = 0;
+
+        virtual dafs::ReplicatedEndpoints SetZero(
+            const dafs::Address management,
+            const dafs::Address replication,
+            const std::string location,
+            dafs::ReplicatedEndpoints& details) = 0;
+
+        virtual dafs::ReplicatedEndpoints SetPlus(
+            const dafs::Address management,
+            const dafs::Address replication,
+            const std::string location,
+            dafs::ReplicatedEndpoints& details) = 0;
     };
 
 
@@ -102,6 +120,24 @@ namespace dafs
         virtual void AddNode(dafs::Address address, std::string location) override;
 
         virtual void RemoveNode(dafs::Address address) override;
+
+        virtual dafs::ReplicatedEndpoints SetMinus(
+            const dafs::Address management,
+            const dafs::Address replication,
+            const std::string location,
+            dafs::ReplicatedEndpoints& details) override;
+
+        virtual dafs::ReplicatedEndpoints SetZero(
+            const dafs::Address management,
+            const dafs::Address replication,
+            const std::string location,
+            dafs::ReplicatedEndpoints& details) override;
+
+        virtual dafs::ReplicatedEndpoints SetPlus(
+            const dafs::Address management,
+            const dafs::Address replication,
+            const std::string location,
+            dafs::ReplicatedEndpoints& details) override;
 
     private:
 

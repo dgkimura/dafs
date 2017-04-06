@@ -33,7 +33,8 @@ SetupReplicatedFiles(
     std::string directory,
     dafs::Address management_interface,
     dafs::Address replication_interface,
-    dafs::Identity identity)
+    dafs::Identity identity,
+    dafs::ReplicatedEndpoints details)
 {
     if (!boost::filesystem::exists(directory))
     {
@@ -50,15 +51,22 @@ SetupReplicatedFiles(
         // write out identity file
         CreateReplicatedFile(
             directory,
-            Constant::IdentityFilename,
+            Constant::IdentityName,
             dafs::Serialize(identity)
         );
 
         // write out author file
         CreateReplicatedFile(
             directory,
-            Constant::AuthorFilename,
+            Constant::AuthorName,
             dafs::Serialize(management_interface)
+        );
+
+        // write out details file
+        CreateReplicatedFile(
+            directory,
+            Constant::DetailsName,
+            dafs::Serialize(details)
         );
     }
 }
@@ -70,13 +78,15 @@ SetupPartition(
     dafs::Address management_interface,
     dafs::Address replication_interface,
     dafs::Identity identity,
+    dafs::ReplicatedEndpoints details,
     std::chrono::seconds ping_interval)
 {
     SetupReplicatedFiles(
         directory,
         management_interface,
         replication_interface,
-        identity);
+        identity,
+        details);
 
     return std::make_shared<dafs::ReplicatedPartition>(
         replication_interface,
@@ -196,6 +206,24 @@ int main(int argc, char** argv)
         dafs::Address(options.address, options.minus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) -
         dafs::Identity("00000000-0000-0000-0000-0000000000ff"),
+        dafs::ReplicatedEndpoints
+        {
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::EmptyAddress()
+            },
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::EmptyAddress()
+            },
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::Address(options.address, options.minus_port)
+            }
+        },
         std::chrono::seconds(options.minus_ping_interval)
     );
     auto pzero = SetupPartition(
@@ -203,6 +231,24 @@ int main(int argc, char** argv)
         dafs::Address(options.address, options.port),
         dafs::Address(options.address, options.zero_port),
         dafs::Identity(boost::uuids::to_string(options.identity)),
+        dafs::ReplicatedEndpoints
+        {
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::EmptyAddress()
+            },
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::Address(options.address, options.zero_port)
+            },
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::EmptyAddress()
+            }
+        },
         std::chrono::seconds(options.zero_ping_interval)
     );
     auto pplus = SetupPartition(
@@ -211,6 +257,24 @@ int main(int argc, char** argv)
         dafs::Address(options.address, options.plus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) +
         dafs::Identity("00000000-0000-0000-0000-0000000000ff"),
+        dafs::ReplicatedEndpoints
+        {
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::Address(options.address, options.plus_port)
+            },
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::EmptyAddress()
+            },
+            dafs::Endpoint
+            {
+                dafs::Address(options.address, options.port),
+                dafs::EmptyAddress()
+            }
+        },
         std::chrono::seconds(options.plus_ping_interval)
     );
 
