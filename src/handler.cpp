@@ -103,6 +103,27 @@ namespace dafs
                                 p_plus->GetDetails()
                             }
                         )
+                    },
+                    dafs::MetaData
+                    {
+                        dafs::NodeEndpointsKey,
+                        dafs::Serialize(
+                            dafs::ReplicatedEndpoints
+                            {
+                                p_minus->GetNodeSetDetails().plus,
+                                p_zero->GetNodeSetDetails().zero,
+                                p_plus->GetNodeSetDetails().minus
+                            }
+                        )
+                    },
+                    dafs::MetaData
+                    {
+                        dafs::IdentityKey,
+                        dafs::Serialize(
+                            node.GetPartition(
+                                dafs::Node::Slot::Zero
+                            )->GetDetails().identity
+                        )
                     }
                 }
             }
@@ -120,8 +141,7 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
-        auto identity = details.zero_details.identity;
-
+        auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
 
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);

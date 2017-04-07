@@ -13,6 +13,7 @@ namespace dafs
         dafs::Address replication;
     };
 
+
     struct ReplicatedEndpoints
     {
         dafs::Endpoint minus;
@@ -21,6 +22,7 @@ namespace dafs
 
         dafs::Endpoint plus;
     };
+
 
     struct PartitionDetails
     {
