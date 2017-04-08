@@ -142,6 +142,8 @@ namespace dafs
     {
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
+        auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
+            dafs::NodeEndpointsKey);
 
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
@@ -207,6 +209,13 @@ namespace dafs
                             {
                                 dafs::NodeDetailsKey,
                                 dafs::Serialize(details)
+                            },
+                            dafs::MetaData
+                            {
+                                dafs::NodeEndpointsKey,
+                                dafs::Serialize(
+                                    endpoints
+                                )
                             }
                         }
                     }
@@ -218,12 +227,16 @@ namespace dafs
                 // Case of standalone node - accept initiation request and
                 // update both halves of topology.
                 //
-                p_zero->AddNode(
-                    details.plus_details.interface,
+                p_zero->SetPlus(
+                    endpoints.plus.management,
+                    endpoints.plus.replication,
                     Constant::PartitionPlusName);
-                p_zero->AddNode(
-                    details.minus_details.interface,
+                p_zero->SetMinus(
+                    endpoints.minus.management,
+                    endpoints.minus.replication,
                     Constant::PartitionMinusName);
+                //endpoints.plus =
+                //endpoints.minus =
                 sender.Send(
                     dafs::Message
                     {
@@ -237,6 +250,13 @@ namespace dafs
                                 dafs::PartitionMinusAddressKey,
                                 dafs::Serialize(
                                     p_minus->GetDetails().interface
+                                )
+                            },
+                            dafs::MetaData
+                            {
+                                dafs::NodeEndpointsKey,
+                                dafs::Serialize(
+                                    endpoints
                                 )
                             },
                             dafs::MetaData
@@ -264,6 +284,8 @@ namespace dafs
         dafs::Sender& sender)
     {
         auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
+        auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
+            dafs::NodeEndpointsKey);
 
         auto p_minus = node.GetPartition(dafs::Node::Slot::Plus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
@@ -310,6 +332,13 @@ namespace dafs
                         {
                             dafs::PartitionPlusAddressKey,
                             dafs::Serialize(p_plus->GetDetails().interface)
+                        },
+                        dafs::MetaData
+                        {
+                            dafs::NodeEndpointsKey,
+                            dafs::Serialize(
+                                endpoints
+                            )
                         }
                     }
                 }
@@ -329,6 +358,8 @@ namespace dafs
         auto p_plus_address = metadata.GetValue<dafs::Address>(dafs::PartitionPlusAddressKey);
         auto p_minus_address = metadata.GetValue<dafs::Address>(dafs::PartitionMinusAddressKey);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+        auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
+            dafs::NodeEndpointsKey);
 
         //
         // Push replication of new node.
