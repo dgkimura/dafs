@@ -190,6 +190,8 @@ namespace dafs
                 // Delete extra replications.
                 p_minus->RemoveNode(p_minus->GetDetails().interface);
 
+                endpoints.plus.replication = p_minus->GetDetails().interface;
+
                 sender.Send(
                     dafs::Message
                     {
@@ -198,13 +200,6 @@ namespace dafs
                         dafs::MessageType::_RequestPlusInitiation,
                         std::vector<dafs::MetaData>
                         {
-                            dafs::MetaData
-                            {
-                                dafs::PartitionMinusAddressKey,
-                                dafs::Serialize(
-                                    p_minus->GetDetails().interface
-                                )
-                            },
                             dafs::MetaData
                             {
                                 dafs::NodeDetailsKey,
@@ -235,8 +230,8 @@ namespace dafs
                     endpoints.minus.management,
                     endpoints.minus.replication,
                     Constant::PartitionMinusName);
-                //endpoints.plus =
-                //endpoints.minus =
+                endpoints.plus.replication = p_minus->GetDetails().interface;
+                endpoints.minus.replication = p_plus->GetDetails().interface;
                 sender.Send(
                     dafs::Message
                     {
@@ -247,23 +242,9 @@ namespace dafs
                         {
                             dafs::MetaData
                             {
-                                dafs::PartitionMinusAddressKey,
-                                dafs::Serialize(
-                                    p_minus->GetDetails().interface
-                                )
-                            },
-                            dafs::MetaData
-                            {
                                 dafs::NodeEndpointsKey,
                                 dafs::Serialize(
                                     endpoints
-                                )
-                            },
-                            dafs::MetaData
-                            {
-                                dafs::PartitionPlusAddressKey,
-                                dafs::Serialize(
-                                    p_plus->GetDetails().interface
                                 )
                             }
                       }
@@ -290,7 +271,6 @@ namespace dafs
         auto p_minus = node.GetPartition(dafs::Node::Slot::Plus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
-        auto p_minus_address = metadata.GetValue<dafs::Address>(dafs::PartitionMinusAddressKey);
 
         if (!IsLogicallyOrdered(p_zero->GetDetails().identity,
                                 details.zero_details.identity,
@@ -314,6 +294,8 @@ namespace dafs
             // Delete extra replications.
             p_plus->RemoveNode(p_plus->GetDetails().interface);
 
+            endpoints.minus.replication = p_plus->GetDetails().interface;
+
             // Send accepted messge to ndoe.
             sender.Send(
                 dafs::Message
@@ -323,16 +305,6 @@ namespace dafs
                     dafs::MessageType::_AcceptPlusInitiation,
                     std::vector<dafs::MetaData>
                     {
-                        dafs::MetaData
-                        {
-                            dafs::PartitionMinusAddressKey,
-                            dafs::Serialize(p_minus_address)
-                        },
-                        dafs::MetaData
-                        {
-                            dafs::PartitionPlusAddressKey,
-                            dafs::Serialize(p_plus->GetDetails().interface)
-                        },
                         dafs::MetaData
                         {
                             dafs::NodeEndpointsKey,
@@ -355,8 +327,6 @@ namespace dafs
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
-        auto p_plus_address = metadata.GetValue<dafs::Address>(dafs::PartitionPlusAddressKey);
-        auto p_minus_address = metadata.GetValue<dafs::Address>(dafs::PartitionMinusAddressKey);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
@@ -364,8 +334,8 @@ namespace dafs
         //
         // Push replication of new node.
         //
-        p_zero->AddNode(p_plus_address, Constant::PartitionPlusName);
-        p_zero->AddNode(p_minus_address, Constant::PartitionMinusName);
+        p_zero->AddNode(endpoints.minus.replication, Constant::PartitionPlusName);
+        p_zero->AddNode(endpoints.plus.replication, Constant::PartitionMinusName);
 
         dafs::Message m;
         return m;

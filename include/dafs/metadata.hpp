@@ -34,11 +34,5 @@ namespace dafs
     const std::string NodeDetailsKey = "NodeDetails";
 
 
-    const std::string PartitionMinusAddressKey = "PartitionMinusAddress";
-
-
-    const std::string PartitionPlusAddressKey = "PartitionPlusAddress";
-
-
     const std::string NodeEndpointsKey = "NodeEndpoints";
 }
