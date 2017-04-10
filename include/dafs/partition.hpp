@@ -188,6 +188,8 @@ namespace dafs
 
     private:
 
+        std::shared_ptr<dafs::Signal> in_progress;
+
         Parliament parliament;
 
         ReplicatedStorage store;
@@ -201,8 +203,6 @@ namespace dafs
         dafs::BlockInfo author;
 
         dafs::BlockInfo details;
-
-        dafs::Signal in_progress;
 
         dafs::Address replication_interface;
     };

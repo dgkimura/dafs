@@ -18,7 +18,7 @@ namespace dafs
     ReplicatedStorage::ReplicatedStorage(
         Parliament& parliament,
         dafs::Root root,
-        dafs::Signal& in_progress)
+        std::shared_ptr<dafs::Signal> in_progress)
     : parliament(parliament),
       root(root),
       in_progress(in_progress),
@@ -69,7 +69,7 @@ namespace dafs
                 )
             )
         );
-        in_progress.Wait();
+        in_progress->Wait();
     }
 
 
@@ -134,7 +134,7 @@ namespace dafs
                 )
             )
         );
-        in_progress.Wait();
+        in_progress->Wait();
     }
 
 
@@ -214,7 +214,7 @@ namespace dafs
     ReplicatedPing::ReplicatedPing(
         Parliament& parliament,
         std::chrono::seconds ping_interval,
-        Signal& in_progress)
+        std::shared_ptr<Signal> in_progress)
     : parliament(parliament),
       ping_interval(ping_interval),
       in_progress(in_progress),
@@ -240,7 +240,7 @@ namespace dafs
                     }
                 )
             );
-            in_progress.Wait();
+            in_progress->Wait();
             std::this_thread::sleep_for(ping_interval);
         }
     }

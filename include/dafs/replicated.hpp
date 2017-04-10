@@ -43,7 +43,7 @@ namespace dafs
         ReplicatedStorage(
             Parliament& parliament,
             dafs::Root root,
-            dafs::Signal& in_progress);
+            std::shared_ptr<dafs::Signal> in_progress);
 
         ReplicatedStorage(
             const ReplicatedStorage& other);
@@ -74,7 +74,7 @@ namespace dafs
 
         dafs::Root root;
 
-        Signal& in_progress;
+        std::shared_ptr<Signal> in_progress;
 
         dafs::BlockInfo blocks;
 
@@ -157,7 +157,7 @@ namespace dafs
         ReplicatedPing(
             Parliament& parliament,
             std::chrono::seconds ping_interval,
-            dafs::Signal& in_progress);
+            std::shared_ptr<dafs::Signal> in_progress);
 
     private:
 
@@ -167,7 +167,7 @@ namespace dafs
 
         std::chrono::seconds ping_interval;
 
-        Signal& in_progress;
+        std::shared_ptr<Signal> in_progress;
 
         bool should_continue;
     };

@@ -17,7 +17,7 @@ namespace dafs
     {
     public:
 
-        Commit(Parliament& parliament, dafs::Root root, dafs::Signal& condition);
+        Commit(Parliament& parliament, dafs::Root root, std::shared_ptr<dafs::Signal> condition);
 
         void operator()(std::string proposal);
 
@@ -36,7 +36,7 @@ namespace dafs
 
         dafs::Root root;
 
-        dafs::Signal& condition;
+        std::shared_ptr<dafs::Signal> condition;
     };
 
 

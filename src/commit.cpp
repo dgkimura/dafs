@@ -10,7 +10,7 @@
 
 namespace dafs
 {
-    Commit::Commit(Parliament& parliament, dafs::Root root, dafs::Signal& condition)
+    Commit::Commit(Parliament& parliament, dafs::Root root, std::shared_ptr<dafs::Signal> condition)
         : proposal_map
           {
               {
@@ -60,7 +60,7 @@ namespace dafs
         edit.info.path = (boost::filesystem::path(root.directory) /
                          boost::filesystem::path(edit.info.path)).string();
         proposal_map[p.type](edit);
-        condition.Set();
+        condition->Set();
     }
 
 
