@@ -101,13 +101,6 @@ namespace dafs
 
 
     void
-    ReplicatedPartition::AddNode(dafs::Address address, std::string location)
-    {
-        nodeset.AddNode(address, location);
-    }
-
-
-    void
     ReplicatedPartition::RemoveNode(dafs::Address address)
     {
         nodeset.RemoveNode(address);

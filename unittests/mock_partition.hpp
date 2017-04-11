@@ -53,10 +53,6 @@ public:
         block_map[block.identity.id] = format;
     }
 
-    virtual void AddNode(dafs::Address address, std::string location) override
-    {
-    }
-
     virtual void RemoveNode(dafs::Address address) override
     {
     }

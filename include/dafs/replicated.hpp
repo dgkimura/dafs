@@ -86,8 +86,6 @@ namespace dafs
     {
     public:
 
-        virtual void AddNode(dafs::Address address, std::string location) = 0;
-
         virtual void RemoveNode(dafs::Address address) = 0;
 
         virtual dafs::ReplicatedEndpoints SetMinus(
@@ -116,8 +114,6 @@ namespace dafs
 
         ReplicatedNodeSet(
             Parliament& parliament);
-
-        virtual void AddNode(dafs::Address address, std::string location) override;
 
         virtual void RemoveNode(dafs::Address address) override;
 

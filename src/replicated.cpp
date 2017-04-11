@@ -156,13 +156,6 @@ namespace dafs
 
 
     void
-    ReplicatedNodeSet::AddNode(dafs::Address address, std::string location)
-    {
-        parliament.AddLegislator(address.ip, address.port, location);
-    }
-
-
-    void
     ReplicatedNodeSet::RemoveNode(dafs::Address address)
     {
         parliament.RemoveLegislator(address.ip, address.port);

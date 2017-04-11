@@ -183,14 +183,15 @@ namespace dafs
                 //
 
                 // Push replication onto initiated node.
-                p_minus->AddNode(
-                    details.minus_details.interface,
+                p_minus->SetPlus(
+                    endpoints.minus.management,
+                    endpoints.minus.replication,
                     Constant::PartitionMinusName);
 
                 // Delete extra replications.
                 p_minus->RemoveNode(p_minus->GetDetails().interface);
 
-                endpoints.plus.replication = p_minus->GetDetails().interface;
+                endpoints.minus.replication = p_minus->GetDetails().interface;
 
                 sender.Send(
                     dafs::Message
@@ -287,13 +288,16 @@ namespace dafs
             //
 
             // Push replication onto initiated node.
-            p_plus->AddNode(
-                details.plus_details.interface,
+            p_plus->SetMinus(
+                endpoints.plus.management,
+                endpoints.plus.replication,
                 Constant::PartitionPlusName);
 
             // Delete extra replications.
             p_plus->RemoveNode(p_plus->GetDetails().interface);
 
+            // swap
+            endpoints.plus = endpoints.minus;
             endpoints.minus.replication = p_plus->GetDetails().interface;
 
             // Send accepted messge to ndoe.
@@ -334,8 +338,14 @@ namespace dafs
         //
         // Push replication of new node.
         //
-        p_zero->AddNode(endpoints.minus.replication, Constant::PartitionPlusName);
-        p_zero->AddNode(endpoints.plus.replication, Constant::PartitionMinusName);
+        p_zero->SetMinus(
+            endpoints.minus.management,
+            endpoints.minus.replication,
+            Constant::PartitionPlusName);
+        p_zero->SetPlus(
+            endpoints.plus.management,
+            endpoints.plus.replication,
+            Constant::PartitionMinusName);
 
         dafs::Message m;
         return m;

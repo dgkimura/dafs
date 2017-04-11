@@ -24,8 +24,6 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) = 0;
 
-        virtual void AddNode(dafs::Address address, std::string location) = 0;
-
         virtual void RemoveNode(dafs::Address address) = 0;
 
         virtual void SetMinus(
@@ -87,10 +85,6 @@ namespace dafs
         }
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) override
-        {
-        }
-
-        virtual void AddNode(dafs::Address address, std::string location) override
         {
         }
 
@@ -160,8 +154,6 @@ namespace dafs
         virtual BlockFormat ReadBlock(BlockInfo block) override;
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) override;
-
-        virtual void AddNode(dafs::Address address, std::string location) override;
 
         virtual void SetMinus(
             dafs::Address management,
