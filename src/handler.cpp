@@ -87,23 +87,11 @@ namespace dafs
         sender.Send(
             dafs::Message
             {
-                node.GetPartition(dafs::Node::Slot::Zero)->GetDetails().author,
+                node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails().zero.management,
                 metadata.GetValue<dafs::Address>(dafs::AddressKey),
                 dafs::MessageType::_RequestMinusInitiation,
                 std::vector<dafs::MetaData>
                 {
-                    dafs::MetaData
-                    {
-                        dafs::NodeDetailsKey,
-                        dafs::Serialize(
-                            dafs::NodeDetails
-                            {
-                                p_minus->GetDetails(),
-                                p_zero->GetDetails(),
-                                p_plus->GetDetails()
-                            }
-                        )
-                    },
                     dafs::MetaData
                     {
                         dafs::NodeEndpointsKey,
@@ -140,7 +128,6 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
@@ -160,15 +147,15 @@ namespace dafs
             sender.Send(
                 dafs::Message
                 {
-                    p_zero->GetDetails().author,
-                    details.zero_details.author,
+                    p_zero->GetNodeSetDetails().zero.management,
+                    endpoints.zero.management,
                     dafs::MessageType::_JoinCluster,
                     std::vector<dafs::MetaData>
                     {
                         dafs::MetaData
                         {
                             dafs::AddressKey,
-                            dafs::Serialize(p_minus->GetDetails().author)
+                            dafs::Serialize(p_minus->GetNodeSetDetails().zero.management)
                         }
                     }
                 }
@@ -196,21 +183,23 @@ namespace dafs
                 sender.Send(
                     dafs::Message
                     {
-                        p_zero->GetDetails().author,
-                        p_minus->GetDetails().author,
+                        p_zero->GetNodeSetDetails().zero.management,
+                        p_minus->GetNodeSetDetails().zero.management,
                         dafs::MessageType::_RequestPlusInitiation,
                         std::vector<dafs::MetaData>
                         {
                             dafs::MetaData
                             {
-                                dafs::NodeDetailsKey,
-                                dafs::Serialize(details)
-                            },
-                            dafs::MetaData
-                            {
                                 dafs::NodeEndpointsKey,
                                 dafs::Serialize(
                                     endpoints
+                                )
+                            },
+                            dafs::MetaData
+                            {
+                                dafs::IdentityKey,
+                                dafs::Serialize(
+                                    identity
                                 )
                             }
                         }
@@ -236,8 +225,8 @@ namespace dafs
                 sender.Send(
                     dafs::Message
                     {
-                        p_zero->GetDetails().author,
-                        details.zero_details.author,
+                        p_zero->GetNodeSetDetails().zero.management,
+                        endpoints.zero.management,
                         dafs::MessageType::_AcceptPlusInitiation,
                         std::vector<dafs::MetaData>
                         {
@@ -265,7 +254,7 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        auto details = metadata.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
+        auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
 
@@ -274,7 +263,7 @@ namespace dafs
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
         if (!IsLogicallyOrdered(p_zero->GetDetails().identity,
-                                details.zero_details.identity,
+                                identity,
                                 p_plus->GetDetails().identity))
         {
             //
@@ -304,8 +293,8 @@ namespace dafs
             sender.Send(
                 dafs::Message
                 {
-                    p_zero->GetDetails().author,
-                    details.zero_details.author,
+                    p_zero->GetNodeSetDetails().zero.management,
+                    endpoints.zero.management,
                     dafs::MessageType::_AcceptPlusInitiation,
                     std::vector<dafs::MetaData>
                     {
