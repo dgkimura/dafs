@@ -67,6 +67,14 @@ namespace dafs
     }
 
 
+    dafs::Identity
+    ReplicatedPartition::GetIdentity()
+    {
+        auto id_block =  store.ReadBlock(identity);
+        return dafs::Deserialize<dafs::Identity>(id_block.contents);
+    }
+
+
     dafs::ReplicatedEndpoints
     ReplicatedPartition::GetNodeSetDetails()
     {

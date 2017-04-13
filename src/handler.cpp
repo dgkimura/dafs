@@ -110,7 +110,7 @@ namespace dafs
                         dafs::Serialize(
                             node.GetPartition(
                                 dafs::Node::Slot::Zero
-                            )->GetDetails().identity
+                            )->GetIdentity()
                         )
                     }
                 }
@@ -137,9 +137,9 @@ namespace dafs
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
         if (p_minus->IsActive() &&
-            (!IsLogicallyOrdered(p_minus->GetDetails().identity,
+            (!IsLogicallyOrdered(p_minus->GetIdentity(),
                                  identity,
-                                 p_zero->GetDetails().identity)))
+                                 p_zero->GetIdentity())))
         {
             //
             // Reject initiation request by telling node who to ask next.
@@ -262,9 +262,9 @@ namespace dafs
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
-        if (!IsLogicallyOrdered(p_zero->GetDetails().identity,
+        if (!IsLogicallyOrdered(p_zero->GetIdentity(),
                                 identity,
-                                p_plus->GetDetails().identity))
+                                p_plus->GetIdentity()))
         {
             //
             // Foobar'd topology. Rollback?
@@ -289,7 +289,7 @@ namespace dafs
             endpoints.plus = endpoints.minus;
             endpoints.minus.replication = p_plus->GetDetails().interface;
 
-            // Send accepted messge to ndoe.
+            // Send accepted messge to node.
             sender.Send(
                 dafs::Message
                 {

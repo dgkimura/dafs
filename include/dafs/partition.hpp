@@ -16,6 +16,8 @@ namespace dafs
 
         virtual dafs::PartitionDetails GetDetails() = 0;
 
+        virtual dafs::Identity GetIdentity() = 0;
+
         virtual dafs::ReplicatedEndpoints GetNodeSetDetails() = 0;
 
         virtual void DeleteBlock(BlockInfo block) = 0;
@@ -66,6 +68,11 @@ namespace dafs
                 dafs::Address("127.0.0.1", 8080),
                 identity
             };
+        }
+
+        virtual dafs::Identity GetIdentity() override
+        {
+            return identity;
         }
 
         virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override
@@ -146,6 +153,8 @@ namespace dafs
         );
 
         virtual dafs::PartitionDetails GetDetails() override;
+
+        virtual dafs::Identity GetIdentity() override;
 
         virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override;
 

@@ -31,6 +31,11 @@ public:
         };
     }
 
+    virtual dafs::Identity GetIdentity() override
+    {
+        return identity;
+    }
+
     virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override
     {
         return dafs::ReplicatedEndpoints
