@@ -31,8 +31,23 @@ namespace dafs
     const std::string IdentityKey = "Identity";
 
 
-    const std::string NodeDetailsKey = "NodeDetails";
-
-
     const std::string NodeEndpointsKey = "NodeEndpoints";
+
+
+    const std::string MinusReplicatedEndpointsKey = "MinusReplicatedEndpoints";
+
+
+    const std::string ZeroReplicatedEndpointsKey = "ZeroReplicatedEndpoints";
+
+
+    const std::string PlusReplicatedEndpointsKey = "PlusReplicatedEndpoints";
+
+
+    const std::string MinusIdentityKey = "MinusIdentity";
+
+
+    const std::string ZeroIdentityKey = "ZeroIdentity";
+
+
+    const std::string PlusIdentityKey = "PlusIdentity";
 }

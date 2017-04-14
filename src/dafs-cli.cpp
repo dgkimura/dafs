@@ -31,30 +31,34 @@ namespace dafs
         sender->Send(message);
         auto result = sender->Receive();
         auto parser = dafs::MetaDataParser(result.metadata);
-        auto details = parser.GetValue<dafs::NodeDetails>(dafs::NodeDetailsKey);
 
-        auto p_minus = details.minus_details;
-        auto p_zero = details.zero_details;
-        auto p_plus = details.plus_details;
+        auto p_minus = parser.GetValue<dafs::ReplicatedEndpoints>(dafs::MinusReplicatedEndpointsKey);
+        auto p_zero = parser.GetValue<dafs::ReplicatedEndpoints>(dafs::ZeroReplicatedEndpointsKey);
+        auto p_plus = parser.GetValue<dafs::ReplicatedEndpoints>(dafs::PlusReplicatedEndpointsKey);
+
+        auto p_minus_id = parser.GetValue<dafs::Identity>(dafs::MinusIdentityKey);
+        auto p_zero_id = parser.GetValue<dafs::Identity>(dafs::ZeroIdentityKey);
+        auto p_plus_id = parser.GetValue<dafs::Identity>(dafs::PlusIdentityKey);
+
         std::cout << "Node info:\n"
                   << "  - p-minus" << std::endl
                   << "      - author"  << std::endl
-                  << "           ip: " << p_minus.author.ip << std::endl
-                  << "           port: " << p_minus.author.port << std::endl
+                  << "           ip: " << p_minus.zero.management.ip << std::endl
+                  << "           port: " << p_minus.zero.management.port << std::endl
                   << "      - identity"  << std::endl
-                  << "           uuid: " << p_minus.identity.id << std::endl
+                  << "           uuid: " << p_minus_id.id << std::endl
                   << "  - p-zero" << std::endl
                   << "      - author"  << std::endl
-                  << "           ip: " << p_zero.author.ip << std::endl
-                  << "           port: " << p_zero.author.port << std::endl
+                  << "           ip: " << p_zero.zero.management.ip << std::endl
+                  << "           port: " << p_zero.zero.management.port << std::endl
                   << "      - identity"  << std::endl
-                  << "           uuid: " << p_zero.identity.id << std::endl
+                  << "           uuid: " << p_zero_id.id << std::endl
                   << "  - p-plus" << std::endl
                   << "      - author"  << std::endl
-                  << "           ip: " << p_plus.author.ip << std::endl
-                  << "           port: " << p_plus.author.port << std::endl
+                  << "           ip: " << p_plus.zero.management.ip << std::endl
+                  << "           port: " << p_plus.zero.management.port << std::endl
                   << "      - identity"  << std::endl
-                  << "           uuid: " << p_plus.identity.id << std::endl;
+                  << "           uuid: " << p_plus_id.id << std::endl;
     }
 
 

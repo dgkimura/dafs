@@ -1,3 +1,4 @@
+#include <iostream>
 #include "dafs/handler.hpp"
 
 
@@ -56,20 +57,52 @@ namespace dafs
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
-        auto details = dafs::NodeDetails
-        {
-            node.GetPartition(dafs::Node::Slot::Minus)->GetDetails(),
-            node.GetPartition(dafs::Node::Slot::Zero)->GetDetails(),
-            node.GetPartition(dafs::Node::Slot::Plus)->GetDetails()
-        };
         dafs::Message m;
-        m.metadata.push_back(
+        m.metadata = std::vector<dafs::MetaData>
+        {
             dafs::MetaData
             {
-                dafs::NodeDetailsKey,
-                dafs::Serialize<dafs::NodeDetails>(details)
+                dafs::MinusReplicatedEndpointsKey,
+                dafs::Serialize<dafs::ReplicatedEndpoints>(
+                    node.GetPartition(dafs::Node::Slot::Minus)->GetNodeSetDetails()
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::MinusIdentityKey,
+                dafs::Serialize<dafs::Identity>(
+                    node.GetPartition(dafs::Node::Slot::Minus)->GetIdentity()
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::ZeroReplicatedEndpointsKey,
+                dafs::Serialize<dafs::ReplicatedEndpoints>(
+                    node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails()
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::ZeroIdentityKey,
+                dafs::Serialize<dafs::Identity>(
+                    node.GetPartition(dafs::Node::Slot::Zero)->GetIdentity()
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::PlusReplicatedEndpointsKey,
+                dafs::Serialize<dafs::ReplicatedEndpoints>(
+                    node.GetPartition(dafs::Node::Slot::Plus)->GetNodeSetDetails()
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::PlusIdentityKey,
+                dafs::Serialize<dafs::Identity>(
+                    node.GetPartition(dafs::Node::Slot::Plus)->GetIdentity()
+                )
             }
-        );
+        };
         return m;
     }
 

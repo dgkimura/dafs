@@ -151,15 +151,6 @@ namespace dafs
 
 
     template <typename Archive>
-    void serialize(Archive& ar, dafs::NodeDetails& obj, const unsigned int version)
-    {
-        ar & obj.minus_details;
-        ar & obj.zero_details;
-        ar & obj.plus_details;
-    }
-
-
-    template <typename Archive>
     void serialize(Archive& ar, dafs::Message& obj, const unsigned int version)
     {
         ar & obj.from;

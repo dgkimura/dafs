@@ -41,14 +41,4 @@ namespace dafs
         //
         dafs::Identity identity;
     };
-
-
-    struct NodeDetails
-    {
-        dafs::PartitionDetails minus_details;
-
-        dafs::PartitionDetails zero_details;
-
-        dafs::PartitionDetails plus_details;
-    };
 }
