@@ -13,6 +13,17 @@
 
 namespace dafs
 {
+    std::string
+    EndpointToString(dafs::Endpoint address)
+    {
+        std::stringstream result;
+        result << "{" << address.management.ip
+               << ":" << address.management.port << "}"
+               << "{" << address.replication.ip
+               << ":" << address.replication.port << "}";
+        return result.str();
+    }
+
     void
     GetNodeDetails(
         dafs::Address address,
@@ -40,25 +51,34 @@ namespace dafs
         auto p_zero_id = parser.GetValue<dafs::Identity>(dafs::ZeroIdentityKey);
         auto p_plus_id = parser.GetValue<dafs::Identity>(dafs::PlusIdentityKey);
 
-        std::cout << "Node info:\n"
-                  << "  - p-minus" << std::endl
-                  << "      - author"  << std::endl
-                  << "           ip: " << p_minus.zero.management.ip << std::endl
-                  << "           port: " << p_minus.zero.management.port << std::endl
-                  << "      - identity"  << std::endl
-                  << "           uuid: " << p_minus_id.id << std::endl
-                  << "  - p-zero" << std::endl
-                  << "      - author"  << std::endl
-                  << "           ip: " << p_zero.zero.management.ip << std::endl
-                  << "           port: " << p_zero.zero.management.port << std::endl
-                  << "      - identity"  << std::endl
-                  << "           uuid: " << p_zero_id.id << std::endl
-                  << "  - p-plus" << std::endl
-                  << "      - author"  << std::endl
-                  << "           ip: " << p_plus.zero.management.ip << std::endl
-                  << "           port: " << p_plus.zero.management.port << std::endl
-                  << "      - identity"  << std::endl
-                  << "           uuid: " << p_plus_id.id << std::endl;
+        std::cout
+            << "Node info:\n"
+            << " - p-minus" << std::endl
+            << "     - identity"  << std::endl
+            << "          " << p_minus_id.id << std::endl
+            << "     - plus"  << std::endl
+            << "          " << EndpointToString(p_minus.plus) << std::endl
+            << "     - zero"  << std::endl
+            << "          " << EndpointToString(p_minus.zero) << std::endl
+            << "     - minus"  << std::endl
+            << "          " << EndpointToString(p_minus.minus) << std::endl
+            << " - p-zero" << std::endl
+            << "     - identity"  << std::endl
+            << "         " << p_zero_id.id << std::endl
+            << "     - plus"  << std::endl
+            << "          " << EndpointToString(p_zero.plus) << std::endl
+            << "     - zero"  << std::endl
+            << "          " << EndpointToString(p_zero.zero) << std::endl
+            << "     - minus"  << std::endl
+            << "          " << EndpointToString(p_zero.minus) << std::endl
+            << " - p-plus" << std::endl
+            << "          " << p_plus_id.id << std::endl
+            << "     - plus"  << std::endl
+            << "          " << EndpointToString(p_plus.plus) << std::endl
+            << "     - zero"  << std::endl
+            << "          " << EndpointToString(p_plus.zero) << std::endl
+            << "     - minus"  << std::endl
+            << "          " << EndpointToString(p_plus.minus) << std::endl;
     }
 
 
