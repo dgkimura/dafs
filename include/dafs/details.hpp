@@ -8,8 +8,14 @@ namespace dafs
 {
     struct Endpoint
     {
+        //
+        // Endpoint used to communicate management operations to perform.
+        //
         dafs::Address management;
 
+        //
+        // Endpoint used in underlying replication protocol.
+        //
         dafs::Address replication;
     };
 
