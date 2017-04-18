@@ -144,9 +144,7 @@ namespace dafs
     template <typename Archive>
     void serialize(Archive& ar, dafs::PartitionDetails& obj, const unsigned int version)
     {
-        ar & obj.author;
         ar & obj.interface;
-        ar & obj.identity;
     }
 
 

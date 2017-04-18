@@ -33,18 +33,8 @@ namespace dafs
     struct PartitionDetails
     {
         //
-        // Management commection to partition owning node.
-        //
-        dafs::Address author;
-
-        //
         // Replicated connection of this node for 2PC communication.
         //
         dafs::Address interface;
-
-        //
-        // Unique identity of the partition
-        //
-        dafs::Identity identity;
     };
 }

@@ -25,12 +25,12 @@ TEST(NodeTest, testGetPartition)
     dafs::Node node(partition_minus, partition_zero, partition_plus);
 
     ASSERT_EQ(
-        partition_minus->GetDetails().identity,
-        node.GetPartition(dafs::Node::Slot::Minus)->GetDetails().identity);
+        partition_minus->GetIdentity(),
+        node.GetPartition(dafs::Node::Slot::Minus)->GetIdentity());
     ASSERT_EQ(
-        partition_zero->GetDetails().identity,
-        node.GetPartition(dafs::Node::Slot::Zero)->GetDetails().identity);
+        partition_zero->GetIdentity(),
+        node.GetPartition(dafs::Node::Slot::Zero)->GetIdentity());
     ASSERT_EQ(
-        partition_plus->GetDetails().identity,
-        node.GetPartition(dafs::Node::Slot::Plus)->GetDetails().identity);
+        partition_plus->GetIdentity(),
+        node.GetPartition(dafs::Node::Slot::Plus)->GetIdentity());
 }

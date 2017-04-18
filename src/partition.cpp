@@ -55,14 +55,9 @@ namespace dafs
     dafs::PartitionDetails
     ReplicatedPartition::GetDetails()
     {
-        auto author_block =  store.ReadBlock(author);
-        auto id_block =  store.ReadBlock(identity);
-
         return dafs::PartitionDetails
         {
-            dafs::Deserialize<dafs::Address>(author_block.contents),
-            replication_interface,
-            dafs::Deserialize<dafs::Identity>(id_block.contents)
+            replication_interface
         };
     }
 

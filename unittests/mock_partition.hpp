@@ -25,9 +25,7 @@ public:
     {
         return dafs::PartitionDetails
         {
-            author,
-            interface,
-            identity
+            interface
         };
     }
 

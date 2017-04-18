@@ -40,9 +40,9 @@ namespace dafs
     std::shared_ptr<dafs::Partition>
     Node::GetPartition(Identity identity)
     {
-        auto minus_id = slot_minus->GetDetails().identity;
-        auto zero_id = slot_zero->GetDetails().identity;
-        auto plus_id = slot_plus->GetDetails().identity;
+        auto minus_id = slot_minus->GetIdentity();
+        auto zero_id = slot_zero->GetIdentity();
+        auto plus_id = slot_plus->GetIdentity();
 
         if (minus_id > zero_id)
         {
