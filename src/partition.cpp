@@ -52,16 +52,6 @@ namespace dafs
     }
 
 
-    dafs::PartitionDetails
-    ReplicatedPartition::GetDetails()
-    {
-        return dafs::PartitionDetails
-        {
-            replication_interface
-        };
-    }
-
-
     dafs::Identity
     ReplicatedPartition::GetIdentity()
     {

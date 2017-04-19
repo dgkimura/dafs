@@ -28,13 +28,4 @@ namespace dafs
 
         dafs::Endpoint plus;
     };
-
-
-    struct PartitionDetails
-    {
-        //
-        // Replicated connection of this node for 2PC communication.
-        //
-        dafs::Address interface;
-    };
 }

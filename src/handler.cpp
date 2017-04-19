@@ -202,6 +202,8 @@ namespace dafs
                 // Accept initiation request and update half of topology.
                 //
 
+                dafs::Endpoint previous = p_minus->GetNodeSetDetails().plus;
+
                 // Push replication onto initiated node.
                 p_minus->SetPlus(
                     endpoints.minus.management,
@@ -209,9 +211,9 @@ namespace dafs
                     Constant::PartitionMinusName);
 
                 // Delete extra replications.
-                p_minus->RemoveNode(p_minus->GetDetails().interface);
+                p_minus->RemoveNode(previous.replication);
 
-                endpoints.minus.replication = p_minus->GetDetails().interface;
+                endpoints.minus = previous;
 
                 sender.Send(
                     dafs::Message
@@ -246,15 +248,15 @@ namespace dafs
                 // update both halves of topology.
                 //
                 p_zero->SetPlus(
-                    endpoints.plus.management,
-                    endpoints.plus.replication,
-                    Constant::PartitionPlusName);
-                p_zero->SetMinus(
                     endpoints.minus.management,
                     endpoints.minus.replication,
                     Constant::PartitionMinusName);
-                endpoints.plus.replication = p_minus->GetDetails().interface;
-                endpoints.minus.replication = p_plus->GetDetails().interface;
+                p_zero->SetMinus(
+                    endpoints.plus.management,
+                    endpoints.plus.replication,
+                    Constant::PartitionPlusName);
+                endpoints.plus = p_minus->GetNodeSetDetails().plus;
+                endpoints.minus = p_plus->GetNodeSetDetails().minus;
                 sender.Send(
                     dafs::Message
                     {
@@ -309,6 +311,8 @@ namespace dafs
             // Update second half of topology
             //
 
+            dafs::Endpoint previous = p_plus->GetNodeSetDetails().minus;
+
             // Push replication onto initiated node.
             p_plus->SetMinus(
                 endpoints.plus.management,
@@ -316,11 +320,11 @@ namespace dafs
                 Constant::PartitionPlusName);
 
             // Delete extra replications.
-            p_plus->RemoveNode(p_plus->GetDetails().interface);
+            p_plus->RemoveNode(previous.replication);
 
-            // swap
+            // swap FIXME
             endpoints.plus = endpoints.minus;
-            endpoints.minus.replication = p_plus->GetDetails().interface;
+            endpoints.minus = previous;
 
             // Send accepted messge to node.
             sender.Send(

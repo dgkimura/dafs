@@ -142,13 +142,6 @@ namespace dafs
 
 
     template <typename Archive>
-    void serialize(Archive& ar, dafs::PartitionDetails& obj, const unsigned int version)
-    {
-        ar & obj.interface;
-    }
-
-
-    template <typename Archive>
     void serialize(Archive& ar, dafs::Message& obj, const unsigned int version)
     {
         ar & obj.from;

@@ -21,14 +21,6 @@ public:
     {
     }
 
-    virtual dafs::PartitionDetails GetDetails() override
-    {
-        return dafs::PartitionDetails
-        {
-            interface
-        };
-    }
-
     virtual dafs::Identity GetIdentity() override
     {
         return identity;
