@@ -31,7 +31,6 @@ CreateReplicatedFile(
 void
 SetupReplicatedFiles(
     std::string directory,
-    dafs::Address management_interface,
     dafs::Address replication_interface,
     dafs::Identity identity,
     dafs::ReplicatedEndpoints details)
@@ -55,13 +54,6 @@ SetupReplicatedFiles(
             dafs::Serialize(identity)
         );
 
-        // write out author file
-        CreateReplicatedFile(
-            directory,
-            Constant::AuthorName,
-            dafs::Serialize(management_interface)
-        );
-
         // write out details file
         CreateReplicatedFile(
             directory,
@@ -75,7 +67,6 @@ SetupReplicatedFiles(
 std::shared_ptr<dafs::ReplicatedPartition>
 SetupPartition(
     std::string directory,
-    dafs::Address management_interface,
     dafs::Address replication_interface,
     dafs::Identity identity,
     dafs::ReplicatedEndpoints details,
@@ -83,7 +74,6 @@ SetupPartition(
 {
     SetupReplicatedFiles(
         directory,
-        management_interface,
         replication_interface,
         identity,
         details);
@@ -202,7 +192,6 @@ int main(int argc, char** argv)
     //
     auto pminus = SetupPartition(
         Constant::PartitionMinusName,
-        dafs::EmptyAddress(),
         dafs::Address(options.address, options.minus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) -
         dafs::Identity("00000000-0000-0000-0000-0000000000ff"),
@@ -228,7 +217,6 @@ int main(int argc, char** argv)
     );
     auto pzero = SetupPartition(
         Constant::PartitionZeroName,
-        dafs::Address(options.address, options.port),
         dafs::Address(options.address, options.zero_port),
         dafs::Identity(boost::uuids::to_string(options.identity)),
         dafs::ReplicatedEndpoints
@@ -253,7 +241,6 @@ int main(int argc, char** argv)
     );
     auto pplus = SetupPartition(
         Constant::PartitionPlusName,
-        dafs::EmptyAddress(),
         dafs::Address(options.address, options.plus_port),
         dafs::Identity(boost::uuids::to_string(options.identity)) +
         dafs::Identity("00000000-0000-0000-0000-0000000000ff"),

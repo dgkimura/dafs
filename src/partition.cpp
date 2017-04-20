@@ -25,10 +25,6 @@ namespace dafs
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
                   dafs::Identity())),
-          author(
-              dafs::CreateBlockInfo(
-                  boost::filesystem::path(Constant::AuthorName).string(),
-                  dafs::Identity())),
           details(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::DetailsName).string(),
@@ -170,10 +166,11 @@ namespace dafs
     bool
     ReplicatedPartition::IsActive()
     {
-        auto block =  store.ReadBlock(author);
-        auto address = dafs::Deserialize<dafs::Address>(block.contents);
+        auto details = GetNodeSetDetails();
 
-        return address.ip != dafs::EmptyAddress().ip &&
-               address.port != dafs::EmptyAddress().port;
+        return details.minus.replication.ip != dafs::EmptyAddress().ip &&
+               details.minus.replication.port != dafs::EmptyAddress().port &&
+               details.plus.replication.ip != dafs::EmptyAddress().ip &&
+               details.plus.replication.port != dafs::EmptyAddress().port;
     }
 }

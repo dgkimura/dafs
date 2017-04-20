@@ -10,12 +10,10 @@ class MockPartition : public dafs::Partition
 public:
 
     MockPartition(
-        dafs::Address author,
         dafs::Address interface,
         dafs::Identity identity
     )
-        : author(author),
-          interface(interface),
+        : interface(interface),
           identity(identity),
           is_active(true)
     {
@@ -85,8 +83,6 @@ public:
     }
 
 private:
-
-    dafs::Address author;
 
     dafs::Address interface;
 
