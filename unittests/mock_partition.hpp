@@ -10,10 +10,14 @@ class MockPartition : public dafs::Partition
 public:
 
     MockPartition(
-        dafs::Address interface,
+        dafs::Endpoint minus,
+        dafs::Endpoint zero,
+        dafs::Endpoint plus,
         dafs::Identity identity
     )
-        : interface(interface),
+        : minus(minus),
+          zero(zero),
+          plus(plus),
           identity(identity),
           is_active(true)
     {
@@ -28,6 +32,9 @@ public:
     {
         return dafs::ReplicatedEndpoints
         {
+            minus,
+            zero,
+            plus
         };
     }
 
@@ -55,6 +62,8 @@ public:
         dafs::Address replication,
         std::string location) override
     {
+        minus.management = management;
+        minus.replication = replication;
     }
 
     virtual void SetZero(
@@ -62,6 +71,8 @@ public:
         dafs::Address replication,
         std::string location) override
     {
+        zero.management = management;
+        zero.replication = replication;
     }
 
     virtual void SetPlus(
@@ -69,6 +80,8 @@ public:
         dafs::Address replication,
         std::string location) override
     {
+        plus.management = management;
+        plus.replication = replication;
     }
 
     virtual std::vector<dafs::Address> NonresponsiveMembers(
@@ -84,7 +97,11 @@ public:
 
 private:
 
-    dafs::Address interface;
+    dafs::Endpoint minus;
+
+    dafs::Endpoint zero;
+
+    dafs::Endpoint plus;
 
     dafs::Identity identity;
 

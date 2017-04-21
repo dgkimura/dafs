@@ -14,15 +14,57 @@ class HandlerTest: public testing::Test
     {
         node_under_test = std::make_shared<dafs::Node>(
             std::make_shared<MockPartition>(
-                dafs::Address("1.1.1.1", 1001),
+                dafs::Endpoint
+                {
+                    dafs::Address("1.1.1.1", 1000),
+                    dafs::Address("1.1.1.1", 1111)
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("2.2.2.2", 2000),
+                    dafs::Address("2.2.2.2", 2222)
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("3.3.3.3", 3000),
+                    dafs::Address("3.3.3.3", 3333)
+                },
                 dafs::Identity("11111111-1111-1111-1111-111111111111")
             ),
             std::make_shared<MockPartition>(
-                dafs::Address("2.2.2.2", 1001),
+                dafs::Endpoint
+                {
+                    dafs::Address("3.3.3.3", 3000),
+                    dafs::Address("3.3.3.3", 3333)
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("1.1.1.1", 1000),
+                    dafs::Address("1.1.1.1", 1111)
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("2.2.2.2", 2000),
+                    dafs::Address("2.2.2.2", 2222)
+                },
                 dafs::Identity("22222222-2222-2222-2222-222222222222")
             ),
             std::make_shared<MockPartition>(
-                dafs::Address("3.3.3.3", 1001),
+                dafs::Endpoint
+                {
+                    dafs::Address("2.2.2.2", 2000),
+                    dafs::Address("2.2.2.2", 2222)
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("3.3.3.3", 3000),
+                    dafs::Address("3.3.3.3", 3333)
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("1.1.1.1", 1000),
+                    dafs::Address("1.1.1.1", 1111)
+                },
                 dafs::Identity("33333333-3333-3333-3333-333333333333")
             )
         );
@@ -37,6 +79,12 @@ public:
         return *node_under_test;
     }
 };
+
+
+bool IsAddressEqual(dafs::Address a, dafs::Address b)
+{
+    return a.ip == b.ip && a.port == b.port;
+}
 
 
 TEST_F(HandlerTest, testHandleReadBlock)
@@ -151,6 +199,63 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
 }
 
 
+TEST_F(HandlerTest, testGetNodeDetails)
+{
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::AddressKey,
+                dafs::Serialize(dafs::Address("A.B.C.D", 1234))
+            }
+        }
+    );
+    MockSender mock_sender;
+    dafs::Message m = HandleGetNodeDetails(GetNode(), parser);
+
+    auto parsed = dafs::MetaDataParser(m.metadata);
+    auto m_identity = parsed.GetValue<dafs::Identity>(dafs::MinusIdentityKey);
+    auto z_identity = parsed.GetValue<dafs::Identity>(dafs::ZeroIdentityKey);
+    auto p_identity = parsed.GetValue<dafs::Identity>(dafs::PlusIdentityKey);
+
+    auto m_endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::MinusReplicatedEndpointsKey);
+    auto z_endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::ZeroReplicatedEndpointsKey);
+    auto p_endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::PlusReplicatedEndpointsKey);
+
+    ASSERT_EQ(
+        dafs::Identity("11111111-1111-1111-1111-111111111111"),
+        m_identity);
+    ASSERT_EQ(
+        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        z_identity);
+    ASSERT_EQ(
+        dafs::Identity("33333333-3333-3333-3333-333333333333"),
+        p_identity);
+
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1000), m_endpoints.minus.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1111), m_endpoints.minus.replication));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2000), m_endpoints.zero.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2222), m_endpoints.zero.replication));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3000), m_endpoints.plus.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3333), m_endpoints.plus.replication));
+
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3000), z_endpoints.minus.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3333), z_endpoints.minus.replication));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1000), z_endpoints.zero.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1111), z_endpoints.zero.replication));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2000), z_endpoints.plus.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2222), z_endpoints.plus.replication));
+
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2000), p_endpoints.minus.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2222), p_endpoints.minus.replication));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3000), p_endpoints.zero.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3333), p_endpoints.zero.replication));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1000), p_endpoints.plus.management));
+    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1111), p_endpoints.plus.replication));
+}
+
+
 TEST_F(HandlerTest, testHandleJoinCluster)
 {
     dafs::MetaDataParser parser(
@@ -170,8 +275,9 @@ TEST_F(HandlerTest, testHandleJoinCluster)
 
     ASSERT_EQ(dafs::MessageType::_RequestMinusInitiation, sent_message.type);
 
-    auto result = dafs::MetaDataParser(sent_message.metadata).GetValue<dafs::ReplicatedEndpoints>(dafs::NodeEndpointsKey);
-    auto identity = dafs::MetaDataParser(sent_message.metadata).GetValue<dafs::Identity>(dafs::IdentityKey);
+    auto parsed = dafs::MetaDataParser(sent_message.metadata);
+    auto result = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::NodeEndpointsKey);
+    auto identity = parsed.GetValue<dafs::Identity>(dafs::IdentityKey);
 
     ASSERT_EQ(
         dafs::Identity("22222222-2222-2222-2222-222222222222"),
