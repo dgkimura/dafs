@@ -81,9 +81,10 @@ public:
 };
 
 
-bool IsAddressEqual(dafs::Address a, dafs::Address b)
+void ASSERT_ADDRESS_EQUAL(dafs::Address a, dafs::Address b)
 {
-    return a.ip == b.ip && a.port == b.port;
+    ASSERT_EQ(a.ip, b.ip);
+    ASSERT_EQ(a.port, b.port);
 }
 
 
@@ -233,26 +234,26 @@ TEST_F(HandlerTest, testGetNodeDetails)
         dafs::Identity("33333333-3333-3333-3333-333333333333"),
         p_identity);
 
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1000), m_endpoints.minus.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1111), m_endpoints.minus.replication));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2000), m_endpoints.zero.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2222), m_endpoints.zero.replication));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3000), m_endpoints.plus.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3333), m_endpoints.plus.replication));
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), m_endpoints.minus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), m_endpoints.minus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), m_endpoints.zero.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), m_endpoints.zero.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), m_endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), m_endpoints.plus.replication);
 
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3000), z_endpoints.minus.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3333), z_endpoints.minus.replication));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1000), z_endpoints.zero.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1111), z_endpoints.zero.replication));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2000), z_endpoints.plus.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2222), z_endpoints.plus.replication));
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), z_endpoints.minus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), z_endpoints.minus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), z_endpoints.zero.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), z_endpoints.zero.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), z_endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), z_endpoints.plus.replication);
 
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2000), p_endpoints.minus.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("2.2.2.2", 2222), p_endpoints.minus.replication));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3000), p_endpoints.zero.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("3.3.3.3", 3333), p_endpoints.zero.replication));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1000), p_endpoints.plus.management));
-    ASSERT_TRUE(IsAddressEqual(dafs::Address("1.1.1.1", 1111), p_endpoints.plus.replication));
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), p_endpoints.minus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), p_endpoints.minus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), p_endpoints.zero.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), p_endpoints.zero.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), p_endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), p_endpoints.plus.replication);
 }
 
 
@@ -276,10 +277,17 @@ TEST_F(HandlerTest, testHandleJoinCluster)
     ASSERT_EQ(dafs::MessageType::_RequestMinusInitiation, sent_message.type);
 
     auto parsed = dafs::MetaDataParser(sent_message.metadata);
-    auto result = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::NodeEndpointsKey);
+    auto endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::NodeEndpointsKey);
     auto identity = parsed.GetValue<dafs::Identity>(dafs::IdentityKey);
 
     ASSERT_EQ(
         dafs::Identity("22222222-2222-2222-2222-222222222222"),
         identity);
+
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), endpoints.minus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), endpoints.minus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), endpoints.zero.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), endpoints.zero.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), endpoints.plus.replication);
 }
