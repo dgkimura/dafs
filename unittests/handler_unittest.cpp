@@ -205,11 +205,6 @@ TEST_F(HandlerTest, testGetNodeDetails)
     dafs::MetaDataParser parser(
         std::vector<dafs::MetaData>
         {
-            dafs::MetaData
-            {
-                dafs::AddressKey,
-                dafs::Serialize(dafs::Address("A.B.C.D", 1234))
-            }
         }
     );
     MockSender mock_sender;
@@ -290,4 +285,36 @@ TEST_F(HandlerTest, testHandleJoinCluster)
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), endpoints.zero.replication);
     ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), endpoints.plus.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), endpoints.plus.replication);
+}
+
+
+TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
+{
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::IdentityKey,
+                dafs::Serialize(
+                    dafs::Identity("99999999-9999-9999-9999-999999999999")
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::NodeEndpointsKey,
+                dafs::Serialize(
+                    dafs::ReplicatedEndpoints
+                    {
+                    }
+                )
+            }
+        }
+    );
+    MockSender mock_sender;
+    HandleRequestMinusInitiation(GetNode(), parser, mock_sender);
+
+    dafs::Message sent_message = mock_sender.sentMessages()[0];
+
+    ASSERT_EQ(dafs::MessageType::_JoinCluster, sent_message.type);
 }
