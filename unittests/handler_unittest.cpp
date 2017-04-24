@@ -318,3 +318,37 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
 
     ASSERT_EQ(dafs::MessageType::_JoinCluster, sent_message.type);
 }
+
+
+TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
+{
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::IdentityKey,
+                dafs::Serialize(
+                    dafs::Identity("11111111-1111-1111-5555-555555555555")
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::NodeEndpointsKey,
+                dafs::Serialize(
+                    dafs::ReplicatedEndpoints
+                    {
+                    }
+                )
+            }
+        }
+    );
+    MockSender mock_sender;
+    HandleRequestMinusInitiation(GetNode(), parser, mock_sender);
+
+    dafs::Message sent_message = mock_sender.sentMessages()[0];
+
+    ASSERT_EQ(dafs::MessageType::_RequestPlusInitiation, sent_message.type);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), sent_message.to);
+}
