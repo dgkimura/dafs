@@ -143,6 +143,8 @@ namespace dafs
 
     class Ping
     {
+        virtual std::vector<dafs::Address>
+        NonresponsiveMembers(int last_elections) = 0;
     };
 
 
@@ -154,6 +156,9 @@ namespace dafs
             Parliament& parliament,
             std::chrono::seconds ping_interval,
             std::shared_ptr<dafs::Signal> in_progress);
+
+        std::vector<dafs::Address>
+        NonresponsiveMembers(int last_elections) override;
 
     private:
 

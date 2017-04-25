@@ -146,22 +146,6 @@ namespace dafs
         );
     }
 
-    std::vector<dafs::Address>
-    ReplicatedPartition::NonresponsiveMembers(int last_elections)
-    {
-        auto nonresponsive = parliament.GetLegislators();
-        for (auto i : parliament.GetAbsenteeBallots(last_elections))
-        {
-            nonresponsive = nonresponsive->Intersection(i.second);
-        }
-        std::vector<dafs::Address> nonresponsive_endpoints;
-        for (auto r : *nonresponsive)
-        {
-            nonresponsive_endpoints.push_back(dafs::Address(r.hostname, r.port));
-        }
-        return nonresponsive_endpoints;
-    }
-
 
     bool
     ReplicatedPartition::IsActive()
