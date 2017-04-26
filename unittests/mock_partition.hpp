@@ -53,10 +53,6 @@ public:
         block_map[block.identity.id] = format;
     }
 
-    virtual void RemoveNode(dafs::Address address) override
-    {
-    }
-
     virtual void SetMinus(
         dafs::Address management,
         dafs::Address replication,

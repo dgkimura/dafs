@@ -90,26 +90,26 @@ namespace dafs
 
 
     void
-    ReplicatedPartition::RemoveNode(dafs::Address address)
-    {
-        nodeset.RemoveNode(address);
-    }
-
-    void
     ReplicatedPartition::SetMinus(
         dafs::Address management,
         dafs::Address replication,
         std::string location)
     {
-        dafs::ReplicatedEndpoints nodesetdetails = GetNodeSetDetails();
-        nodeset.SetMinus(management, replication, location, nodesetdetails);
+        dafs::ReplicatedEndpoints endpoints = GetNodeSetDetails();
+        dafs::Address removed = endpoints.minus.replication;
+
+        nodeset.SetMinus(management, replication, location, endpoints);
         WriteBlock(
             details,
             BlockFormat
             {
-                dafs::Serialize(nodesetdetails)
+                dafs::Serialize(endpoints)
             }
         );
+        if (removed.port != dafs::EmptyAddress().port)
+        {
+            nodeset.RemoveNode(removed);
+        }
     }
 
     void
@@ -118,13 +118,14 @@ namespace dafs
         dafs::Address replication,
         std::string location)
     {
-        dafs::ReplicatedEndpoints nodesetdetails = GetNodeSetDetails();
-        nodeset.SetZero(management, replication, location, nodesetdetails);
+        dafs::ReplicatedEndpoints endpoints = GetNodeSetDetails();
+
+        nodeset.SetZero(management, replication, location, endpoints);
         WriteBlock(
             details,
             BlockFormat
             {
-                dafs::Serialize(nodesetdetails)
+                dafs::Serialize(endpoints)
             }
         );
     }
@@ -135,15 +136,21 @@ namespace dafs
         dafs::Address replication,
         std::string location)
     {
-        dafs::ReplicatedEndpoints nodesetdetails = GetNodeSetDetails();
-        nodeset.SetPlus(management, replication, location, nodesetdetails);
+        dafs::ReplicatedEndpoints endpoints = GetNodeSetDetails();
+        dafs::Address removed = endpoints.plus.replication;
+
+        nodeset.SetPlus(management, replication, location, endpoints);
         WriteBlock(
             details,
             BlockFormat
             {
-                dafs::Serialize(nodesetdetails)
+                dafs::Serialize(endpoints)
             }
         );
+        if (removed.port != dafs::EmptyAddress().port)
+        {
+            nodeset.RemoveNode(removed);
+        }
     }
 
 

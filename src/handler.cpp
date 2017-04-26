@@ -210,9 +210,6 @@ namespace dafs
                     endpoints.minus.replication,
                     Constant::PartitionMinusName);
 
-                // Delete extra replications.
-                p_minus->RemoveNode(previous.replication);
-
                 endpoints.minus = previous;
 
                 sender.Send(
@@ -318,9 +315,6 @@ namespace dafs
                 endpoints.plus.management,
                 endpoints.plus.replication,
                 Constant::PartitionPlusName);
-
-            // Delete extra replications.
-            p_plus->RemoveNode(previous.replication);
 
             // swap FIXME
             endpoints.plus = endpoints.minus;

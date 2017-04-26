@@ -24,8 +24,6 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) = 0;
 
-        virtual void RemoveNode(dafs::Address address) = 0;
-
         virtual void SetMinus(
             dafs::Address management,
             dafs::Address replication,
@@ -76,10 +74,6 @@ namespace dafs
         }
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) override
-        {
-        }
-
-        virtual void RemoveNode(dafs::Address address) override
         {
         }
 
@@ -154,8 +148,6 @@ namespace dafs
             dafs::Address management,
             dafs::Address replication,
             std::string location) override;
-
-        virtual void RemoveNode(dafs::Address address) override;
 
         virtual bool IsActive() override;
 
