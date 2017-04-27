@@ -187,7 +187,7 @@ namespace dafs
 
 
     void
-    JoinNodeToCluster(
+    AddNodeToCluster(
         dafs::Address address,
         std::vector<std::string> args)
     {
@@ -216,7 +216,27 @@ namespace dafs
                 }
             }
         };
-        std::cout << "JoinNodeToCluster: ip:" << address.ip << " port:"<< address.port<<"\n";
+        std::cout << "AddNodeToCluster: ip:" << address.ip << " port:"<< address.port<<"\n";
+        auto sender = boost::make_shared<dafs::NetworkSender>();
+        sender->Send(message);
+    }
+
+
+    void
+    RemoveNodeFromCluster(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        auto message = dafs::Message
+        {
+            address, // from
+            address, // to
+            dafs::MessageType::ExitCluster,
+            std::vector<dafs::MetaData>
+            {
+            }
+        };
+        std::cout << "RemoveNodeFromCluster: ip:" << address.ip << " port:"<< address.port<<"\n";
         auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
     }

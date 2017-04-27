@@ -1,4 +1,3 @@
-#include <iostream>
 #include "dafs/handler.hpp"
 
 
@@ -290,7 +289,7 @@ namespace dafs
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
 
-        auto p_minus = node.GetPartition(dafs::Node::Slot::Plus);
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
@@ -366,6 +365,104 @@ namespace dafs
             endpoints.plus.management,
             endpoints.plus.replication,
             Constant::PartitionMinusName);
+
+        dafs::Message m;
+        return m;
+    }
+
+
+    dafs::Message
+    HandleExitCluster(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
+    {
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
+        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+
+        sender.Send(
+            dafs::Message
+            {
+                p_zero->GetNodeSetDetails().zero.management,
+                p_minus->GetNodeSetDetails().zero.management,
+                dafs::MessageType::_RequestPlusExit,
+                std::vector<dafs::MetaData>
+                {
+                    dafs::MetaData
+                    {
+                        dafs::IdentityKey,
+                        dafs::Serialize(p_zero->GetIdentity())
+                    }
+                }
+            }
+        );
+
+        dafs::Message m;
+        return m;
+    }
+
+
+    dafs::Message
+    HandleRequestPlusExit(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
+    {
+        auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
+
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
+        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
+
+        if (p_plus->GetIdentity() == identity)
+        {
+            p_zero->SetPlus(
+                p_plus->GetNodeSetDetails().plus.management,
+                p_plus->GetNodeSetDetails().plus.replication,
+                Constant::PartitionMinusName);
+
+            // TODO: Send p_plus's blocklist for pruning later...
+
+            sender.Send(
+                dafs::Message
+                {
+                    p_zero->GetNodeSetDetails().zero.management,
+                    p_plus->GetNodeSetDetails().plus.management,
+                    dafs::MessageType::_RequestMinusExit,
+                    std::vector<dafs::MetaData>
+                    {
+                        dafs::MetaData
+                        {
+                            dafs::EndpointKey,
+                            dafs::Serialize(p_plus->GetNodeSetDetails().minus)
+                        }
+                    }
+                }
+            );
+        }
+
+        dafs::Message m;
+        return m;
+    }
+
+
+    dafs::Message
+    HandleRequestMinusExit(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata)
+    {
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
+        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
+
+        auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
+
+        // TODO: Use blocklist to add _relavent_ files to p_minus and p_zero
+
+        p_zero->SetMinus(
+            endpoint.management,
+            endpoint.replication,
+            Constant::PartitionPlusName);
 
         dafs::Message m;
         return m;

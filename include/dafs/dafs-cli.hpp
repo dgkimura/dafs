@@ -35,7 +35,12 @@ namespace dafs
         std::vector<std::string> args);
 
 
-    void JoinNodeToCluster(
+    void AddNodeToCluster(
+        dafs::Address address,
+        std::vector<std::string> args);
+
+
+    void RemoveNodeFromCluster(
         dafs::Address address,
         std::vector<std::string> args);
 
@@ -46,7 +51,8 @@ namespace dafs
     > commands =
     {
         { "info", dafs::GetNodeDetails },
-        { "join", dafs::JoinNodeToCluster },
+        { "join", dafs::AddNodeToCluster },
+        { "exit", dafs::RemoveNodeFromCluster },
         { "wb", dafs::ExecuteWriteBlock },
         { "rb", dafs::ExecuteReadBlock },
         { "db", dafs::ExecuteDeleteBlock }

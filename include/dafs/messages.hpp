@@ -50,15 +50,27 @@ namespace dafs
 
         //
         // Accepted inivitation - message sent to node to indicate that it
-        // was accepted as the minus partition.
-        //
-        _AcceptMinusInitiation,
-
-        //
-        // Accepted inivitation - message sent to node to indicate that it
         // was accepted as the plus partition.
         //
         _AcceptPlusInitiation,
+
+        //
+        // Exit cluster - message sent to a node to signal it to exit a
+        // cluster.
+        //
+        ExitCluster,
+
+        //
+        // Plus exit - message sent to node requesting to remove the plus
+        // partition.
+        //
+        _RequestPlusExit,
+
+        //
+        // Minus exit - message sent to node requesting to remove the minus
+        // partition.
+        //
+        _RequestMinusExit
     };
 
 

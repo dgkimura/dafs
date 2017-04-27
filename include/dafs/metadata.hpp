@@ -22,6 +22,9 @@ namespace dafs
     const std::string AddressKey = "Address";
 
 
+    const std::string EndpointKey = "Endpoint";
+
+
     const std::string IdentityKey = "Identity";
 
 

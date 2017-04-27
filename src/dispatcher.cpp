@@ -85,6 +85,37 @@ namespace dafs
                           node,
                           message.metadata);
                   }
+              },
+              {
+                  dafs::MessageType::ExitCluster,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      dafs::NetworkSender sender;
+                      return dafs::HandleExitCluster(
+                          node,
+                          message.metadata,
+                          sender);
+                  }
+              },
+              {
+                  dafs::MessageType::_RequestPlusExit,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      dafs::NetworkSender sender;
+                      return dafs::HandleRequestPlusExit(
+                          node,
+                          message.metadata,
+                          sender);
+                  }
+              },
+              {
+                  dafs::MessageType::_RequestMinusExit,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      return dafs::HandleRequestMinusExit(
+                          node,
+                          message.metadata);
+                  }
               }
           },
           node(node)

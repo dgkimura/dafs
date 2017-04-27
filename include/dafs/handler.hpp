@@ -56,4 +56,24 @@ namespace dafs
     HandleAcceptPlusInitiation(
         dafs::Node& node,
         dafs::MetaDataParser metadata);
+
+
+    dafs::Message
+    HandleExitCluster(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
+
+
+    dafs::Message
+    HandleRequestPlusExit(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
+
+
+    dafs::Message
+    HandleRequestMinusExit(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata);
 }
