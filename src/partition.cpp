@@ -157,11 +157,11 @@ namespace dafs
     bool
     ReplicatedPartition::IsActive()
     {
-        auto details = GetNodeSetDetails();
+        auto endpoints = GetNodeSetDetails();
 
-        return details.minus.replication.ip != dafs::EmptyAddress().ip &&
-               details.minus.replication.port != dafs::EmptyAddress().port &&
-               details.plus.replication.ip != dafs::EmptyAddress().ip &&
-               details.plus.replication.port != dafs::EmptyAddress().port;
+        return endpoints.minus.replication.ip != dafs::EmptyAddress().ip &&
+               endpoints.minus.replication.port != dafs::EmptyAddress().port &&
+               endpoints.plus.replication.ip != dafs::EmptyAddress().ip &&
+               endpoints.plus.replication.port != dafs::EmptyAddress().port;
     }
 }
