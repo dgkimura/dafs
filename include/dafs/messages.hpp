@@ -61,16 +61,16 @@ namespace dafs
         ExitCluster,
 
         //
-        // Plus exit - message sent to node requesting to remove the plus
-        // partition.
+        // Plus exit cluster - message sent to node requesting to remove the
+        // plus partition.
         //
-        _RequestPlusExit,
+        _PlusExitCluster,
 
         //
-        // Minus exit - message sent to node requesting to remove the minus
-        // partition.
+        // Minus exit cluster - message sent to node requesting to remove the
+        // minus partition.
         //
-        _RequestMinusExit
+        _MinusExitCluster
     };
 
 

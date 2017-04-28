@@ -385,7 +385,7 @@ namespace dafs
             {
                 p_zero->GetNodeSetDetails().zero.management,
                 p_minus->GetNodeSetDetails().zero.management,
-                dafs::MessageType::_RequestPlusExit,
+                dafs::MessageType::_PlusExitCluster,
                 std::vector<dafs::MetaData>
                 {
                     dafs::MetaData
@@ -403,7 +403,7 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestPlusExit(
+    HandlePlusExitCluster(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
@@ -428,17 +428,33 @@ namespace dafs
                 {
                     p_zero->GetNodeSetDetails().zero.management,
                     p_plus->GetNodeSetDetails().plus.management,
-                    dafs::MessageType::_RequestMinusExit,
+                    dafs::MessageType::_MinusExitCluster,
                     std::vector<dafs::MetaData>
                     {
                         dafs::MetaData
                         {
                             dafs::EndpointKey,
                             dafs::Serialize(p_plus->GetNodeSetDetails().minus)
+                        },
+                        dafs::MetaData
+                        {
+                            dafs::IdentityKey,
+                            dafs::Serialize(identity)
                         }
                     }
                 }
             );
+        }
+        else
+        {
+            auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
+
+            // TODO: Use blocklist to add _relavent_ files to p_plus and p_zero
+
+            p_zero->SetPlus(
+                endpoint.management,
+                endpoint.replication,
+                Constant::PartitionMinusName);
         }
 
         dafs::Message m;
@@ -447,22 +463,59 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestMinusExit(
+    HandleMinusExitCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender)
     {
+        auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
+
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
-        auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
+        if (p_minus->GetIdentity() == identity)
+        {
+            p_zero->SetMinus(
+                p_minus->GetNodeSetDetails().minus.management,
+                p_minus->GetNodeSetDetails().minus.replication,
+                Constant::PartitionPlusName);
 
-        // TODO: Use blocklist to add _relavent_ files to p_minus and p_zero
+            // TODO: Send p_minus's blocklist for pruning later...
 
-        p_zero->SetMinus(
-            endpoint.management,
-            endpoint.replication,
-            Constant::PartitionPlusName);
+            sender.Send(
+                dafs::Message
+                {
+                    p_zero->GetNodeSetDetails().zero.management,
+                    p_minus->GetNodeSetDetails().minus.management,
+                    dafs::MessageType::_PlusExitCluster,
+                    std::vector<dafs::MetaData>
+                    {
+                        dafs::MetaData
+                        {
+                            dafs::EndpointKey,
+                            dafs::Serialize(p_minus->GetNodeSetDetails().plus)
+                        },
+                        dafs::MetaData
+                        {
+                            dafs::IdentityKey,
+                            dafs::Serialize(identity)
+                        }
+                    }
+                }
+            );
+        }
+        else
+        {
+            auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
+
+            // TODO: Use blocklist to add _relavent_ files to p_minus and p_zero
+
+            p_zero->SetMinus(
+                endpoint.management,
+                endpoint.replication,
+                Constant::PartitionPlusName);
+        }
 
         dafs::Message m;
         return m;

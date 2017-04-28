@@ -66,14 +66,15 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestPlusExit(
+    HandlePlusExitCluster(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
     dafs::Message
-    HandleRequestMinusExit(
+    HandleMinusExitCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata);
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
 }

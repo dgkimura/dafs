@@ -98,23 +98,25 @@ namespace dafs
                   }
               },
               {
-                  dafs::MessageType::_RequestPlusExit,
+                  dafs::MessageType::_PlusExitCluster,
                   [&node](dafs::Message message) -> dafs::Message
                   {
                       dafs::NetworkSender sender;
-                      return dafs::HandleRequestPlusExit(
+                      return dafs::HandlePlusExitCluster(
                           node,
                           message.metadata,
                           sender);
                   }
               },
               {
-                  dafs::MessageType::_RequestMinusExit,
+                  dafs::MessageType::_MinusExitCluster,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      return dafs::HandleRequestMinusExit(
+                      dafs::NetworkSender sender;
+                      return dafs::HandleMinusExitCluster(
                           node,
-                          message.metadata);
+                          message.metadata,
+                          sender);
                   }
               }
           },
