@@ -61,6 +61,12 @@ namespace dafs
         ExitCluster,
 
         //
+        // Propose exit cluster - message sent to either replicated partition
+        // node suggesting to remove a non-responsive node.
+        //
+        _ProposeExitCluster,
+
+        //
         // Plus exit cluster - message sent to node requesting to remove the
         // plus partition.
         //

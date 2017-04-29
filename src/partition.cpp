@@ -63,6 +63,19 @@ namespace dafs
         return dafs::Deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
     }
 
+    bool
+    ReplicatedPartition::IsAddressResponsive(dafs::Address address)
+    {
+        for (auto r : ping.NonresponsiveMembers(10))
+        {
+            if (r.ip == address.ip && r.port == address.port)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     void
     ReplicatedPartition::DeleteBlock(BlockInfo info)

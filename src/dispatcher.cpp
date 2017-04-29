@@ -98,6 +98,17 @@ namespace dafs
                   }
               },
               {
+                  dafs::MessageType::_ProposeExitCluster,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      dafs::NetworkSender sender;
+                      return dafs::HandleProposeExitCluster(
+                          node,
+                          message.metadata,
+                          sender);
+                  }
+              },
+              {
                   dafs::MessageType::_PlusExitCluster,
                   [&node](dafs::Message message) -> dafs::Message
                   {

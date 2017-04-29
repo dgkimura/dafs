@@ -38,6 +38,11 @@ public:
         };
     }
 
+    virtual bool IsAddressResponsive(dafs::Address address) override
+    {
+        return true;
+    }
+
     virtual void DeleteBlock(dafs::BlockInfo block) override
     {
         block_map.erase(block.identity.id);

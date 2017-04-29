@@ -18,6 +18,8 @@ namespace dafs
 
         virtual dafs::ReplicatedEndpoints GetNodeSetDetails() = 0;
 
+        virtual bool IsAddressResponsive(dafs::Address address) = 0;
+
         virtual void DeleteBlock(BlockInfo block) = 0;
 
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
@@ -62,6 +64,11 @@ namespace dafs
             return dafs::ReplicatedEndpoints
             {
             };
+        }
+
+        virtual bool IsAddressResponsive(dafs::Address address) override
+        {
+            return true;
         }
 
         virtual void DeleteBlock(BlockInfo block) override
@@ -127,6 +134,8 @@ namespace dafs
         virtual dafs::Identity GetIdentity() override;
 
         virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override;
+
+        virtual bool IsAddressResponsive(dafs::Address address) override;
 
         virtual void DeleteBlock(BlockInfo block) override;
 

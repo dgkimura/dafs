@@ -66,6 +66,13 @@ namespace dafs
 
 
     dafs::Message
+    HandleProposeExitCluster(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata,
+        dafs::Sender& sender);
+
+
+    dafs::Message
     HandlePlusExitCluster(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
