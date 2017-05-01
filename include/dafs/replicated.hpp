@@ -77,8 +77,6 @@ namespace dafs
         std::shared_ptr<Signal> in_progress;
 
         dafs::BlockInfo blocks;
-
-        dafs::BlockInfo nodes;
     };
 
 

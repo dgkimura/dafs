@@ -25,10 +25,6 @@ namespace dafs
       blocks(
           dafs::CreateBlockInfo(
               boost::filesystem::path(Constant::BlockListName).string(),
-              dafs::Identity())),
-      nodes(
-          dafs::CreateBlockInfo(
-              boost::filesystem::path(Constant::NodeSetName).string(),
               dafs::Identity()))
     {
     }
@@ -39,8 +35,7 @@ namespace dafs
     : parliament(other.parliament),
       root(other.root),
       in_progress(other.in_progress),
-      blocks(other.blocks),
-      nodes(other.nodes)
+      blocks(other.blocks)
     {
     }
 
