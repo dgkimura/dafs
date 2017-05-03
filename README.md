@@ -1,9 +1,9 @@
-#dafs
+# dafs
 
 [![Build Status](https://travis-ci.org/dgkimura/dafs.svg?branch=master)](https://travis-ci.org/dgkimura/dafs)
 [![Coverage Status](https://coveralls.io/repos/github/dgkimura/dafs/badge.svg?branch=master)](https://coveralls.io/github/dgkimura/dafs?branch=master)
 
-The dafs project is a highly-scalable distributed file storage service.
+The dafs project is an elastic file storage service.
 
 
 ## Build
@@ -17,23 +17,12 @@ $ make && ./unittests/all_unittests
 
 
 ## Setup
-Create a `config.ini` file describing the partitions on the node. Each node
-references 3 partitions.
-
-```
-$ cat config.ini
-[partition-minus]
-port = 8070
-
-[partition-zero]
-port = 8080
-
-[partition-plus]
-port = 8090
-```
-
-Now start the server specifying an identity.
+You can start the server by providing an identity for the server.
 
 ```
 $ dafs-server --identity=11111111-1111-1111-1111-111111111111
 ```
+
+
+## Design
+A server is a member of 3 partitions.
