@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <string>
 
 #include <paxos/parliament.hpp>
@@ -142,7 +143,7 @@ namespace dafs
     class Ping
     {
         virtual std::vector<dafs::Address>
-        NonresponsiveMembers(int last_elections) = 0;
+        NonresponsiveMembers(int last_elections=10) = 0;
     };
 
 
@@ -152,17 +153,25 @@ namespace dafs
 
         ReplicatedPing(
             Parliament& parliament,
+            dafs::Address address_,
+            std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
             std::chrono::seconds ping_interval,
             std::shared_ptr<dafs::Signal> in_progress);
 
         std::vector<dafs::Address>
-        NonresponsiveMembers(int last_elections) override;
+        NonresponsiveMembers(int last_elections=10) override;
 
     private:
+
+        dafs::Endpoint get_failover_endpoint(dafs::Address address);
 
         void send_ping();
 
         Parliament& parliament;
+
+        dafs::Address address_;
+
+        std::function<dafs::ReplicatedEndpoints(void)> get_endpoints;
 
         std::chrono::seconds ping_interval;
 

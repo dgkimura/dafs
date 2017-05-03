@@ -9,6 +9,7 @@
 #include "dafs/customhash.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/replicated.hpp"
+#include "dafs/sender.hpp"
 #include "dafs/serialization.hpp"
 #include "dafs/signal.hpp"
 
@@ -201,9 +202,13 @@ namespace dafs
 
     ReplicatedPing::ReplicatedPing(
         Parliament& parliament,
+        dafs::Address address,
+        std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
         std::chrono::seconds ping_interval,
         std::shared_ptr<Signal> in_progress)
     : parliament(parliament),
+      address_(address),
+      get_endpoints(get_endpoints),
       ping_interval(ping_interval),
       in_progress(in_progress),
       should_continue(true)
@@ -229,6 +234,34 @@ namespace dafs
                 )
             );
             in_progress->Wait();
+
+            for (auto a : NonresponsiveMembers())
+            {
+                auto endpoint = get_failover_endpoint(a);
+                if (endpoint.replication.ip == dafs::EmptyAddress().ip &&
+                    endpoint.replication.port == dafs::EmptyAddress().port)
+                {
+                    break;
+                }
+                dafs::NetworkSender sender;
+                sender.Send(
+                    dafs::Message
+                    {
+                        dafs::EmptyAddress(),
+                        endpoint.management,
+                        dafs::MessageType::_ProposeExitCluster,
+                        std::vector<dafs::MetaData>
+                        {
+                            dafs::MetaData
+                            {
+                                dafs::AddressKey,
+                                dafs::Serialize(a)
+                            }
+                        }
+                    }
+                );
+                break;
+            }
             std::this_thread::sleep_for(ping_interval);
         }
     }
@@ -247,5 +280,37 @@ namespace dafs
             nonresponsive_endpoints.push_back(dafs::Address(r.hostname, r.port));
         }
         return nonresponsive_endpoints;
+    }
+
+    dafs::Endpoint
+    ReplicatedPing::get_failover_endpoint(dafs::Address address)
+    {
+        auto endpoints = get_endpoints();
+
+        if (endpoints.minus.replication.ip != address.ip &&
+            endpoints.minus.replication.port != address.port &&
+            endpoints.minus.replication.ip != address_.ip &&
+            endpoints.minus.replication.port != address_.port)
+        {
+            return endpoints.minus;
+        }
+        if (endpoints.zero.replication.ip != address.ip &&
+            endpoints.zero.replication.port != address.port &&
+            endpoints.zero.replication.ip != address_.ip &&
+            endpoints.zero.replication.port != address_.port)
+        {
+            return endpoints.zero;
+        }
+        if (endpoints.plus.replication.ip != address.ip &&
+            endpoints.plus.replication.port != address.port &&
+            endpoints.plus.replication.ip != address_.ip &&
+            endpoints.plus.replication.port != address_.port)
+        {
+            return endpoints.plus;
+        }
+        return {
+            dafs::EmptyAddress(),
+            dafs::EmptyAddress()
+        };
     }
 }

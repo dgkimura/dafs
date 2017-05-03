@@ -20,7 +20,14 @@ namespace dafs
                      dafs::Commit(parliament, root, in_progress)),
           store(parliament, root, in_progress),
           nodeset(parliament),
-          ping(parliament, ping_interval, in_progress),
+          ping(parliament,
+               address,
+               [this]()->dafs::ReplicatedEndpoints
+               {
+                   return GetNodeSetDetails();
+               },
+               ping_interval,
+               in_progress),
           identity(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
@@ -66,7 +73,7 @@ namespace dafs
     bool
     ReplicatedPartition::IsAddressResponsive(dafs::Address address)
     {
-        for (auto r : ping.NonresponsiveMembers(10))
+        for (auto r : ping.NonresponsiveMembers())
         {
             if (r.ip == address.ip && r.port == address.port)
             {
