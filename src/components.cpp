@@ -8,7 +8,7 @@
 #include "dafs/commit.hpp"
 #include "dafs/customhash.hpp"
 #include "dafs/disk.hpp"
-#include "dafs/replicated.hpp"
+#include "dafs/components.hpp"
 #include "dafs/sender.hpp"
 #include "dafs/serialization.hpp"
 #include "dafs/signal.hpp"

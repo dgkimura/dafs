@@ -3,6 +3,7 @@ project(dafs.src)
 
 set(SOURCES
     commit.cpp
+    components.cpp
     delta.cpp
     disk.cpp
     dispatcher.cpp
@@ -15,7 +16,6 @@ set(SOURCES
     sender.cpp
     server.cpp
     signal.cpp
-    replicated.cpp
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)

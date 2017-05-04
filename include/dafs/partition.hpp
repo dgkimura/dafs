@@ -5,7 +5,7 @@
 #include "dafs/filesystem.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/signal.hpp"
-#include "dafs/replicated.hpp"
+#include "dafs/components.hpp"
 
 
 namespace dafs
