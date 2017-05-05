@@ -10,6 +10,7 @@
 #include "dafs/messages.hpp"
 #include "dafs/propose.hpp"
 #include "dafs/replication.hpp"
+#include "dafs/sender.hpp"
 #include "dafs/signal.hpp"
 #include "dafs/serialization.hpp"
 
@@ -141,8 +142,10 @@ namespace dafs
 
     class Ping
     {
-        virtual std::vector<dafs::Address>
-        NonresponsiveMembers(int last_elections=10) = 0;
+        virtual std::vector<dafs::Address> NonresponsiveMembers(
+            int last_elections=10) = 0;
+
+        virtual void SendPing(std::shared_ptr<dafs::Sender> sender) = 0;
     };
 
 
@@ -160,11 +163,13 @@ namespace dafs
         std::vector<dafs::Address>
         NonresponsiveMembers(int last_elections=10) override;
 
+        void Start();
+
+        void SendPing(std::shared_ptr<dafs::Sender> sender) override;
+
     private:
 
         dafs::Endpoint get_failover_endpoint(dafs::Address address);
-
-        void send_ping();
 
         dafs::Replication& replication;
 

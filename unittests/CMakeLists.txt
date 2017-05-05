@@ -12,6 +12,7 @@ ExternalProject_Add(
 )
 
 set(SOURCES
+    components_unittest.cpp
     customhash_unittest.cpp
     delta_unittest.cpp
     filesystem_unittest.cpp

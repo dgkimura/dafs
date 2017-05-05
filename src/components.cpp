@@ -9,7 +9,6 @@
 #include "dafs/customhash.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/components.hpp"
-#include "dafs/sender.hpp"
 #include "dafs/serialization.hpp"
 #include "dafs/signal.hpp"
 
@@ -213,56 +212,64 @@ namespace dafs
       in_progress(in_progress),
       should_continue(true)
     {
-        std::thread([this]() { send_ping(); }).detach();
+    }
+
+    void
+    ReplicatedPing::Start()
+    {
+        std::thread([this]()
+        {
+            auto sender = std::make_shared<dafs::NetworkSender>();
+            while (should_continue)
+            {
+                SendPing(sender);
+                std::this_thread::sleep_for(ping_interval);
+            }
+        }).detach();
     }
 
 
     void
-    ReplicatedPing::send_ping()
+    ReplicatedPing::SendPing(std::shared_ptr<dafs::Sender> sender)
     {
-        while (should_continue)
-        {
-            replication.Write
+        replication.Write
+        (
+            dafs::Serialize<dafs::Proposal>
             (
-                dafs::Serialize<dafs::Proposal>
-                (
-                    Proposal
-                    {
-                        dafs::ProposalType::Ping,
-                        dafs::Serialize(dafs::ProposalContent{})
-                    }
-                )
-            );
-            in_progress->Wait();
-
-            for (auto a : replication.GetMissingReplicas())
-            {
-                auto endpoint = get_failover_endpoint(a);
-                if (endpoint.replication.ip == dafs::EmptyAddress().ip &&
-                    endpoint.replication.port == dafs::EmptyAddress().port)
+                Proposal
                 {
-                    break;
+                    dafs::ProposalType::Ping,
+                    dafs::Serialize(dafs::ProposalContent{})
                 }
-                dafs::NetworkSender sender;
-                sender.Send(
-                    dafs::Message
-                    {
-                        dafs::EmptyAddress(),
-                        endpoint.management,
-                        dafs::MessageType::_ProposeExitCluster,
-                        std::vector<dafs::MetaData>
-                        {
-                            dafs::MetaData
-                            {
-                                dafs::AddressKey,
-                                dafs::Serialize(a)
-                            }
-                        }
-                    }
-                );
+            )
+        );
+        in_progress->Wait();
+
+        for (auto a : replication.GetMissingReplicas())
+        {
+            auto endpoint = get_failover_endpoint(a);
+            if (endpoint.replication.ip == dafs::EmptyAddress().ip &&
+                endpoint.replication.port == dafs::EmptyAddress().port)
+            {
                 break;
             }
-            std::this_thread::sleep_for(ping_interval);
+            sender->Send(
+                dafs::Message
+                {
+                    dafs::EmptyAddress(),
+                    endpoint.management,
+                    dafs::MessageType::_ProposeExitCluster,
+                    std::vector<dafs::MetaData>
+                    {
+                        dafs::MetaData
+                        {
+                            dafs::AddressKey,
+                            dafs::Serialize(a)
+                        }
+                    }
+                }
+            );
+            break;
         }
     }
 

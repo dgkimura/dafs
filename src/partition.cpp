@@ -38,6 +38,7 @@ namespace dafs
                   dafs::Identity())),
           replication_interface(address)
     {
+        ping.Start();
     }
 
 
