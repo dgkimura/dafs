@@ -3,8 +3,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <paxos/parliament.hpp>
-
 #include "dafs/callback.hpp"
 #include "dafs/filesystem.hpp"
 #include "dafs/signal.hpp"

@@ -3,8 +3,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <paxos/parliament.hpp>
-
 #include "dafs/callback.hpp"
 #include "dafs/filesystem.hpp"
 #include "dafs/propose.hpp"
@@ -17,7 +15,7 @@ namespace dafs
     {
     public:
 
-        Commit(Parliament& parliament, dafs::Root root, std::shared_ptr<dafs::Signal> condition);
+        Commit(dafs::Root root, std::shared_ptr<dafs::Signal> condition);
 
         void operator()(std::string proposal);
 

@@ -17,10 +17,10 @@
 namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(
-        Parliament& parliament,
+        dafs::Replication& replication,
         dafs::Root root,
         std::shared_ptr<dafs::Signal> in_progress)
-    : parliament(parliament),
+    : replication(replication),
       root(root),
       in_progress(in_progress),
       blocks(
@@ -33,7 +33,7 @@ namespace dafs
 
     ReplicatedStorage::ReplicatedStorage(
         const ReplicatedStorage& other)
-    : parliament(other.parliament),
+    : replication(other.replication),
       root(other.root),
       in_progress(other.in_progress),
       blocks(other.blocks)
@@ -51,7 +51,7 @@ namespace dafs
     void
     ReplicatedStorage::DeleteBlock(BlockInfo info)
     {
-        parliament.SendProposal
+        replication.Write
         (
             dafs::Serialize<dafs::Proposal>
             (
@@ -116,7 +116,7 @@ namespace dafs
         BlockInfo info,
         std::string data)
     {
-        parliament.SendProposal
+        replication.Write
         (
             dafs::Serialize<dafs::Proposal>
             (
@@ -145,8 +145,8 @@ namespace dafs
 
 
     ReplicatedNodeSet::ReplicatedNodeSet(
-        Parliament& parliament)
-    : parliament(parliament)
+        dafs::Replication& replication)
+    : replication_(replication)
     {
     }
 
@@ -154,7 +154,7 @@ namespace dafs
     void
     ReplicatedNodeSet::RemoveNode(dafs::Address address)
     {
-        parliament.RemoveLegislator(address.ip, address.port);
+        replication_.RemoveReplica(address);
     }
 
 
@@ -165,7 +165,7 @@ namespace dafs
         std::string location,
         dafs::ReplicatedEndpoints& details)
     {
-        parliament.AddLegislator(replication.ip, replication.port, location);
+        replication_.AddReplica(replication, location);
         details.minus.management = management;
         details.minus.replication = replication;
         return details;
@@ -179,7 +179,7 @@ namespace dafs
         std::string location,
         dafs::ReplicatedEndpoints& details)
     {
-        parliament.AddLegislator(replication.ip, replication.port, location);
+        replication_.AddReplica(replication, location);
         details.zero.management = management;
         details.zero.replication = replication;
         return details;
@@ -193,7 +193,7 @@ namespace dafs
         const std::string location,
         dafs::ReplicatedEndpoints& details)
     {
-        parliament.AddLegislator(replication.ip, replication.port, location);
+        replication_.AddReplica(replication, location);
         details.plus.management = management;
         details.plus.replication = replication;
         return details;
@@ -201,12 +201,12 @@ namespace dafs
 
 
     ReplicatedPing::ReplicatedPing(
-        Parliament& parliament,
+        dafs::Replication& replication,
         dafs::Address address,
         std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
         std::chrono::seconds ping_interval,
         std::shared_ptr<Signal> in_progress)
-    : parliament(parliament),
+    : replication(replication),
       address_(address),
       get_endpoints(get_endpoints),
       ping_interval(ping_interval),
@@ -222,7 +222,7 @@ namespace dafs
     {
         while (should_continue)
         {
-            parliament.SendProposal
+            replication.Write
             (
                 dafs::Serialize<dafs::Proposal>
                 (
@@ -235,7 +235,7 @@ namespace dafs
             );
             in_progress->Wait();
 
-            for (auto a : NonresponsiveMembers())
+            for (auto a : replication.GetMissingReplicas())
             {
                 auto endpoint = get_failover_endpoint(a);
                 if (endpoint.replication.ip == dafs::EmptyAddress().ip &&
@@ -269,16 +269,7 @@ namespace dafs
     std::vector<dafs::Address>
     ReplicatedPing::NonresponsiveMembers(int last_elections)
     {
-        auto nonresponsive = parliament.GetLegislators();
-        for (auto i : parliament.GetAbsenteeBallots(last_elections))
-        {
-            nonresponsive = nonresponsive->Intersection(i.second);
-        }
         std::vector<dafs::Address> nonresponsive_endpoints;
-        for (auto r : *nonresponsive)
-        {
-            nonresponsive_endpoints.push_back(dafs::Address(r.hostname, r.port));
-        }
         return nonresponsive_endpoints;
     }
 

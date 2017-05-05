@@ -1,9 +1,8 @@
 #pragma once
 
-#include <paxos/parliament.hpp>
-
 #include "dafs/filesystem.hpp"
 #include "dafs/messages.hpp"
+#include "dafs/replication.hpp"
 #include "dafs/signal.hpp"
 #include "dafs/components.hpp"
 
@@ -164,7 +163,7 @@ namespace dafs
 
         std::shared_ptr<dafs::Signal> in_progress;
 
-        Parliament parliament;
+        PaxosReplication replication_;
 
         ReplicatedStorage store;
 

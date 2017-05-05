@@ -13,6 +13,7 @@ set(SOURCES
     node.cpp
     partition.cpp
     propose.cpp
+    replication.cpp
     sender.cpp
     server.cpp
     signal.cpp

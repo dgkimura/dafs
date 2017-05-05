@@ -3,14 +3,13 @@
 #include <functional>
 #include <string>
 
-#include <paxos/parliament.hpp>
-
 #include "dafs/constants.hpp"
 #include "dafs/delta.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/filesystem.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/propose.hpp"
+#include "dafs/replication.hpp"
 #include "dafs/signal.hpp"
 #include "dafs/serialization.hpp"
 
@@ -42,7 +41,7 @@ namespace dafs
     public:
 
         ReplicatedStorage(
-            Parliament& parliament,
+            dafs::Replication& replication,
             dafs::Root root,
             std::shared_ptr<dafs::Signal> in_progress);
 
@@ -71,7 +70,7 @@ namespace dafs
             BlockInfo info,
             std::string data);
 
-        Parliament& parliament;
+        dafs::Replication& replication;
 
         dafs::Root root;
 
@@ -112,7 +111,7 @@ namespace dafs
     public:
 
         ReplicatedNodeSet(
-            Parliament& parliament);
+            dafs::Replication& replication);
 
         virtual void RemoveNode(dafs::Address address) override;
 
@@ -136,7 +135,7 @@ namespace dafs
 
     private:
 
-        Parliament& parliament;
+        dafs::Replication& replication_;
     };
 
 
@@ -152,7 +151,7 @@ namespace dafs
     public:
 
         ReplicatedPing(
-            Parliament& parliament,
+            dafs::Replication& replication,
             dafs::Address address_,
             std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
             std::chrono::seconds ping_interval,
@@ -167,7 +166,7 @@ namespace dafs
 
         void send_ping();
 
-        Parliament& parliament;
+        dafs::Replication& replication;
 
         dafs::Address address_;
 

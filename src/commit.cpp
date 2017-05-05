@@ -10,7 +10,7 @@
 
 namespace dafs
 {
-    Commit::Commit(Parliament& parliament, dafs::Root root, std::shared_ptr<dafs::Signal> condition)
+    Commit::Commit(dafs::Root root, std::shared_ptr<dafs::Signal> condition)
         : proposal_map
           {
               {

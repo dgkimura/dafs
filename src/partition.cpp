@@ -15,12 +15,12 @@ namespace dafs
         std::chrono::seconds ping_interval
     )
         : in_progress(std::make_shared<dafs::Signal>()),
-          parliament(Replica(address.ip, address.port),
-                     root.directory,
-                     dafs::Commit(parliament, root, in_progress)),
-          store(parliament, root, in_progress),
-          nodeset(parliament),
-          ping(parliament,
+          replication_(address,
+                      root.directory,
+                      dafs::Commit(root, in_progress)),
+          store(replication_, root, in_progress),
+          nodeset(replication_),
+          ping(replication_,
                address,
                [this]()->dafs::ReplicatedEndpoints
                {
@@ -44,7 +44,7 @@ namespace dafs
     ReplicatedPartition::ReplicatedPartition(
         const ReplicatedPartition& other
     )
-        : parliament(other.parliament),
+        : replication_(other.replication_),
           store(other.store),
           nodeset(other.nodeset),
           ping(other.ping),
