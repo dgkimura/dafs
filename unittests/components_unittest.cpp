@@ -8,12 +8,9 @@
 #include "mock_sender.hpp"
 
 
-TEST(ReplicatedPingTest, x)
+TEST(ReplicatedPingTest, testPingSendsProposeExitCluster)
 {
-    auto signal = std::make_shared<dafs::Signal>();
-
     MockReplication replication(
-        signal,
         std::vector<dafs::Address>
         {
             dafs::Address("AWAY", 404)
@@ -46,8 +43,7 @@ TEST(ReplicatedPingTest, x)
         replication,
         dafs::Address("C", 3),
         get_endpoints,
-        std::chrono::seconds(0),
-        signal);
+        std::chrono::seconds(0));
     ping.SendPing(mock_sender);
 
     ASSERT_EQ(1, mock_sender->sentMessages().size());

@@ -8,11 +8,20 @@ namespace dafs
 {
     PaxosReplication::PaxosReplication(
         dafs::Address address,
-        std::string directory,
-        dafs::Commit commit)
-    : parliament(Replica(address.ip, address.port),
-                 directory,
-                 commit)
+        dafs::Root root)
+    : in_progress(std::make_shared<dafs::Signal>()),
+      parliament(Replica(address.ip, address.port),
+                 root.directory,
+                 dafs::Commit(root, in_progress))
+    {
+    }
+
+
+    PaxosReplication::PaxosReplication(
+        const PaxosReplication& other
+    )
+        : parliament(other.parliament),
+          in_progress(std::make_shared<dafs::Signal>())
     {
     }
 
@@ -21,6 +30,7 @@ namespace dafs
     PaxosReplication::Write(std::string entry)
     {
         parliament.SendProposal(entry);
+        in_progress->Wait();
     }
 
 

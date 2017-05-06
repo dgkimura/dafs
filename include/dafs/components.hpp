@@ -43,8 +43,7 @@ namespace dafs
 
         ReplicatedStorage(
             dafs::Replication& replication,
-            dafs::Root root,
-            std::shared_ptr<dafs::Signal> in_progress);
+            dafs::Root root);
 
         ReplicatedStorage(
             const ReplicatedStorage& other);
@@ -74,8 +73,6 @@ namespace dafs
         dafs::Replication& replication;
 
         dafs::Root root;
-
-        std::shared_ptr<Signal> in_progress;
 
         dafs::BlockInfo blocks;
     };
@@ -157,8 +154,7 @@ namespace dafs
             dafs::Replication& replication,
             dafs::Address address_,
             std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
-            std::chrono::seconds ping_interval,
-            std::shared_ptr<dafs::Signal> in_progress);
+            std::chrono::seconds ping_interval);
 
         std::vector<dafs::Address>
         NonresponsiveMembers(int last_elections=10) override;
@@ -178,8 +174,6 @@ namespace dafs
         std::function<dafs::ReplicatedEndpoints(void)> get_endpoints;
 
         std::chrono::seconds ping_interval;
-
-        std::shared_ptr<Signal> in_progress;
 
         bool should_continue;
     };

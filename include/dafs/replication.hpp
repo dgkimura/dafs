@@ -6,6 +6,7 @@
 
 #include "dafs/commit.hpp"
 #include "dafs/messages.hpp"
+#include "dafs/signal.hpp"
 
 
 namespace dafs
@@ -30,8 +31,10 @@ namespace dafs
 
         PaxosReplication(
             dafs::Address address,
-            std::string directory,
-            dafs::Commit commit);
+            dafs::Root directory);
+
+        PaxosReplication(
+            const PaxosReplication& other);
 
         void Write(std::string entry) override;
 
@@ -42,6 +45,8 @@ namespace dafs
         std::vector<dafs::Address> GetMissingReplicas() override;
 
     private:
+
+        std::shared_ptr<dafs::Signal> in_progress;
 
         Parliament parliament;
     };

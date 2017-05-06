@@ -17,11 +17,9 @@ namespace dafs
 {
     ReplicatedStorage::ReplicatedStorage(
         dafs::Replication& replication,
-        dafs::Root root,
-        std::shared_ptr<dafs::Signal> in_progress)
+        dafs::Root root)
     : replication(replication),
       root(root),
-      in_progress(in_progress),
       blocks(
           dafs::CreateBlockInfo(
               boost::filesystem::path(Constant::BlockListName).string(),
@@ -34,7 +32,6 @@ namespace dafs
         const ReplicatedStorage& other)
     : replication(other.replication),
       root(other.root),
-      in_progress(other.in_progress),
       blocks(other.blocks)
     {
     }
@@ -64,7 +61,6 @@ namespace dafs
                 )
             )
         );
-        in_progress->Wait();
     }
 
 
@@ -129,7 +125,6 @@ namespace dafs
                 )
             )
         );
-        in_progress->Wait();
     }
 
 
@@ -203,13 +198,11 @@ namespace dafs
         dafs::Replication& replication,
         dafs::Address address,
         std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
-        std::chrono::seconds ping_interval,
-        std::shared_ptr<Signal> in_progress)
+        std::chrono::seconds ping_interval)
     : replication(replication),
       address_(address),
       get_endpoints(get_endpoints),
       ping_interval(ping_interval),
-      in_progress(in_progress),
       should_continue(true)
     {
     }
@@ -243,7 +236,6 @@ namespace dafs
                 }
             )
         );
-        in_progress->Wait();
 
         for (auto a : replication.GetMissingReplicas())
         {

@@ -14,11 +14,8 @@ namespace dafs
         Root root,
         std::chrono::seconds ping_interval
     )
-        : in_progress(std::make_shared<dafs::Signal>()),
-          replication_(address,
-                      root.directory,
-                      dafs::Commit(root, in_progress)),
-          store(replication_, root, in_progress),
+        : replication_(address, root),
+          store(replication_, root),
           nodeset(replication_),
           ping(replication_,
                address,
@@ -26,8 +23,7 @@ namespace dafs
                {
                    return GetNodeSetDetails();
                },
-               ping_interval,
-               in_progress),
+               ping_interval),
           identity(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
@@ -50,7 +46,6 @@ namespace dafs
           nodeset(other.nodeset),
           ping(other.ping),
           identity(other.identity),
-          in_progress(std::make_shared<dafs::Signal>()),
           replication_interface(other.replication_interface)
     {
     }

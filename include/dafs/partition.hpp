@@ -3,7 +3,6 @@
 #include "dafs/filesystem.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/replication.hpp"
-#include "dafs/signal.hpp"
 #include "dafs/components.hpp"
 
 
@@ -160,8 +159,6 @@ namespace dafs
         virtual bool IsActive() override;
 
     private:
-
-        std::shared_ptr<dafs::Signal> in_progress;
 
         PaxosReplication replication_;
 
