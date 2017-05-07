@@ -5,6 +5,7 @@ set(SOURCES
     commit.cpp
     components.cpp
     delta.cpp
+    details.cpp
     disk.cpp
     dispatcher.cpp
     filesystem.cpp

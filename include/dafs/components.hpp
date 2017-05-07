@@ -165,7 +165,7 @@ namespace dafs
 
     private:
 
-        dafs::Endpoint get_failover_endpoint(dafs::Address address);
+        dafs::Endpoint get_failover_endpoint(dafs::Address inactive);
 
         dafs::Replication& replication;
 

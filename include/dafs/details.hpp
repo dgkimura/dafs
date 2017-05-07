@@ -28,4 +28,10 @@ namespace dafs
 
         dafs::Endpoint plus;
     };
+
+
+    dafs::Endpoint GetFailover(
+        dafs::ReplicatedEndpoints endpoints,
+        dafs::Address active,
+        dafs::Address inactive);
 }

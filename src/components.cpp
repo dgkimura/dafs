@@ -7,6 +7,7 @@
 
 #include "dafs/commit.hpp"
 #include "dafs/customhash.hpp"
+#include "dafs/details.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/components.hpp"
 #include "dafs/serialization.hpp"
@@ -273,34 +274,10 @@ namespace dafs
     }
 
     dafs::Endpoint
-    ReplicatedPing::get_failover_endpoint(dafs::Address address)
+    ReplicatedPing::get_failover_endpoint(dafs::Address inactive)
     {
         auto endpoints = get_endpoints();
 
-        if (endpoints.minus.replication.ip != address.ip &&
-            endpoints.minus.replication.port != address.port &&
-            endpoints.minus.replication.ip != address_.ip &&
-            endpoints.minus.replication.port != address_.port)
-        {
-            return endpoints.minus;
-        }
-        if (endpoints.zero.replication.ip != address.ip &&
-            endpoints.zero.replication.port != address.port &&
-            endpoints.zero.replication.ip != address_.ip &&
-            endpoints.zero.replication.port != address_.port)
-        {
-            return endpoints.zero;
-        }
-        if (endpoints.plus.replication.ip != address.ip &&
-            endpoints.plus.replication.port != address.port &&
-            endpoints.plus.replication.ip != address_.ip &&
-            endpoints.plus.replication.port != address_.port)
-        {
-            return endpoints.plus;
-        }
-        return {
-            dafs::EmptyAddress(),
-            dafs::EmptyAddress()
-        };
+        return GetFailover(endpoints, address_, inactive);
     }
 }
