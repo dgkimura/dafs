@@ -1,3 +1,6 @@
+#include <unordered_map>
+
+#include "dafs/customhash.hpp"
 #include "dafs/details.hpp"
 
 
@@ -9,30 +12,19 @@ namespace dafs
         dafs::Address active,
         dafs::Address inactive)
     {
-        if (endpoints.minus.replication.ip != active.ip &&
-            endpoints.minus.replication.port != active.port &&
-            endpoints.minus.replication.ip != inactive.ip &&
-            endpoints.minus.replication.port != inactive.port)
-        {
-            return endpoints.minus;
-        }
-        if (endpoints.zero.replication.ip != active.ip &&
-            endpoints.zero.replication.port != active.port &&
-            endpoints.zero.replication.ip != inactive.ip &&
-            endpoints.zero.replication.port != inactive.port)
-        {
-            return endpoints.zero;
-        }
-        if (endpoints.plus.replication.ip != active.ip &&
-            endpoints.plus.replication.port != active.port &&
-            endpoints.plus.replication.ip != inactive.ip &&
-            endpoints.plus.replication.port != inactive.port)
-        {
-            return endpoints.plus;
-        }
-        return {
-            dafs::EmptyAddress(),
-            dafs::EmptyAddress()
-        };
+        std::unordered_map<dafs::Address, dafs::Endpoint> items;
+        items[endpoints.minus.replication] = endpoints.minus;
+        items[endpoints.zero.replication] = endpoints.zero;
+        items[endpoints.plus.replication] = endpoints.plus;
+
+        items.erase(active);
+        items.erase(inactive);
+
+        return items.size() == 1 ? items.begin()->second :
+            dafs::Endpoint
+            {
+                dafs::EmptyAddress(),
+                dafs::EmptyAddress()
+            };
     }
 }

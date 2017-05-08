@@ -69,3 +69,34 @@ TEST(DetailsTest, testGetFailoverWithValidCombinations)
             dafs::Address("B_Replication", 22)).replication.ip
     );
 }
+
+
+TEST(DetailsTest, testGetFailoverWithUnknownAddress)
+{
+    dafs::ReplicatedEndpoints endpoints
+    {
+        dafs::Endpoint
+        {
+            dafs::Address("A_Management", 1),
+            dafs::Address("A_Replication", 11)
+        },
+        dafs::Endpoint
+        {
+            dafs::Address("B_Management", 2),
+            dafs::Address("B_Replication", 22)
+        },
+        dafs::Endpoint
+        {
+            dafs::Address("C_Management", 3),
+            dafs::Address("C_Replication", 33)
+        },
+    };
+
+    ASSERT_EQ(
+        "",
+        GetFailover(
+            endpoints,
+            dafs::Address("UNKNOWN", 404),
+            dafs::Address("B_Replication", 22)).replication.ip
+    );
+}

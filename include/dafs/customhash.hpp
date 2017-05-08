@@ -38,4 +38,22 @@ namespace std
             return std::hash<dafs::BlockFormat>{}(rawblock);
         }
     };
+
+
+    template<> struct hash<dafs::Address>
+    {
+        std::size_t operator()(dafs::Address const& a) const
+        {
+            return std::hash<std::string>{}(a.ip) ^ std::hash<short>{}(a.port);
+        }
+    };
+
+
+    template<> struct equal_to<dafs::Address>
+    {
+        bool operator()(const dafs::Address& lhs, const dafs::Address& rhs) const
+        {
+            return lhs.ip == rhs.ip && lhs.port == rhs.port;
+        }
+    };
 }
