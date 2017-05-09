@@ -56,32 +56,21 @@ namespace dafs
                   }
               },
               {
-                  dafs::MessageType::_RequestMinusInitiation,
+                  dafs::MessageType::_RequestJoinCluster,
                   [&node](dafs::Message message) -> dafs::Message
                   {
                       dafs::NetworkSender sender;
-                      return dafs::HandleRequestMinusInitiation(
+                      return dafs::HandleRequestJoinCluster(
                           node,
                           message.metadata,
                           sender);
                   }
               },
               {
-                  dafs::MessageType::_RequestPlusInitiation,
+                  dafs::MessageType::_AcceptJoinCluster,
                   [&node](dafs::Message message) -> dafs::Message
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleRequestPlusInitiation(
-                          node,
-                          message.metadata,
-                          sender);
-                  }
-              },
-              {
-                  dafs::MessageType::_AcceptPlusInitiation,
-                  [&node](dafs::Message message) -> dafs::Message
-                  {
-                      return dafs::HandleAcceptPlusInitiation(
+                      return dafs::HandleAcceptJoinCluster(
                           node,
                           message.metadata);
                   }

@@ -39,21 +39,14 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestMinusInitiation(
+    HandleRequestJoinCluster(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender);
 
 
     dafs::Message
-    HandleRequestPlusInitiation(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender);
-
-
-    dafs::Message
-    HandleAcceptPlusInitiation(
+    HandleAcceptJoinCluster(
         dafs::Node& node,
         dafs::MetaDataParser metadata);
 

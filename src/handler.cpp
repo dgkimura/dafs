@@ -121,7 +121,7 @@ namespace dafs
             {
                 node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails().zero.management,
                 metadata.GetValue<dafs::Address>(dafs::AddressKey),
-                dafs::MessageType::_RequestMinusInitiation,
+                dafs::MessageType::_RequestJoinCluster,
                 std::vector<dafs::MetaData>
                 {
                     dafs::MetaData
@@ -155,7 +155,7 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestMinusInitiation(
+    HandleRequestJoinCluster(
         dafs::Node& node,
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
@@ -201,7 +201,9 @@ namespace dafs
                 // Accept initiation request and update half of topology.
                 //
 
-                dafs::Endpoint previous = p_minus->GetNodeSetDetails().plus;
+                dafs::ReplicatedEndpoints updated;
+                updated.plus = p_minus->GetNodeSetDetails().plus;
+                updated.minus = p_zero->GetNodeSetDetails().minus;
 
                 // Push replication onto initiated node.
                 p_minus->SetPlus(
@@ -209,28 +211,25 @@ namespace dafs
                     endpoints.minus.replication,
                     Constant::PartitionMinusName);
 
-                endpoints.minus = previous;
+                p_zero->SetMinus(
+                    endpoints.plus.management,
+                    endpoints.plus.replication,
+                    Constant::PartitionPlusName);
 
+                // Send accepted messge to node.
                 sender.Send(
                     dafs::Message
                     {
                         p_zero->GetNodeSetDetails().zero.management,
-                        p_minus->GetNodeSetDetails().zero.management,
-                        dafs::MessageType::_RequestPlusInitiation,
+                        endpoints.zero.management,
+                        dafs::MessageType::_AcceptJoinCluster,
                         std::vector<dafs::MetaData>
                         {
                             dafs::MetaData
                             {
                                 dafs::NodeEndpointsKey,
                                 dafs::Serialize(
-                                    endpoints
-                                )
-                            },
-                            dafs::MetaData
-                            {
-                                dafs::IdentityKey,
-                                dafs::Serialize(
-                                    identity
+                                    updated
                                 )
                             }
                         }
@@ -258,7 +257,7 @@ namespace dafs
                     {
                         p_zero->GetNodeSetDetails().zero.management,
                         endpoints.zero.management,
-                        dafs::MessageType::_AcceptPlusInitiation,
+                        dafs::MessageType::_AcceptJoinCluster,
                         std::vector<dafs::MetaData>
                         {
                             dafs::MetaData
@@ -280,73 +279,7 @@ namespace dafs
 
 
     dafs::Message
-    HandleRequestPlusInitiation(
-        dafs::Node& node,
-        dafs::MetaDataParser metadata,
-        dafs::Sender& sender)
-    {
-        auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
-        auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
-            dafs::NodeEndpointsKey);
-
-        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
-        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
-        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
-
-        if (!IsLogicallyOrdered(p_zero->GetIdentity(),
-                                identity,
-                                p_plus->GetIdentity()))
-        {
-            //
-            // Foobar'd topology. Rollback?
-            //
-        }
-        else
-        {
-            //
-            // Update second half of topology
-            //
-
-            dafs::Endpoint previous = p_plus->GetNodeSetDetails().minus;
-
-            // Push replication onto initiated node.
-            p_plus->SetMinus(
-                endpoints.plus.management,
-                endpoints.plus.replication,
-                Constant::PartitionPlusName);
-
-            // swap FIXME
-            endpoints.plus = endpoints.minus;
-            endpoints.minus = previous;
-
-            // Send accepted messge to node.
-            sender.Send(
-                dafs::Message
-                {
-                    p_zero->GetNodeSetDetails().zero.management,
-                    endpoints.zero.management,
-                    dafs::MessageType::_AcceptPlusInitiation,
-                    std::vector<dafs::MetaData>
-                    {
-                        dafs::MetaData
-                        {
-                            dafs::NodeEndpointsKey,
-                            dafs::Serialize(
-                                endpoints
-                            )
-                        }
-                    }
-                }
-            );
-        }
-
-        dafs::Message m;
-        return m;
-    }
-
-
-    dafs::Message
-    HandleAcceptPlusInitiation(
+    HandleAcceptJoinCluster(
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {

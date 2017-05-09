@@ -269,7 +269,7 @@ TEST_F(HandlerTest, testHandleJoinCluster)
 
     dafs::Message sent_message = mock_sender.sentMessages()[0];
 
-    ASSERT_EQ(dafs::MessageType::_RequestMinusInitiation, sent_message.type);
+    ASSERT_EQ(dafs::MessageType::_RequestJoinCluster, sent_message.type);
 
     auto parsed = dafs::MetaDataParser(sent_message.metadata);
     auto endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::NodeEndpointsKey);
@@ -312,7 +312,7 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
         }
     );
     MockSender mock_sender;
-    HandleRequestMinusInitiation(GetNode(), parser, mock_sender);
+    HandleRequestJoinCluster(GetNode(), parser, mock_sender);
 
     dafs::Message sent_message = mock_sender.sentMessages()[0];
 
@@ -344,11 +344,10 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
         }
     );
     MockSender mock_sender;
-    HandleRequestMinusInitiation(GetNode(), parser, mock_sender);
+    HandleRequestJoinCluster(GetNode(), parser, mock_sender);
 
     dafs::Message sent_message = mock_sender.sentMessages()[0];
 
-    ASSERT_EQ(dafs::MessageType::_RequestPlusInitiation, sent_message.type);
+    ASSERT_EQ(dafs::MessageType::_AcceptJoinCluster, sent_message.type);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), sent_message.to);
 }

@@ -40,19 +40,13 @@ namespace dafs
         // Request initation - message sent to a node requesting to initiate
         // into minus partition on given cluster node.
         //
-        _RequestMinusInitiation,
-
-        //
-        // Request initation - message sent to a node requesting to initiate
-        // into plus partition on given cluster node.
-        //
-        _RequestPlusInitiation,
+        _RequestJoinCluster,
 
         //
         // Accepted inivitation - message sent to node to indicate that it
         // was accepted as the plus partition.
         //
-        _AcceptPlusInitiation,
+        _AcceptJoinCluster,
 
         //
         // Exit cluster - message sent to a node to signal it to exit a
