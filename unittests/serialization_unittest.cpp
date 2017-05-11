@@ -324,3 +324,22 @@ TEST(SerializationUnitTest, testNodeSetIsSerializableAndDeserializable)
     ASSERT_EQ(expected.items[0], actual.items[0]);
     ASSERT_EQ(expected.items[1], actual.items[1]);
 }
+
+
+TEST(SerializationUnitTest, testProposalIsSerializableAndDeserializable)
+{
+    boost::uuids::string_generator gen;
+    dafs::Proposal expected
+    {
+        dafs::ProposalType::Ping,
+        "the proposal content",
+        gen("{11111111-2222-3333-4444-555555555555}")
+    }, actual;
+
+    std::string string_obj = dafs::Serialize(expected);
+    actual = dafs::Deserialize<dafs::Proposal>(string_obj);
+
+    ASSERT_EQ(expected.type, actual.type);
+    ASSERT_EQ(expected.content, actual.content);
+    ASSERT_EQ(expected.uuid, actual.uuid);
+}

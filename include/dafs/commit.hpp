@@ -3,7 +3,10 @@
 #include <unordered_map>
 #include <vector>
 
+#include <boost/uuid/uuid.hpp>
+
 #include "dafs/callback.hpp"
+#include "dafs/customhash.hpp"
 #include "dafs/filesystem.hpp"
 #include "dafs/propose.hpp"
 #include "dafs/signal.hpp"
@@ -15,7 +18,9 @@ namespace dafs
     {
     public:
 
-        Commit(dafs::Root root, std::shared_ptr<dafs::Signal> condition);
+        Commit(
+            dafs::Root root,
+            std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>>& progress_map);
 
         void operator()(std::string proposal);
 
@@ -27,14 +32,17 @@ namespace dafs
     private:
 
         std::unordered_map<
+            boost::uuids::uuid,
+            std::shared_ptr<dafs::Signal>
+        >& progress_map;
+
+        std::unordered_map<
             dafs::ProposalType,
             dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>,
             dafs::ProposalTypeHash
         > proposal_map;
 
         dafs::Root root;
-
-        std::shared_ptr<dafs::Signal> condition;
     };
 
 

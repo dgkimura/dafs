@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_map>
 #include "boost/algorithm/string.hpp"
 #include "boost/lexical_cast.hpp"
 
@@ -11,8 +12,11 @@
 
 namespace dafs
 {
-    Commit::Commit(dafs::Root root, std::shared_ptr<dafs::Signal> condition)
-        : proposal_map
+    Commit::Commit(
+        dafs::Root root,
+        std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>>& progress_map)
+        : progress_map(progress_map),
+          proposal_map
           {
               {
                    ProposalType::WriteBlock,
@@ -46,8 +50,7 @@ namespace dafs
                    )
               }
           },
-          root(root),
-          condition(condition)
+          root(root)
     {
     }
 
@@ -61,7 +64,12 @@ namespace dafs
         edit.info.path = (boost::filesystem::path(root.directory) /
                          boost::filesystem::path(edit.info.path)).string();
         proposal_map[p.type](edit);
-        condition->Set();
+
+        if (progress_map.find(p.uuid) != progress_map.end())
+        {
+            progress_map[p.uuid]->Set();
+            progress_map.erase(p.uuid);
+        }
     }
 
 

@@ -197,6 +197,15 @@ namespace dafs
         {
             if (p_minus->IsActive())
             {
+                if (!p_minus->Acquire() || !p_zero->Acquire())
+                {
+                    //
+                    // Did not acquire both partition locks.
+                    //
+                    dafs::Message m;
+                    return m;
+                }
+
                 //
                 // Accept initiation request and update half of topology.
                 //
@@ -283,7 +292,9 @@ namespace dafs
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
 
@@ -298,6 +309,10 @@ namespace dafs
             endpoints.plus.management,
             endpoints.plus.replication,
             Constant::PartitionMinusName);
+
+        p_minus->Release();
+        p_zero->Release();
+        p_plus->Release();
 
         dafs::Message m;
         return m;

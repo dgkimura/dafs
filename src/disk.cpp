@@ -46,5 +46,6 @@ namespace dafs
         std::fstream output(boost::filesystem::path(info.path).string(),
                             std::ios::out | std::ios::binary);
         output << apply_delta_content;
+        output.flush();
     }
 }

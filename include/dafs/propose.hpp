@@ -3,6 +3,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include <boost/uuid/uuid.hpp>
+
 #include "dafs/callback.hpp"
 #include "dafs/filesystem.hpp"
 #include "dafs/signal.hpp"
@@ -43,6 +45,11 @@ namespace dafs
         // Serialized content.
         //
         std::string content;
+
+        //
+        // Unique identifier of proposal.
+        //
+        boost::uuids::uuid uuid;
     };
 
 

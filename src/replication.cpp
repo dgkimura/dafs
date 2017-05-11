@@ -9,10 +9,10 @@ namespace dafs
     PaxosReplication::PaxosReplication(
         dafs::Address address,
         dafs::Root root)
-    : in_progress(std::make_shared<dafs::Signal>()),
+    : progress_map(),
       parliament(Replica(address.ip, address.port),
                  root.directory,
-                 dafs::Commit(root, in_progress))
+                 dafs::Commit(root, progress_map))
     {
     }
 
@@ -21,7 +21,7 @@ namespace dafs
         const PaxosReplication& other
     )
         : parliament(other.parliament),
-          in_progress(std::make_shared<dafs::Signal>())
+          progress_map(other.progress_map)
     {
     }
 
@@ -29,8 +29,17 @@ namespace dafs
     void
     PaxosReplication::Write(std::string entry)
     {
-        parliament.SendProposal(entry);
-        in_progress->Wait();
+        auto proposal = dafs::Deserialize<dafs::Proposal>(entry);
+        auto signal = std::make_shared<dafs::Signal>();
+
+        while (progress_map.find(proposal.uuid) != progress_map.end())
+        {
+            proposal.uuid = boost::uuids::random_generator()();
+        }
+        progress_map[proposal.uuid] = signal;
+
+        parliament.SendProposal(dafs::Serialize(proposal));
+        progress_map[proposal.uuid]->Wait();
     }
 
 

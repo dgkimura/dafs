@@ -2,8 +2,10 @@
 
 #include <vector>
 
+#include <boost/uuid/uuid.hpp>
 #include <paxos/parliament.hpp>
 
+#include "dafs/customhash.hpp"
 #include "dafs/commit.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/signal.hpp"
@@ -46,7 +48,7 @@ namespace dafs
 
     private:
 
-        std::shared_ptr<dafs::Signal> in_progress;
+        std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>> progress_map;
 
         Parliament parliament;
     };

@@ -3,6 +3,9 @@
 #include <fstream>
 #include <sys/stat.h>
 
+#include <boost/functional/hash.hpp>
+#include <boost/uuid/uuid.hpp>
+
 #include "dafs/filesystem.hpp"
 #include "dafs/serialization.hpp"
 
@@ -45,6 +48,15 @@ namespace std
         std::size_t operator()(dafs::Address const& a) const
         {
             return std::hash<std::string>{}(a.ip) ^ std::hash<short>{}(a.port);
+        }
+    };
+
+
+    template<> struct hash<boost::uuids::uuid>
+    {
+        std::size_t operator()(boost::uuids::uuid const& u) const
+        {
+            return boost::hash<boost::uuids::uuid>()(u);
         }
     };
 
