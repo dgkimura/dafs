@@ -64,7 +64,7 @@ namespace dafs
 
     private:
 
-        virtual BlockInfo rooted(BlockInfo info);
+        BlockInfo rooted(BlockInfo info);
 
         virtual void do_write(
             BlockInfo info,
@@ -139,6 +139,8 @@ namespace dafs
 
     class Ping
     {
+    public:
+
         virtual std::vector<dafs::Address> NonresponsiveMembers(
             int last_elections=10) = 0;
 
@@ -176,6 +178,41 @@ namespace dafs
         std::chrono::seconds ping_interval;
 
         bool should_continue;
+    };
+
+
+    class Lock
+    {
+    public:
+
+        virtual bool Acquire() = 0;
+
+        virtual void Release() = 0;
+    };
+
+
+    class ReplicatedLock : public Lock
+    {
+    public:
+
+        ReplicatedLock(
+            dafs::Replication& replication,
+            dafs::Address address,
+            dafs::Root root);
+
+        virtual bool Acquire() override;
+
+        virtual void Release() override;
+
+    private:
+
+        BlockInfo rooted(BlockInfo info);
+
+        dafs::Replication& replication;
+
+        dafs::Address address;
+
+        dafs::Root root;
     };
 }
 

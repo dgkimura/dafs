@@ -40,6 +40,10 @@ namespace dafs
             std::string location) = 0;
 
         virtual bool IsActive() = 0;
+
+        virtual bool Acquire() = 0;
+
+        virtual void Release() = 0;
     };
 
 
@@ -109,6 +113,15 @@ namespace dafs
             return false;
         }
 
+        virtual bool Acquire() override
+        {
+            return true;
+        }
+
+        virtual void Release() override
+        {
+        }
+
     private:
 
         dafs::Identity identity;
@@ -158,6 +171,10 @@ namespace dafs
 
         virtual bool IsActive() override;
 
+        virtual bool Acquire() override;
+
+        virtual void Release() override;
+
     private:
 
         PaxosReplication replication_;
@@ -167,6 +184,8 @@ namespace dafs
         ReplicatedNodeSet nodeset;
 
         ReplicatedPing ping;
+
+        ReplicatedLock lock;
 
         dafs::BlockInfo identity;
 

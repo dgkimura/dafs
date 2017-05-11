@@ -1,6 +1,5 @@
 #include <boost/filesystem.hpp>
 
-#include "dafs/commit.hpp"
 #include "dafs/delta.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/partition.hpp"
@@ -24,6 +23,7 @@ namespace dafs
                    return GetNodeSetDetails();
                },
                ping_interval),
+          lock(replication_, address, root),
           identity(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::IdentityName).string(),
@@ -45,6 +45,7 @@ namespace dafs
           store(other.store),
           nodeset(other.nodeset),
           ping(other.ping),
+          lock(other.lock),
           identity(other.identity),
           replication_interface(other.replication_interface)
     {
@@ -179,5 +180,19 @@ namespace dafs
                endpoints.minus.replication.port != dafs::EmptyAddress().port &&
                endpoints.plus.replication.ip != dafs::EmptyAddress().ip &&
                endpoints.plus.replication.port != dafs::EmptyAddress().port;
+    }
+
+
+    bool
+    ReplicatedPartition::Acquire()
+    {
+        return lock.Acquire();
+    }
+
+
+    void
+    ReplicatedPartition::Release()
+    {
+        lock.Release();
     }
 }

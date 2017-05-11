@@ -15,9 +15,6 @@ namespace dafs
         WriteBlock,
         DeleteBlock,
 
-        AddNode,
-        RemoveNode,
-
         Ping
     };
 

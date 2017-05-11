@@ -11,6 +11,8 @@ namespace
 
         static constexpr const char* DetailsName = "details";
 
+        static constexpr const char* LockName = "dafs.lock";
+
         static constexpr const char* PartitionMinusName = "p-minus";
 
         static constexpr const char* PartitionZeroName = "p-zero";

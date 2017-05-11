@@ -90,6 +90,15 @@ public:
         return is_active;
     }
 
+    virtual bool Acquire() override
+    {
+        return true;
+    }
+
+    virtual void Release() override
+    {
+    }
+
 private:
 
     dafs::Endpoint minus;

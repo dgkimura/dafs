@@ -5,13 +5,13 @@
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "dafs/constants.hpp"
 #include "dafs/commit.hpp"
 #include "dafs/customhash.hpp"
 #include "dafs/details.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/components.hpp"
 #include "dafs/serialization.hpp"
-#include "dafs/signal.hpp"
 
 
 namespace dafs
@@ -266,6 +266,7 @@ namespace dafs
         }
     }
 
+
     std::vector<dafs::Address>
     ReplicatedPing::NonresponsiveMembers(int last_elections)
     {
@@ -273,11 +274,88 @@ namespace dafs
         return nonresponsive_endpoints;
     }
 
+
     dafs::Endpoint
     ReplicatedPing::get_failover_endpoint(dafs::Address inactive)
     {
         auto endpoints = get_endpoints();
 
         return GetFailover(endpoints, address_, inactive);
+    }
+
+
+    ReplicatedLock::ReplicatedLock(
+        dafs::Replication& replication,
+        dafs::Address address,
+        dafs::Root root)
+    : replication(replication),
+      address(address),
+      root(root)
+    {
+    }
+
+
+    bool
+    ReplicatedLock::Acquire()
+    {
+        dafs::BlockInfo lockfile;
+        lockfile.path = Constant::LockName;
+
+        replication.Write
+        (
+            dafs::Serialize<dafs::Proposal>
+            (
+                CreateProposal
+                (
+                    dafs::ProposalType::WriteBlock,
+                    dafs::Serialize
+                    (
+                        CreateDelta(
+                            rooted(lockfile).path,
+                            "", // was empty
+                            dafs::Serialize(address)
+                        )
+                    ),
+                    lockfile,
+                    0, // revision
+                    0  // Write IFF was empty
+                )
+            )
+        );
+
+        return dafs::ReadBlock(rooted(lockfile)).contents == dafs::Serialize(address);
+    }
+
+
+    void
+    ReplicatedLock::Release()
+    {
+        dafs::BlockInfo lockfile;
+        lockfile.path = Constant::LockName;
+
+        replication.Write
+        (
+            dafs::Serialize<dafs::Proposal>
+            (
+                CreateProposal
+                (
+                    dafs::ProposalType::DeleteBlock,
+                    "",
+                    lockfile,
+                    lockfile.revision,
+                    std::hash<dafs::BlockInfo>{}(lockfile)
+                )
+            )
+        );
+    }
+
+
+    BlockInfo
+    ReplicatedLock::rooted(
+        BlockInfo info)
+    {
+        info.path = (boost::filesystem::path(root.directory) /
+                     boost::filesystem::path(info.path)).string();
+        return info;
     }
 }
