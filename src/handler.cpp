@@ -430,6 +430,15 @@ namespace dafs
 
         if (p_plus->GetIdentity() == identity)
         {
+            if (!p_zero->Acquire())
+            {
+                //
+                // Did not acquire partition lock.
+                //
+                dafs::Message m;
+                return m;
+            }
+
             p_zero->SetPlus(
                 p_plus->GetNodeSetDetails().plus.management,
                 p_plus->GetNodeSetDetails().plus.replication,
@@ -461,6 +470,15 @@ namespace dafs
         }
         else
         {
+            if (!p_zero->Acquire())
+            {
+                //
+                // Did not acquire partition lock.
+                //
+                dafs::Message m;
+                return m;
+            }
+
             auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
 
             // TODO: Use blocklist to add _relavent_ files to p_plus and p_zero
@@ -469,6 +487,9 @@ namespace dafs
                 endpoint.management,
                 endpoint.replication,
                 Constant::PartitionMinusName);
+
+            p_plus->Release();
+            p_zero->Release();
         }
 
         dafs::Message m;
@@ -490,6 +511,15 @@ namespace dafs
 
         if (p_minus->GetIdentity() == identity)
         {
+            if (!p_zero->Acquire())
+            {
+                //
+                // Did not acquire partition lock.
+                //
+                dafs::Message m;
+                return m;
+            }
+
             p_zero->SetMinus(
                 p_minus->GetNodeSetDetails().minus.management,
                 p_minus->GetNodeSetDetails().minus.replication,
@@ -521,6 +551,15 @@ namespace dafs
         }
         else
         {
+            if (!p_zero->Acquire())
+            {
+                //
+                // Did not acquire partition lock.
+                //
+                dafs::Message m;
+                return m;
+            }
+
             auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
 
             // TODO: Use blocklist to add _relavent_ files to p_minus and p_zero
@@ -529,6 +568,9 @@ namespace dafs
                 endpoint.management,
                 endpoint.replication,
                 Constant::PartitionPlusName);
+
+            p_minus->Release();
+            p_zero->Release();
         }
 
         dafs::Message m;
