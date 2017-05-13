@@ -68,7 +68,6 @@ namespace dafs
         if (progress_map.find(p.uuid) != progress_map.end())
         {
             progress_map[p.uuid]->Set();
-            progress_map.erase(p.uuid);
         }
     }
 

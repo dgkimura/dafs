@@ -39,7 +39,9 @@ namespace dafs
         progress_map[proposal.uuid] = signal;
 
         parliament.SendProposal(dafs::Serialize(proposal));
+
         progress_map[proposal.uuid]->Wait();
+        progress_map.erase(proposal.uuid);
     }
 
 
