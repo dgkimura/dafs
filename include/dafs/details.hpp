@@ -34,4 +34,8 @@ namespace dafs
         dafs::ReplicatedEndpoints endpoints,
         dafs::Address active,
         dafs::Address inactive);
+
+
+    bool IsReplicatedPartition(
+        dafs::ReplicatedEndpoints endpoints);
 }

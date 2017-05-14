@@ -27,4 +27,17 @@ namespace dafs
                 dafs::EmptyAddress()
             };
     }
+
+
+    bool
+    IsReplicatedPartition(
+        dafs::ReplicatedEndpoints endpoints)
+    {
+        return endpoints.minus.replication.ip != dafs::EmptyAddress().ip &&
+               endpoints.minus.replication.port != dafs::EmptyAddress().port &&
+               endpoints.zero.replication.ip != dafs::EmptyAddress().ip &&
+               endpoints.zero.replication.port != dafs::EmptyAddress().port &&
+               endpoints.plus.replication.ip != dafs::EmptyAddress().ip &&
+               endpoints.plus.replication.port != dafs::EmptyAddress().port;
+    }
 }

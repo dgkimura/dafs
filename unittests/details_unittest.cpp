@@ -100,3 +100,68 @@ TEST(DetailsTest, testGetFailoverWithUnknownAddress)
             dafs::Address("B_Replication", 22)).replication.ip
     );
 }
+
+
+TEST(DetailsTest, testIsReplicatedPartitionWithoutEmptyAddress)
+{
+    dafs::ReplicatedEndpoints endpoints
+    {
+        dafs::Endpoint
+        {
+            dafs::Address("A_Management", 1),
+            dafs::Address("A_Replication", 11)
+        },
+        dafs::Endpoint
+        {
+            dafs::Address("B_Management", 2),
+            dafs::Address("B_Replication", 22)
+        },
+        dafs::Endpoint
+        {
+            dafs::Address("C_Management", 3),
+            dafs::Address("C_Replication", 33)
+        },
+    };
+
+    ASSERT_TRUE(IsReplicatedPartition(endpoints));
+}
+
+
+TEST(DetailsTest, testIsReplicatedPartitionWithEmptyAddress)
+{
+    dafs::ReplicatedEndpoints endpoints
+    {
+        dafs::Endpoint
+        {
+            dafs::Address("A_Management", 1),
+            dafs::Address("A_Replication", 11)
+        },
+        dafs::Endpoint
+        {
+            dafs::Address("B_Management", 2),
+            dafs::Address("B_Replication", 22)
+        },
+        dafs::Endpoint
+        {
+            dafs::Address("C_Management", 3),
+            dafs::Address("C_Replication", 33)
+        },
+    };
+
+    ASSERT_TRUE(IsReplicatedPartition(endpoints));
+
+    dafs::ReplicatedEndpoints nonreplicated = endpoints;
+    nonreplicated.minus.replication = dafs::EmptyAddress();
+
+    ASSERT_FALSE(IsReplicatedPartition(nonreplicated));
+
+    nonreplicated = endpoints;
+    nonreplicated.zero.replication = dafs::EmptyAddress();
+
+    ASSERT_FALSE(IsReplicatedPartition(nonreplicated));
+
+    nonreplicated = endpoints;
+    nonreplicated.plus.replication = dafs::EmptyAddress();
+
+    ASSERT_FALSE(IsReplicatedPartition(nonreplicated));
+}
