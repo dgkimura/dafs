@@ -22,6 +22,10 @@ namespace dafs
                {
                    return GetNodeSetDetails();
                },
+               [this]()->bool
+               {
+                   return lock.IsLocked();
+               },
                ping_interval),
           lock(replication_, address, root),
           identity(

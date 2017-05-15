@@ -38,11 +38,14 @@ TEST(ReplicatedPingTest, testPingSendsProposeExitCluster)
         };
     };
 
+    auto is_partition_locked = [](){ return false; };
+
     auto mock_sender = std::make_shared<MockSender>();
     dafs::ReplicatedPing ping(
         replication,
         dafs::Address("C", 3),
         get_endpoints,
+        is_partition_locked,
         std::chrono::seconds(0));
     ping.SendPing(mock_sender);
 

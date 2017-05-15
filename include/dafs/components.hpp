@@ -156,6 +156,7 @@ namespace dafs
             dafs::Replication& replication,
             dafs::Address address_,
             std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
+            std::function<bool(void)> is_partition_locked,
             std::chrono::seconds ping_interval);
 
         std::vector<dafs::Address>
@@ -175,6 +176,8 @@ namespace dafs
 
         std::function<dafs::ReplicatedEndpoints(void)> get_endpoints;
 
+        std::function<bool(void)> is_partition_locked;
+
         std::chrono::seconds ping_interval;
 
         bool should_continue;
@@ -186,6 +189,8 @@ namespace dafs
     public:
 
         virtual bool Acquire() = 0;
+
+        virtual bool IsLocked() = 0;
 
         virtual void Release() = 0;
     };
@@ -201,6 +206,8 @@ namespace dafs
             dafs::Root root);
 
         virtual bool Acquire() override;
+
+        virtual bool IsLocked() override;
 
         virtual void Release() override;
 

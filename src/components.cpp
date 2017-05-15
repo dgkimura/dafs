@@ -199,10 +199,12 @@ namespace dafs
         dafs::Replication& replication,
         dafs::Address address,
         std::function<dafs::ReplicatedEndpoints(void)> get_endpoints,
+        std::function<bool(void)> is_partition_locked,
         std::chrono::seconds ping_interval)
     : replication(replication),
       address_(address),
       get_endpoints(get_endpoints),
+      is_partition_locked(is_partition_locked),
       ping_interval(ping_interval),
       should_continue(true)
     {
@@ -216,7 +218,10 @@ namespace dafs
             auto sender = std::make_shared<dafs::NetworkSender>();
             while (should_continue)
             {
-                SendPing(sender);
+                if (IsReplicatedPartition(get_endpoints()) && !is_partition_locked())
+                {
+                    SendPing(sender);
+                }
                 std::this_thread::sleep_for(ping_interval);
             }
         }).detach();
@@ -324,6 +329,16 @@ namespace dafs
         );
 
         return dafs::ReadBlock(rooted(lockfile)).contents == dafs::Serialize(address);
+    }
+
+
+    bool
+    ReplicatedLock::IsLocked()
+    {
+        dafs::BlockInfo lockfile;
+        lockfile.path = Constant::LockName;
+
+        return dafs::ReadBlock(rooted(lockfile)).contents.size() > 0;
     }
 
 
