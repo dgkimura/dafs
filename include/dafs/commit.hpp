@@ -14,13 +14,35 @@
 
 namespace dafs
 {
+    class Ignore
+    {
+    public:
+
+        Ignore(
+            std::unordered_map<
+                boost::uuids::uuid,
+                std::shared_ptr<dafs::Signal>>& progress_map);
+
+        void operator()(std::string proposal);
+
+    private:
+
+        std::unordered_map<
+            boost::uuids::uuid,
+            std::shared_ptr<dafs::Signal>
+        >& progress_map;
+    };
+
+
     class Commit
     {
     public:
 
         Commit(
             dafs::Root root,
-            std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>>& progress_map);
+            std::unordered_map<
+                boost::uuids::uuid,
+                std::shared_ptr<dafs::Signal>>& progress_map);
 
         void operator()(std::string proposal);
 

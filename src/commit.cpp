@@ -12,6 +12,25 @@
 
 namespace dafs
 {
+    Ignore::Ignore(
+        std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>>& progress_map)
+        : progress_map(progress_map)
+    {
+    }
+
+
+    void
+    Ignore::operator()(std::string proposal)
+    {
+        Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
+
+        if (progress_map.find(p.uuid) != progress_map.end())
+        {
+            progress_map[p.uuid]->Set();
+        }
+    }
+
+
     Commit::Commit(
         dafs::Root root,
         std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>>& progress_map)
