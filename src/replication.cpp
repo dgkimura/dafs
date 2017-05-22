@@ -31,13 +31,13 @@ namespace dafs
     PaxosReplication::Write(std::string entry)
     {
         auto proposal = dafs::Deserialize<dafs::Proposal>(entry);
-        auto signal = std::make_shared<dafs::Signal>();
 
-        while (progress_map.find(proposal.uuid) != progress_map.end())
+        do
         {
             proposal.uuid = boost::uuids::random_generator()();
-        }
-        progress_map[proposal.uuid] = signal;
+        } while (progress_map.find(proposal.uuid) != progress_map.end());
+
+        progress_map[proposal.uuid] = std::make_shared<dafs::Signal>();
 
         parliament.SendProposal(dafs::Serialize(proposal));
 
