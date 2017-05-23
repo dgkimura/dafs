@@ -35,7 +35,8 @@ namespace dafs
         do
         {
             proposal.uuid = boost::uuids::random_generator()();
-        } while (progress_map.find(proposal.uuid) != progress_map.end());
+        }
+        while (progress_map.find(proposal.uuid) != progress_map.end());
 
         progress_map[proposal.uuid] = std::make_shared<dafs::Signal>();
 
@@ -63,8 +64,20 @@ namespace dafs
     std::vector<dafs::Address>
     PaxosReplication::GetMissingReplicas()
     {
+        int minimum_ballot_count = 10;
+        auto absentee_ballots = parliament.GetAbsenteeBallots(minimum_ballot_count);
+
+        if (absentee_ballots.size() < minimum_ballot_count)
+        {
+            //
+            // We don't have enough data to suggest missing replica.
+            //
+            return std::vector<dafs::Address>{};
+        }
+
         auto nonresponsive = parliament.GetLegislators();
-        for (auto i : parliament.GetAbsenteeBallots(10))
+
+        for (auto i : parliament.GetAbsenteeBallots(minimum_ballot_count))
         {
             nonresponsive = nonresponsive->Intersection(i.second);
         }

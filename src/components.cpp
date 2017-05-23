@@ -275,8 +275,7 @@ namespace dafs
     std::vector<dafs::Address>
     ReplicatedPing::NonresponsiveMembers(int last_elections)
     {
-        std::vector<dafs::Address> nonresponsive_endpoints;
-        return nonresponsive_endpoints;
+        return replication.GetMissingReplicas();
     }
 
 
