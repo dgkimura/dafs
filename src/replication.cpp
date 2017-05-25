@@ -21,8 +21,9 @@ namespace dafs
     PaxosReplication::PaxosReplication(
         const PaxosReplication& other
     )
-        : parliament(other.parliament),
-          progress_map(other.progress_map)
+        : progress_map(other.progress_map),
+          parliament(other.parliament),
+          mutex()
     {
     }
 
@@ -30,6 +31,10 @@ namespace dafs
     void
     PaxosReplication::Write(std::string entry)
     {
+        // Here mutex is to guard against concurrent write access to
+        // progress_map.
+        std::lock_guard<std::mutex> guard(mutex);
+
         auto proposal = dafs::Deserialize<dafs::Proposal>(entry);
 
         do

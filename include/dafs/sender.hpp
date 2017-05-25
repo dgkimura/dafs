@@ -1,7 +1,5 @@
 #pragma once
 
-#include <mutex>
-
 #include <boost/asio.hpp>
 
 #include "dafs/messages.hpp"
@@ -36,7 +34,5 @@ namespace dafs
         boost::asio::io_service io_service;
 
         boost::asio::ip::tcp::socket socket;
-
-        std::mutex mutex;
     };
 }
