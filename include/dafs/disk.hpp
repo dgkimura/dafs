@@ -20,32 +20,6 @@ namespace dafs
 
 
     template <typename T>
-    bool Contains(
-        dafs::BlockInfo info,
-        T item,
-        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock)
-    {
-        bool is_contained = false;
-
-        dafs::BlockFormat block = get_block(info);
-
-        auto index = dafs::Index<T>();
-        if (!block.contents.empty())
-        {
-            index = dafs::Deserialize<dafs::Index<T>>(block.contents);
-        }
-        for (auto i : index.items)
-        {
-            if (i == item)
-            {
-                is_contained = true;
-            }
-        }
-        return is_contained;
-    }
-
-
-    template <typename T>
     dafs::Delta Insert(
         dafs::BlockInfo info,
         T item,

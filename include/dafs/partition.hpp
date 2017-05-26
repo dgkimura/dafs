@@ -24,6 +24,8 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) = 0;
 
+        virtual BlockIndex GetIndex() = 0;
+
         virtual void SetMinus(
             dafs::Address management,
             dafs::Address replication,
@@ -84,6 +86,11 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) override
         {
+        }
+
+        virtual BlockIndex GetIndex() override
+        {
+            return BlockIndex{};
         }
 
         virtual void SetMinus(
@@ -154,6 +161,8 @@ namespace dafs
 
         virtual void WriteBlock(BlockInfo block, BlockFormat format) override;
 
+        virtual BlockIndex GetIndex() override;
+
         virtual void SetMinus(
             dafs::Address management,
             dafs::Address replication,
@@ -189,10 +198,6 @@ namespace dafs
 
         dafs::BlockInfo identity;
 
-        dafs::BlockInfo author;
-
         dafs::BlockInfo details;
-
-        dafs::Address replication_interface;
     };
 }

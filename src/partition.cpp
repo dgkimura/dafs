@@ -35,8 +35,7 @@ namespace dafs
           details(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::DetailsName).string(),
-                  dafs::Identity())),
-          replication_interface(address)
+                  dafs::Identity()))
     {
         ping.Start();
     }
@@ -50,8 +49,7 @@ namespace dafs
           nodeset(other.nodeset),
           ping(other.ping),
           lock(other.lock),
-          identity(other.identity),
-          replication_interface(other.replication_interface)
+          identity(other.identity)
     {
     }
 
@@ -103,10 +101,23 @@ namespace dafs
     ReplicatedPartition::WriteBlock(BlockInfo block, BlockFormat format)
     {
         store.WriteBlock(block, format);
-        if (!store.ContainsIndex(block))
+
+        auto index = store.GetIndex().items;
+        if (!std::any_of(index.cbegin(), index.cend(),
+                         [=](const BlockInfo& b)
+                         {
+                             return b.identity==block.identity;
+                         }))
         {
             store.InsertIndex(block);
         }
+    }
+
+
+    BlockIndex
+    ReplicatedPartition::GetIndex()
+    {
+        return store.GetIndex();
     }
 
 

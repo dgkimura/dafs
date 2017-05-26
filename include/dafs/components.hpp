@@ -29,7 +29,7 @@ namespace dafs
 
         virtual void RemoveIndex(BlockInfo info) = 0;
 
-        virtual bool ContainsIndex(BlockInfo info) = 0;
+        virtual BlockIndex GetIndex() = 0;
 
         virtual void WriteBlock(BlockInfo info, BlockFormat data) = 0;
 
@@ -56,7 +56,7 @@ namespace dafs
 
         virtual void RemoveIndex(BlockInfo info) override;
 
-        virtual bool ContainsIndex(BlockInfo info) override;
+        virtual BlockIndex GetIndex() override;
 
         virtual void WriteBlock(BlockInfo info, BlockFormat data) override;
 

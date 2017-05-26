@@ -45,17 +45,30 @@ public:
 
     virtual void DeleteBlock(dafs::BlockInfo block) override
     {
-        block_map.erase(block.identity.id);
+        block_map.erase(block);
     }
 
     virtual dafs::BlockFormat ReadBlock(dafs::BlockInfo block) override
     {
-        return block_map[block.identity.id];
+        return block_map[block];
     }
 
     virtual void WriteBlock(dafs::BlockInfo block, dafs::BlockFormat format) override
     {
-        block_map[block.identity.id] = format;
+        block_map[block] = format;
+    }
+
+    virtual dafs::BlockIndex GetIndex() override
+    {
+        std::vector<dafs::BlockInfo> keys;
+        for (auto i : block_map)
+        {
+            keys.push_back(i.first);
+        }
+        return dafs::BlockIndex
+        {
+            keys
+        };
     }
 
     virtual void SetMinus(
@@ -111,5 +124,5 @@ private:
 
     bool is_active;
 
-    std::unordered_map<std::string, dafs::BlockFormat> block_map;
+    std::unordered_map<dafs::BlockInfo, dafs::BlockFormat> block_map;
 };

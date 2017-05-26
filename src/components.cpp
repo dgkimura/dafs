@@ -83,10 +83,13 @@ namespace dafs
     }
 
 
-    bool
-    ReplicatedStorage::ContainsIndex(BlockInfo info)
+    BlockIndex
+    ReplicatedStorage::GetIndex()
     {
-        return dafs::Contains(rooted(blocks), info);
+        auto block = ReadBlock(blocks);
+
+        return block.contents.empty() ? BlockIndex() :
+               dafs::Deserialize<BlockIndex>(block.contents);
     }
 
 
