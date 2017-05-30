@@ -444,7 +444,11 @@ namespace dafs
                 p_plus->GetNodeSetDetails().plus.replication,
                 Constant::PartitionMinusName);
 
-            // TODO: Send p_plus's blocklist for pruning later...
+            //
+            // Save plus partition's block info list for pruning on the other
+            // server which will handle the 2nd half of the exit.
+            //
+            auto blockinfo_list = p_plus->GetIndex();
 
             sender.Send(
                 dafs::Message
@@ -463,6 +467,11 @@ namespace dafs
                         {
                             dafs::IdentityKey,
                             dafs::Serialize(identity)
+                        },
+                        dafs::MetaData
+                        {
+                            dafs::BlockInfoListKey,
+                            dafs::Serialize(blockinfo_list)
                         }
                     }
                 }
@@ -525,7 +534,11 @@ namespace dafs
                 p_minus->GetNodeSetDetails().minus.replication,
                 Constant::PartitionPlusName);
 
-            // TODO: Send p_minus's blocklist for pruning later...
+            //
+            // Save minus partition's block info list for pruning on the other
+            // server which will handle the 2nd half of the exit.
+            //
+            auto blockinfo_list = p_minus->GetIndex();
 
             sender.Send(
                 dafs::Message
@@ -544,6 +557,11 @@ namespace dafs
                         {
                             dafs::IdentityKey,
                             dafs::Serialize(identity)
+                        },
+                        dafs::MetaData
+                        {
+                            dafs::BlockInfoListKey,
+                            dafs::Serialize(blockinfo_list)
                         }
                     }
                 }
