@@ -17,6 +17,11 @@ namespace dafs
         // Endpoint used in underlying replication protocol.
         //
         dafs::Address replication;
+
+        //
+        // Identity associated with the management endpoint.
+        //
+        dafs::Identity identity;
     };
 
 

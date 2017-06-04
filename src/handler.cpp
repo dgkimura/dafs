@@ -218,11 +218,13 @@ namespace dafs
                 p_minus->SetPlus(
                     endpoints.minus.management,
                     endpoints.minus.replication,
+                    endpoints.minus.identity,
                     Constant::PartitionMinusName);
 
                 p_zero->SetMinus(
                     endpoints.plus.management,
                     endpoints.plus.replication,
+                    endpoints.plus.identity,
                     Constant::PartitionPlusName);
 
                 // Send accepted messge to node.
@@ -254,10 +256,12 @@ namespace dafs
                 p_zero->SetPlus(
                     endpoints.minus.management,
                     endpoints.minus.replication,
+                    endpoints.plus.identity,
                     Constant::PartitionMinusName);
                 p_zero->SetMinus(
                     endpoints.plus.management,
                     endpoints.plus.replication,
+                    endpoints.plus.identity,
                     Constant::PartitionPlusName);
                 endpoints.plus = p_minus->GetNodeSetDetails().plus;
                 endpoints.minus = p_plus->GetNodeSetDetails().minus;
@@ -304,10 +308,12 @@ namespace dafs
         p_zero->SetMinus(
             endpoints.minus.management,
             endpoints.minus.replication,
+            endpoints.minus.identity,
             Constant::PartitionPlusName);
         p_zero->SetPlus(
             endpoints.plus.management,
             endpoints.plus.replication,
+            endpoints.plus.identity,
             Constant::PartitionMinusName);
 
         p_minus->Release();
@@ -442,6 +448,7 @@ namespace dafs
             p_zero->SetPlus(
                 p_plus->GetNodeSetDetails().plus.management,
                 p_plus->GetNodeSetDetails().plus.replication,
+                p_plus->GetNodeSetDetails().plus.identity,
                 Constant::PartitionMinusName);
 
             //
@@ -495,6 +502,7 @@ namespace dafs
             p_zero->SetPlus(
                 endpoint.management,
                 endpoint.replication,
+                endpoint.identity,
                 Constant::PartitionMinusName);
 
             p_plus->Release();
@@ -532,6 +540,7 @@ namespace dafs
             p_zero->SetMinus(
                 p_minus->GetNodeSetDetails().minus.management,
                 p_minus->GetNodeSetDetails().minus.replication,
+                p_minus->GetNodeSetDetails().minus.identity,
                 Constant::PartitionPlusName);
 
             //
@@ -585,6 +594,7 @@ namespace dafs
             p_zero->SetMinus(
                 endpoint.management,
                 endpoint.replication,
+                endpoint.identity,
                 Constant::PartitionPlusName);
 
             p_minus->Release();

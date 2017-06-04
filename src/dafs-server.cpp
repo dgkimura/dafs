@@ -32,7 +32,6 @@ void
 SetupReplicatedFiles(
     std::string directory,
     dafs::Address replication_interface,
-    dafs::Identity identity,
     dafs::ReplicatedEndpoints details)
 {
     if (!boost::filesystem::exists(directory))
@@ -45,13 +44,6 @@ SetupReplicatedFiles(
             ReplicasetFilename,
             replication_interface.ip + ":" + std::to_string(
                 replication_interface.port)
-        );
-
-        // write out identity file
-        CreateReplicatedFile(
-            directory,
-            Constant::IdentityName,
-            dafs::Serialize(identity)
         );
 
         // write out details file
@@ -68,14 +60,12 @@ std::shared_ptr<dafs::ReplicatedPartition>
 SetupPartition(
     std::string directory,
     dafs::Address replication_interface,
-    dafs::Identity identity,
     dafs::ReplicatedEndpoints details,
     std::chrono::seconds ping_interval)
 {
     SetupReplicatedFiles(
         directory,
         replication_interface,
-        identity,
         details);
 
     return std::make_shared<dafs::ReplicatedPartition>(
@@ -193,24 +183,27 @@ int main(int argc, char** argv)
     auto pminus = SetupPartition(
         Constant::PartitionMinusName,
         dafs::Address(options.address, options.minus_port),
-        dafs::Identity(boost::uuids::to_string(options.identity)) -
-        dafs::Identity("00000000-0000-0000-0000-0000000000ff"),
         dafs::ReplicatedEndpoints
         {
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::EmptyAddress()
+                dafs::EmptyAddress(),
+                dafs::Identity("00000000-0000-0000-0000-000000000000")
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::EmptyAddress()
+                dafs::EmptyAddress(),
+                dafs::Identity("00000000-0000-0000-0000-000000000000")
+
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::Address(options.address, options.minus_port)
+                dafs::Address(options.address, options.minus_port),
+                dafs::Identity(boost::uuids::to_string(options.identity))
+
             }
         },
         std::chrono::seconds(options.minus_ping_interval)
@@ -218,23 +211,28 @@ int main(int argc, char** argv)
     auto pzero = SetupPartition(
         Constant::PartitionZeroName,
         dafs::Address(options.address, options.zero_port),
-        dafs::Identity(boost::uuids::to_string(options.identity)),
         dafs::ReplicatedEndpoints
         {
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::EmptyAddress()
+                dafs::EmptyAddress(),
+                dafs::Identity("00000000-0000-0000-0000-000000000000")
+
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::Address(options.address, options.zero_port)
+                dafs::Address(options.address, options.zero_port),
+                dafs::Identity(boost::uuids::to_string(options.identity))
+
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::EmptyAddress()
+                dafs::EmptyAddress(),
+                dafs::Identity("00000000-0000-0000-0000-000000000000")
+
             }
         },
         std::chrono::seconds(options.zero_ping_interval)
@@ -242,24 +240,27 @@ int main(int argc, char** argv)
     auto pplus = SetupPartition(
         Constant::PartitionPlusName,
         dafs::Address(options.address, options.plus_port),
-        dafs::Identity(boost::uuids::to_string(options.identity)) +
-        dafs::Identity("00000000-0000-0000-0000-0000000000ff"),
         dafs::ReplicatedEndpoints
         {
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::Address(options.address, options.plus_port)
+                dafs::Address(options.address, options.plus_port),
+                dafs::Identity(boost::uuids::to_string(options.identity))
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::EmptyAddress()
+                dafs::EmptyAddress(),
+                dafs::Identity("00000000-0000-0000-0000-000000000000")
+
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
-                dafs::EmptyAddress()
+                dafs::EmptyAddress(),
+                dafs::Identity("00000000-0000-0000-0000-000000000000")
+
             }
         },
         std::chrono::seconds(options.plus_ping_interval)

@@ -28,10 +28,6 @@ namespace dafs
                },
                ping_interval),
           lock(replication_, address, root),
-          identity(
-              dafs::CreateBlockInfo(
-                  boost::filesystem::path(Constant::IdentityName).string(),
-                  dafs::Identity())),
           details(
               dafs::CreateBlockInfo(
                   boost::filesystem::path(Constant::DetailsName).string(),
@@ -48,8 +44,7 @@ namespace dafs
           store(other.store),
           nodeset(other.nodeset),
           ping(other.ping),
-          lock(other.lock),
-          identity(other.identity)
+          lock(other.lock)
     {
     }
 
@@ -57,8 +52,10 @@ namespace dafs
     dafs::Identity
     ReplicatedPartition::GetIdentity()
     {
-        auto id_block =  store.ReadBlock(identity);
-        return dafs::Deserialize<dafs::Identity>(id_block.contents);
+        auto details_block =  store.ReadBlock(details);
+        auto details = dafs::Deserialize<dafs::ReplicatedEndpoints>(
+            details_block.contents);
+        return details.zero.identity;
     }
 
 
@@ -125,12 +122,16 @@ namespace dafs
     ReplicatedPartition::SetMinus(
         dafs::Address management,
         dafs::Address replication,
+        dafs::Identity identity,
         std::string location)
     {
-        dafs::ReplicatedEndpoints endpoints = GetNodeSetDetails();
-        dafs::Address removed = endpoints.minus.replication;
+        dafs::Address removed = GetNodeSetDetails().minus.replication;
 
-        nodeset.SetMinus(management, replication, location, endpoints);
+        auto endpoints = nodeset.SetMinus(management,
+                                          replication,
+                                          identity,
+                                          location,
+                                          GetNodeSetDetails());
         WriteBlock(
             details,
             BlockFormat
@@ -148,11 +149,14 @@ namespace dafs
     ReplicatedPartition::SetZero(
         dafs::Address management,
         dafs::Address replication,
+        dafs::Identity identity,
         std::string location)
     {
-        dafs::ReplicatedEndpoints endpoints = GetNodeSetDetails();
-
-        nodeset.SetZero(management, replication, location, endpoints);
+        auto endpoints = nodeset.SetZero(management,
+                                         replication,
+                                         identity,
+                                         location,
+                                         GetNodeSetDetails());
         WriteBlock(
             details,
             BlockFormat
@@ -166,12 +170,17 @@ namespace dafs
     ReplicatedPartition::SetPlus(
         dafs::Address management,
         dafs::Address replication,
+        dafs::Identity identity,
         std::string location)
     {
-        dafs::ReplicatedEndpoints endpoints = GetNodeSetDetails();
-        dafs::Address removed = endpoints.plus.replication;
+        dafs::Address removed = GetNodeSetDetails().plus.replication;
 
-        nodeset.SetPlus(management, replication, location, endpoints);
+        auto endpoints = nodeset.SetPlus(management,
+                                         replication,
+                                         identity,
+                                         location,
+                                         GetNodeSetDetails());
+
         WriteBlock(
             details,
             BlockFormat

@@ -87,20 +87,23 @@ namespace dafs
         virtual dafs::ReplicatedEndpoints SetMinus(
             const dafs::Address management,
             const dafs::Address replication,
+            const dafs::Identity identity,
             const std::string location,
-            dafs::ReplicatedEndpoints& details) = 0;
+            dafs::ReplicatedEndpoints details) = 0;
 
         virtual dafs::ReplicatedEndpoints SetZero(
             const dafs::Address management,
             const dafs::Address replication,
+            const dafs::Identity identity,
             const std::string location,
-            dafs::ReplicatedEndpoints& details) = 0;
+            dafs::ReplicatedEndpoints details) = 0;
 
         virtual dafs::ReplicatedEndpoints SetPlus(
             const dafs::Address management,
             const dafs::Address replication,
+            const dafs::Identity identity,
             const std::string location,
-            dafs::ReplicatedEndpoints& details) = 0;
+            dafs::ReplicatedEndpoints details) = 0;
     };
 
 
@@ -116,20 +119,23 @@ namespace dafs
         virtual dafs::ReplicatedEndpoints SetMinus(
             const dafs::Address management,
             const dafs::Address replication,
+            const dafs::Identity identity,
             const std::string location,
-            dafs::ReplicatedEndpoints& details) override;
+            dafs::ReplicatedEndpoints details) override;
 
         virtual dafs::ReplicatedEndpoints SetZero(
             const dafs::Address management,
             const dafs::Address replication,
+            const dafs::Identity identity,
             const std::string location,
-            dafs::ReplicatedEndpoints& details) override;
+            dafs::ReplicatedEndpoints details) override;
 
         virtual dafs::ReplicatedEndpoints SetPlus(
             const dafs::Address management,
             const dafs::Address replication,
+            const dafs::Identity identity,
             const std::string location,
-            dafs::ReplicatedEndpoints& details) override;
+            dafs::ReplicatedEndpoints details) override;
 
     private:
 

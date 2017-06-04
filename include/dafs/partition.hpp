@@ -29,16 +29,19 @@ namespace dafs
         virtual void SetMinus(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) = 0;
 
         virtual void SetZero(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) = 0;
 
         virtual void SetPlus(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) = 0;
 
         virtual bool IsActive() = 0;
@@ -96,6 +99,7 @@ namespace dafs
         virtual void SetMinus(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) override
         {
         }
@@ -103,6 +107,7 @@ namespace dafs
         virtual void SetZero(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) override
         {
         }
@@ -110,6 +115,7 @@ namespace dafs
         virtual void SetPlus(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) override
         {
         }
@@ -166,16 +172,19 @@ namespace dafs
         virtual void SetMinus(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) override;
 
         virtual void SetZero(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) override;
 
         virtual void SetPlus(
             dafs::Address management,
             dafs::Address replication,
+            dafs::Identity identity,
             std::string location) override;
 
         virtual bool IsActive() override;
@@ -195,8 +204,6 @@ namespace dafs
         ReplicatedPing ping;
 
         ReplicatedLock lock;
-
-        dafs::BlockInfo identity;
 
         dafs::BlockInfo details;
     };

@@ -74,6 +74,7 @@ public:
     virtual void SetMinus(
         dafs::Address management,
         dafs::Address replication,
+        dafs::Identity identity,
         std::string location) override
     {
         minus.management = management;
@@ -83,6 +84,7 @@ public:
     virtual void SetZero(
         dafs::Address management,
         dafs::Address replication,
+        dafs::Identity identity,
         std::string location) override
     {
         zero.management = management;
@@ -92,6 +94,7 @@ public:
     virtual void SetPlus(
         dafs::Address management,
         dafs::Address replication,
+        dafs::Identity identity,
         std::string location) override
     {
         plus.management = management;

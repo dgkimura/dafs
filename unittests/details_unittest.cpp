@@ -12,17 +12,20 @@ TEST(DetailsTest, testGetFailoverWithValidCombinations)
         dafs::Endpoint
         {
             dafs::Address("A_Management", 1),
-            dafs::Address("A_Replication", 11)
+            dafs::Address("A_Replication", 11),
+            dafs::Identity("11111111-1111-1111-1111-111111111111")
         },
         dafs::Endpoint
         {
             dafs::Address("B_Management", 2),
-            dafs::Address("B_Replication", 22)
+            dafs::Address("B_Replication", 22),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
         },
         dafs::Endpoint
         {
             dafs::Address("C_Management", 3),
-            dafs::Address("C_Replication", 33)
+            dafs::Address("C_Replication", 33),
+            dafs::Identity("33333333-3333-3333-3333-333333333333")
         },
     };
 
@@ -78,17 +81,20 @@ TEST(DetailsTest, testGetFailoverWithUnknownAddress)
         dafs::Endpoint
         {
             dafs::Address("A_Management", 1),
-            dafs::Address("A_Replication", 11)
+            dafs::Address("A_Replication", 11),
+            dafs::Identity("11111111-1111-1111-1111-111111111111")
         },
         dafs::Endpoint
         {
             dafs::Address("B_Management", 2),
-            dafs::Address("B_Replication", 22)
+            dafs::Address("B_Replication", 22),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
         },
         dafs::Endpoint
         {
             dafs::Address("C_Management", 3),
-            dafs::Address("C_Replication", 33)
+            dafs::Address("C_Replication", 33),
+            dafs::Identity("33333333-3333-3333-3333-333333333333")
         },
     };
 
@@ -109,17 +115,21 @@ TEST(DetailsTest, testIsReplicatedPartitionWithoutEmptyAddress)
         dafs::Endpoint
         {
             dafs::Address("A_Management", 1),
-            dafs::Address("A_Replication", 11)
+            dafs::Address("A_Replication", 11),
+            dafs::Identity("11111111-1111-1111-1111-111111111111")
         },
         dafs::Endpoint
         {
             dafs::Address("B_Management", 2),
-            dafs::Address("B_Replication", 22)
+            dafs::Address("B_Replication", 22),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+
         },
         dafs::Endpoint
         {
             dafs::Address("C_Management", 3),
-            dafs::Address("C_Replication", 33)
+            dafs::Address("C_Replication", 33),
+            dafs::Identity("33333333-3333-3333-3333-333333333333")
         },
     };
 
@@ -134,17 +144,20 @@ TEST(DetailsTest, testIsReplicatedPartitionWithEmptyAddress)
         dafs::Endpoint
         {
             dafs::Address("A_Management", 1),
-            dafs::Address("A_Replication", 11)
+            dafs::Address("A_Replication", 11),
+            dafs::Identity("11111111-1111-1111-1111-111111111111")
         },
         dafs::Endpoint
         {
             dafs::Address("B_Management", 2),
-            dafs::Address("B_Replication", 22)
+            dafs::Address("B_Replication", 22),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
         },
         dafs::Endpoint
         {
             dafs::Address("C_Management", 3),
-            dafs::Address("C_Replication", 33)
+            dafs::Address("C_Replication", 33),
+            dafs::Identity("33333333-3333-3333-3333-333333333333")
         },
     };
 

@@ -55,3 +55,86 @@ TEST(ReplicatedPingTest, testPingSendsProposeExitCluster)
         mock_sender->sentMessages()[0].type);
 }
 
+
+TEST(ReplicatedNodeSetTest, testSetMinusUpdatesReplicatedEndpointDetails)
+{
+    auto endpoints = dafs::ReplicatedEndpoints
+    {
+        dafs::Endpoint
+        {
+            dafs::Address{"1.0.0.0", 1000},
+            dafs::Address{"1.0.0.1", 1001},
+            dafs::Identity("10000000-0000-0000-000000000000")
+        },
+        dafs::Endpoint
+        {
+            dafs::Address{"2.0.0.0", 2000},
+            dafs::Address{"2.0.0.1", 2001},
+            dafs::Identity("20000000-0000-0000-000000000000")
+        },
+        dafs::Endpoint
+        {
+            dafs::Address{"3.0.0.0", 3000},
+            dafs::Address{"3.0.0.1", 3001},
+            dafs::Identity("30000000-0000-0000-000000000000")
+        }
+    };
+    MockReplication replication;
+
+    dafs::ReplicatedNodeSet nodeset(replication);
+    auto result = nodeset.SetMinus(
+        dafs::Address{"1.1.0.0", 1100},
+        dafs::Address{"1.1.0.1", 1101},
+        dafs::Identity("11111111-1111-1111-111111111111"),
+        "a_location",
+        endpoints
+    );
+
+    ASSERT_EQ("1.1.0.0", result.minus.management.ip);
+    ASSERT_EQ(1100, result.minus.management.port);
+    ASSERT_EQ("1.1.0.1", result.minus.replication.ip);
+    ASSERT_EQ(1101, result.minus.replication.port);
+    ASSERT_EQ("11111111-1111-1111-111111111111", result.minus.identity.id);
+}
+
+
+TEST(ReplicatedNodeSetTest, testSetPlusUpdatesReplicatedEndpointDetails)
+{
+    auto endpoints = dafs::ReplicatedEndpoints
+    {
+        dafs::Endpoint
+        {
+            dafs::Address{"1.0.0.0", 1000},
+            dafs::Address{"1.0.0.1", 1001},
+            dafs::Identity("10000000-0000-0000-000000000000")
+        },
+        dafs::Endpoint
+        {
+            dafs::Address{"2.0.0.0", 2000},
+            dafs::Address{"2.0.0.1", 2001},
+            dafs::Identity("20000000-0000-0000-000000000000")
+        },
+        dafs::Endpoint
+        {
+            dafs::Address{"3.0.0.0", 3000},
+            dafs::Address{"3.0.0.1", 3001},
+            dafs::Identity("30000000-0000-0000-000000000000")
+        }
+    };
+    MockReplication replication;
+
+    dafs::ReplicatedNodeSet nodeset(replication);
+    auto result = nodeset.SetPlus(
+        dafs::Address{"1.1.0.0", 1100},
+        dafs::Address{"1.1.0.1", 1101},
+        dafs::Identity("11111111-1111-1111-111111111111"),
+        "a_location",
+        endpoints
+    );
+
+    ASSERT_EQ("1.1.0.0", result.plus.management.ip);
+    ASSERT_EQ(1100, result.plus.management.port);
+    ASSERT_EQ("1.1.0.1", result.plus.replication.ip);
+    ASSERT_EQ(1101, result.plus.replication.port);
+    ASSERT_EQ("11111111-1111-1111-111111111111", result.plus.identity.id);
+}

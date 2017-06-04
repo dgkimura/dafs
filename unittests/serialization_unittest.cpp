@@ -343,3 +343,30 @@ TEST(SerializationUnitTest, testProposalIsSerializableAndDeserializable)
     ASSERT_EQ(expected.content, actual.content);
     ASSERT_EQ(expected.uuid, actual.uuid);
 }
+
+
+TEST(SerializationUnitTest, testEndpointIsSerializableAndDeserializable)
+{
+    dafs::Endpoint expected
+    {
+        dafs::Address
+        {
+            "1.1.1.1", 1111
+        },
+        dafs::Address
+        {
+            "2.2.2.2", 2222
+        },
+        dafs::Identity("33333333-3333-3333-3333-333333333333")
+
+    }, actual;
+
+    std::string string_obj = dafs::Serialize(expected);
+    actual = dafs::Deserialize<dafs::Endpoint>(string_obj);
+
+    ASSERT_EQ(expected.management.ip, actual.management.ip);
+    ASSERT_EQ(expected.management.port, actual.management.port);
+    ASSERT_EQ(expected.replication.ip, actual.replication.ip);
+    ASSERT_EQ(expected.replication.port, actual.replication.port);
+    ASSERT_EQ(expected.identity, actual.identity);
+}

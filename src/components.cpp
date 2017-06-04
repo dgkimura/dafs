@@ -158,28 +158,32 @@ namespace dafs
 
     dafs::ReplicatedEndpoints
     ReplicatedNodeSet::SetMinus(
-        dafs::Address management,
-        dafs::Address replication,
-        std::string location,
-        dafs::ReplicatedEndpoints& details)
+        const dafs::Address management,
+        const dafs::Address replication,
+        const dafs::Identity identity,
+        const std::string location,
+        dafs::ReplicatedEndpoints details)
     {
         replication_.AddReplica(replication, location);
         details.minus.management = management;
         details.minus.replication = replication;
+        details.minus.identity = identity;
         return details;
     }
 
 
     dafs::ReplicatedEndpoints
     ReplicatedNodeSet::SetZero(
-        dafs::Address management,
-        dafs::Address replication,
-        std::string location,
-        dafs::ReplicatedEndpoints& details)
+        const dafs::Address management,
+        const dafs::Address replication,
+        const dafs::Identity identity,
+        const std::string location,
+        dafs::ReplicatedEndpoints details)
     {
         replication_.AddReplica(replication, location);
         details.zero.management = management;
         details.zero.replication = replication;
+        details.zero.identity = identity;
         return details;
     }
 
@@ -188,12 +192,14 @@ namespace dafs
     ReplicatedNodeSet::SetPlus(
         const dafs::Address management,
         const dafs::Address replication,
+        const dafs::Identity identity,
         const std::string location,
-        dafs::ReplicatedEndpoints& details)
+        dafs::ReplicatedEndpoints details)
     {
         replication_.AddReplica(replication, location);
         details.plus.management = management;
         details.plus.replication = replication;
+        details.plus.identity = identity;
         return details;
     }
 
