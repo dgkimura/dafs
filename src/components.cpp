@@ -22,9 +22,12 @@ namespace dafs
     : replication(replication),
       root(root),
       blocks(
-          dafs::CreateBlockInfo(
+          dafs::BlockInfo
+          {
               boost::filesystem::path(Constant::BlockListName).string(),
-              dafs::Identity()))
+              dafs::Identity()
+          }
+      )
     {
     }
 

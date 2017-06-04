@@ -12,20 +12,18 @@ public:
     MockPartition(
         dafs::Endpoint minus,
         dafs::Endpoint zero,
-        dafs::Endpoint plus,
-        dafs::Identity identity
+        dafs::Endpoint plus
     )
         : minus(minus),
           zero(zero),
           plus(plus),
-          identity(identity),
           is_active(true)
     {
     }
 
     virtual dafs::Identity GetIdentity() override
     {
-        return identity;
+        return zero.identity;
     }
 
     virtual dafs::ReplicatedEndpoints GetNodeSetDetails() override
@@ -122,8 +120,6 @@ private:
     dafs::Endpoint zero;
 
     dafs::Endpoint plus;
-
-    dafs::Identity identity;
 
     bool is_active;
 

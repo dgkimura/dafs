@@ -29,9 +29,12 @@ namespace dafs
                ping_interval),
           lock(replication_, address, root),
           details(
-              dafs::CreateBlockInfo(
+              dafs::BlockInfo
+              {
                   boost::filesystem::path(Constant::DetailsName).string(),
-                  dafs::Identity()))
+                  dafs::Identity()
+              }
+          )
     {
         ping.Start();
     }
@@ -84,6 +87,7 @@ namespace dafs
     ReplicatedPartition::DeleteBlock(BlockInfo info)
     {
         store.DeleteBlock(info);
+        store.RemoveIndex(info);
     }
 
 
@@ -132,7 +136,7 @@ namespace dafs
                                           identity,
                                           location,
                                           GetNodeSetDetails());
-        WriteBlock(
+        store.WriteBlock(
             details,
             BlockFormat
             {
@@ -157,7 +161,7 @@ namespace dafs
                                          identity,
                                          location,
                                          GetNodeSetDetails());
-        WriteBlock(
+        store.WriteBlock(
             details,
             BlockFormat
             {
@@ -181,7 +185,7 @@ namespace dafs
                                          location,
                                          GetNodeSetDetails());
 
-        WriteBlock(
+        store.WriteBlock(
             details,
             BlockFormat
             {

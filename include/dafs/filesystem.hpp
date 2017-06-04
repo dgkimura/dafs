@@ -164,34 +164,6 @@ namespace dafs
             dafs::Identity result(raw_result);
             return result;
         }
-
-        Identity
-        Median(const Identity& rhs) const
-        {
-            Identity upper = rhs > *this ? rhs : *this;
-            Identity lower = rhs > *this ? *this : rhs;
-
-            Identity diff = upper - lower;
-
-            std::string raw_result;
-            for (int i = id.size(); i >= 0; i--)
-            {
-                if (id[i] == '-')
-                {
-                    raw_result = '-' + raw_result;
-                    continue;
-                }
-                int a;
-                std::stringstream(std::string(1, id[i])) >> std::hex >> a;
-                a >>= 1;
-                std::stringstream tmp;
-                tmp << std::hex << a;
-                raw_result = tmp.str() + raw_result;
-            }
-            dafs::Identity result(raw_result);
-            dafs::Identity median = result + lower;
-            return median;
-        }
     };
 
 
@@ -272,13 +244,6 @@ namespace dafs
     // Function to create Bytes
     //
     Bytes CreateBytes(const std::string& data);
-
-
-    //
-    // Function to create BlockInfo
-    //
-    BlockInfo CreateBlockInfo(const std::string& path,
-                              const dafs::Identity identity);
 
 
     bool IsLogicallyOrdered(dafs::Identity first,

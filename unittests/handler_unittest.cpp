@@ -17,55 +17,61 @@ class HandlerTest: public testing::Test
                 dafs::Endpoint
                 {
                     dafs::Address("1.1.1.1", 1000),
-                    dafs::Address("1.1.1.1", 1111)
+                    dafs::Address("1.1.1.1", 1111),
+                    dafs::Identity("11111111-1111-1111-1111-111111111111")
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("2.2.2.2", 2000),
-                    dafs::Address("2.2.2.2", 2222)
+                    dafs::Address("2.2.2.2", 2222),
+                    dafs::Identity("22222222-2222-2222-2222-222222222222")
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("3.3.3.3", 3000),
-                    dafs::Address("3.3.3.3", 3333)
-                },
-                dafs::Identity("11111111-1111-1111-1111-111111111111")
+                    dafs::Address("3.3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333")
+                }
             ),
             std::make_shared<MockPartition>(
                 dafs::Endpoint
                 {
                     dafs::Address("3.3.3.3", 3000),
-                    dafs::Address("3.3.3.3", 3333)
+                    dafs::Address("3.3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333")
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("1.1.1.1", 1000),
-                    dafs::Address("1.1.1.1", 1111)
+                    dafs::Address("1.1.1.1", 1111),
+                    dafs::Identity("11111111-1111-1111-1111-111111111111")
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("2.2.2.2", 2000),
-                    dafs::Address("2.2.2.2", 2222)
-                },
-                dafs::Identity("22222222-2222-2222-2222-222222222222")
+                    dafs::Address("2.2.2.2", 2222),
+                    dafs::Identity("22222222-2222-2222-2222-222222222222")
+                }
             ),
             std::make_shared<MockPartition>(
                 dafs::Endpoint
                 {
                     dafs::Address("2.2.2.2", 2000),
-                    dafs::Address("2.2.2.2", 2222)
+                    dafs::Address("2.2.2.2", 2222),
+                    dafs::Identity("22222222-2222-2222-2222-222222222222")
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("3.3.3.3", 3000),
-                    dafs::Address("3.3.3.3", 3333)
+                    dafs::Address("3.3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333")
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("1.1.1.1", 1000),
-                    dafs::Address("1.1.1.1", 1111)
-                },
-                dafs::Identity("33333333-3333-3333-3333-333333333333")
+                    dafs::Address("1.1.1.1", 1111),
+                    dafs::Identity("11111111-1111-1111-1111-111111111111")
+                }
             )
         );
     }
@@ -220,14 +226,14 @@ TEST_F(HandlerTest, testGetNodeDetails)
     auto p_endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::PlusReplicatedEndpointsKey);
 
     ASSERT_EQ(
-        dafs::Identity("11111111-1111-1111-1111-111111111111"),
-        m_identity);
+        "22222222-2222-2222-2222-222222222222",
+        m_identity.id);
     ASSERT_EQ(
-        dafs::Identity("22222222-2222-2222-2222-222222222222"),
-        z_identity);
+        "11111111-1111-1111-1111-111111111111",
+        z_identity.id);
     ASSERT_EQ(
-        dafs::Identity("33333333-3333-3333-3333-333333333333"),
-        p_identity);
+        "33333333-3333-3333-3333-333333333333",
+        p_identity.id);
 
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), m_endpoints.minus.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), m_endpoints.minus.replication);
@@ -275,9 +281,7 @@ TEST_F(HandlerTest, testHandleJoinCluster)
     auto endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::NodeEndpointsKey);
     auto identity = parsed.GetValue<dafs::Identity>(dafs::IdentityKey);
 
-    ASSERT_EQ(
-        dafs::Identity("22222222-2222-2222-2222-222222222222"),
-        identity);
+    ASSERT_EQ("11111111-1111-1111-1111-111111111111", identity.id);
 
     ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), endpoints.minus.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), endpoints.minus.replication);
@@ -297,7 +301,7 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
             {
                 dafs::IdentityKey,
                 dafs::Serialize(
-                    dafs::Identity("99999999-9999-9999-9999-999999999999")
+                    dafs::Identity("11111111-1111-1111-5555-555555555555")
                 )
             },
             dafs::MetaData
@@ -329,7 +333,7 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
             {
                 dafs::IdentityKey,
                 dafs::Serialize(
-                    dafs::Identity("11111111-1111-1111-5555-555555555555")
+                    dafs::Identity("00000000-0000-0000-0000-000000000000")
                 )
             },
             dafs::MetaData

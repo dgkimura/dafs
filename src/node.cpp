@@ -40,33 +40,42 @@ namespace dafs
     std::shared_ptr<dafs::Partition>
     Node::GetPartition(Identity identity)
     {
-        auto minus_id = slot_minus->GetIdentity();
-        auto zero_id = slot_zero->GetIdentity();
-        auto plus_id = slot_plus->GetIdentity();
+        auto minus_detail = slot_minus->GetNodeSetDetails();
+        auto zero_detail = slot_zero->GetNodeSetDetails();
+        auto plus_detail = slot_plus->GetNodeSetDetails();
 
-        if (minus_id > zero_id)
-        {
-            minus_id = Identity();
-        }
-        if (zero_id > plus_id)
-        {
-            zero_id = Identity();
-        }
-
-        if (minus_id <= identity &&
-            identity < minus_id.Median(zero_id) &&
+        if (minus_detail.zero.identity == identity &&
             slot_minus->IsActive())
         {
             return slot_minus;
         }
-        else if (identity >= minus_id.Median(zero_id) &&
-                 identity < zero_id.Median(plus_id) &&
+        else if (zero_detail.zero.identity == identity &&
                  slot_zero->IsActive())
         {
             return slot_zero;
         }
-        else if (identity < plus_id &&
-                 identity >= minus_id.Median(zero_id) &&
+        else if (plus_detail.zero.identity == identity &&
+                 slot_plus->IsActive())
+        {
+            return slot_plus;
+        }
+        else if (IsLogicallyOrdered(zero_detail.zero.identity,
+                                    identity,
+                                    zero_detail.plus.identity) &&
+                 slot_zero->IsActive())
+        {
+            return slot_zero;
+        }
+        else if (IsLogicallyOrdered(minus_detail.zero.identity,
+                                    identity,
+                                    minus_detail.plus.identity) &&
+            slot_minus->IsActive())
+        {
+            return slot_minus;
+        }
+        else if (IsLogicallyOrdered(plus_detail.zero.identity,
+                                    identity,
+                                    plus_detail.plus.identity) &&
                  slot_plus->IsActive())
         {
             return slot_plus;
