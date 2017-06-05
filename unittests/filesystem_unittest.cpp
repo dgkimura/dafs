@@ -92,3 +92,131 @@ TEST(FileSystemTest, testsIdentityArithmaticStringRepresentation)
     ASSERT_EQ("00000000-0000-0000-0000-000000000a19", (a + b).id);
     ASSERT_EQ("00000000-0000-0000-0000-000000000909", (a - b).id);
 }
+
+
+TEST(FileSystemTest, testsSplitUpperIndexWithNoWrap)
+{
+    auto index = SplitUpperIndex(
+        dafs::BlockIndex
+        {
+            std::vector<dafs::BlockInfo>
+            {
+                dafs::BlockInfo
+                {
+                    "a_block",
+                    dafs::Identity("10000000-0000-0000-0000-000000000000"),
+                    0
+                },
+                dafs::BlockInfo
+                {
+                    "b_block",
+                    dafs::Identity("10000000-0000-0000-0000-222222222222"),
+                    0
+                },
+                dafs::BlockInfo
+                {
+                    "c_block",
+                    dafs::Identity("10000000-0000-0000-0000-444444444444"),
+                    0
+                }
+            }
+        },
+        dafs::Identity("10000000-0000-0000-0000-111111111111"),
+        dafs::Identity("10000000-0000-0000-0000-333333333333"),
+        dafs::Identity("10000000-0000-0000-0000-555555555555")
+    );
+
+    ASSERT_EQ("10000000-0000-0000-0000-444444444444", index.items[0].identity.id);
+}
+
+
+TEST(FileSystemTest, testsSplitUpperIndexWithWrapAfterDivider)
+{
+    auto index = SplitUpperIndex(
+        dafs::BlockIndex
+        {
+            std::vector<dafs::BlockInfo>
+            {
+                dafs::BlockInfo
+                {
+                    "a_block",
+                    dafs::Identity("10000000-0000-0000-0000-000000000000"),
+                    0
+                },
+                dafs::BlockInfo
+                {
+                    "b_block",
+                    dafs::Identity("10000000-0000-0000-0000-222222222222"),
+                    0
+                },
+                dafs::BlockInfo
+                {
+                    "c_block",
+                    dafs::Identity("10000000-0000-0000-0000-444444444444"),
+                    0
+                }
+            }
+        },
+        dafs::Identity("10000000-0000-0000-0000-333333333333"),
+        dafs::Identity("10000000-0000-0000-0000-555555555555"),
+        dafs::Identity("10000000-0000-0000-0000-111111111111")
+    );
+
+    ASSERT_EQ("10000000-0000-0000-0000-000000000000", index.items[0].identity.id);
+
+    index = SplitUpperIndex(
+        dafs::BlockIndex
+        {
+            std::vector<dafs::BlockInfo>
+            {
+                dafs::BlockInfo
+                {
+                    "c_block",
+                    dafs::Identity("10000000-0000-0000-0000-666666666666"),
+                    0
+                }
+            }
+        },
+        dafs::Identity("10000000-0000-0000-0000-333333333333"),
+        dafs::Identity("10000000-0000-0000-0000-555555555555"),
+        dafs::Identity("10000000-0000-0000-0000-111111111111")
+    );
+
+    ASSERT_EQ("10000000-0000-0000-0000-666666666666", index.items[0].identity.id);
+}
+
+
+TEST(FileSystemTest, testsSplitUpperIndexWithWrapAfterLower)
+{
+    auto index = SplitUpperIndex(
+        dafs::BlockIndex
+        {
+            std::vector<dafs::BlockInfo>
+            {
+                dafs::BlockInfo
+                {
+                    "a_block",
+                    dafs::Identity("10000000-0000-0000-0000-000000000000"),
+                    0
+                },
+                dafs::BlockInfo
+                {
+                    "b_block",
+                    dafs::Identity("10000000-0000-0000-0000-222222222222"),
+                    0
+                },
+                dafs::BlockInfo
+                {
+                    "c_block",
+                    dafs::Identity("10000000-0000-0000-0000-444444444444"),
+                    0
+                }
+            }
+        },
+        dafs::Identity("10000000-0000-0000-0000-555555555555"),
+        dafs::Identity("10000000-0000-0000-0000-111111111111"),
+        dafs::Identity("10000000-0000-0000-0000-333333333333")
+    );
+
+    ASSERT_EQ("10000000-0000-0000-0000-222222222222", index.items[0].identity.id);
+}

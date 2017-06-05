@@ -320,6 +320,16 @@ namespace dafs
         p_zero->Release();
         p_plus->Release();
 
+        for (auto info : SplitUpperIndex(p_minus->GetIndex(),
+                                         p_minus->GetIdentity(),
+                                         p_zero->GetIdentity(),
+                                         p_plus->GetIdentity()).items)
+        {
+            auto format = p_minus->ReadBlock(info);
+            p_zero->WriteBlock(info, format);
+            p_minus->DeleteBlock(info);
+        }
+
         dafs::Message m;
         return m;
     }
@@ -496,8 +506,17 @@ namespace dafs
             }
 
             auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
+            auto index = metadata.GetValue<dafs::BlockIndex>(dafs::BlockInfoListKey);
 
-            // TODO: Use blocklist to add _relavent_ files to p_plus and p_zero
+            for (auto info : SplitLowerIndex(index,
+                                             p_zero->GetIdentity(),
+                                             p_plus->GetIdentity(),
+                                             p_plus->GetNodeSetDetails().plus.identity).items)
+            {
+                auto format = p_plus->ReadBlock(info);
+                p_zero->WriteBlock(info, format);
+                p_plus->DeleteBlock(info);
+            }
 
             p_zero->SetPlus(
                 endpoint.management,
@@ -588,8 +607,17 @@ namespace dafs
             }
 
             auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
+            auto index = metadata.GetValue<dafs::BlockIndex>(dafs::BlockInfoListKey);
 
-            // TODO: Use blocklist to add _relavent_ files to p_minus and p_zero
+            for (auto info : SplitUpperIndex(index,
+                                             p_minus->GetIdentity(),
+                                             p_zero->GetIdentity(),
+                                             p_plus->GetIdentity()).items)
+            {
+                auto format = p_minus->ReadBlock(info);
+                p_zero->WriteBlock(info, format);
+                p_minus->DeleteBlock(info);
+            }
 
             p_zero->SetMinus(
                 endpoint.management,
