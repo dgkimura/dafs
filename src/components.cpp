@@ -102,21 +102,12 @@ namespace dafs
         BlockFormat was = dafs::ReadBlock(rooted(info));
         Delta delta = CreateDelta(info.path, was.contents, data.contents);
 
-        do_write(info, dafs::Serialize(delta));
+        Write(info, delta);
     }
 
 
     void
     ReplicatedStorage::Write(BlockInfo info, Delta delta)
-    {
-        do_write(info, dafs::Serialize(delta));
-    }
-
-
-    void
-    ReplicatedStorage::do_write(
-        BlockInfo info,
-        std::string data)
     {
         replication.Write
         (
@@ -125,7 +116,7 @@ namespace dafs
                 CreateProposal
                 (
                     dafs::ProposalType::WriteBlock,
-                    data,
+                    dafs::Serialize(delta),
                     info,
                     info.revision,
                     std::hash<dafs::BlockInfo>{}(rooted(info))

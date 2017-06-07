@@ -66,10 +66,6 @@ namespace dafs
 
         BlockInfo rooted(BlockInfo info);
 
-        virtual void do_write(
-            BlockInfo info,
-            std::string data);
-
         dafs::Replication& replication;
 
         dafs::Root root;

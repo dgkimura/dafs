@@ -9,6 +9,7 @@
 #include "dafs/customhash.hpp"
 #include "dafs/filesystem.hpp"
 #include "dafs/propose.hpp"
+#include "dafs/result.hpp"
 #include "dafs/signal.hpp"
 
 
@@ -46,11 +47,6 @@ namespace dafs
 
         void operator()(std::string proposal);
 
-        struct Result
-        {
-            std::string contents;
-        };
-
     private:
 
         std::unordered_map<
@@ -60,7 +56,7 @@ namespace dafs
 
         std::unordered_map<
             dafs::ProposalType,
-            dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>,
+            dafs::Callback<dafs::Result, dafs::ProposalContent&>,
             dafs::ProposalTypeHash
         > proposal_map;
 
@@ -68,11 +64,11 @@ namespace dafs
     };
 
 
-    dafs::Commit::Result WriteBlock(
+    dafs::Result WriteBlock(
         dafs::ProposalContent& content);
 
 
-    dafs::Commit::Result DeleteBlock(
+    dafs::Result DeleteBlock(
         dafs::ProposalContent& content);
 }
 

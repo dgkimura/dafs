@@ -26,7 +26,9 @@ namespace dafs
 
         if (progress_map.find(p.uuid) != progress_map.end())
         {
-            progress_map[p.uuid]->Set();
+            dafs::Result r;
+            r.success = false;
+            progress_map[p.uuid]->Set(r);
         }
     }
 
@@ -39,9 +41,9 @@ namespace dafs
           {
               {
                    ProposalType::WriteBlock,
-                   dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>
+                   dafs::Callback<dafs::Result, dafs::ProposalContent&>
                    (
-                       [](dafs::ProposalContent& context) -> dafs::Commit::Result
+                       [](dafs::ProposalContent& context) -> dafs::Result
                        {
                            return dafs::WriteBlock(context);
                        }
@@ -49,9 +51,9 @@ namespace dafs
                 },
                 {
                    ProposalType::DeleteBlock,
-                   dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>
+                   dafs::Callback<dafs::Result, dafs::ProposalContent&>
                    (
-                       [](dafs::ProposalContent& context) -> dafs::Commit::Result
+                       [](dafs::ProposalContent& context) -> dafs::Result
                        {
                            return dafs::DeleteBlock(context);
                        }
@@ -59,11 +61,11 @@ namespace dafs
                 },
                 {
                    ProposalType::Ping,
-                   dafs::Callback<dafs::Commit::Result, dafs::ProposalContent&>
+                   dafs::Callback<dafs::Result, dafs::ProposalContent&>
                    (
-                       [](dafs::ProposalContent& context) -> dafs::Commit::Result
+                       [](dafs::ProposalContent& context) -> dafs::Result
                        {
-                            dafs::Commit::Result r;
+                            dafs::Result r;
                             return r;
                        }
                    )
@@ -82,20 +84,20 @@ namespace dafs
 
         edit.info.path = (boost::filesystem::path(root.directory) /
                          boost::filesystem::path(edit.info.path)).string();
-        proposal_map[p.type](edit);
+        auto result = proposal_map[p.type](edit);
 
         if (progress_map.find(p.uuid) != progress_map.end())
         {
-            progress_map[p.uuid]->Set();
+            progress_map[p.uuid]->Set(result);
         }
     }
 
 
-    dafs::Commit::Result
+    dafs::Result
     WriteBlock(
         dafs::ProposalContent& edit)
     {
-        dafs::Commit::Result r;
+        dafs::Result r;
 
         //
         // Check hash and revision of block info list.
@@ -105,16 +107,22 @@ namespace dafs
         {
             dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
             dafs::Write(edit.info, delta);
+
+            r.success = true;
+        }
+        else
+        {
+            r.success = false;
         }
         return r;
     }
 
 
-    dafs::Commit::Result
+    dafs::Result
     DeleteBlock(
         dafs::ProposalContent& edit)
     {
-        dafs::Commit::Result r;
+        dafs::Result r;
 
         //
         // Check hash and revision of block info list.
@@ -122,7 +130,12 @@ namespace dafs
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            r.contents = dafs::Serialize(dafs::DeleteBlock(edit.info));
+            r.content = dafs::Serialize(dafs::DeleteBlock(edit.info));
+            r.success = true;
+        }
+        else
+        {
+            r.success = false;
         }
         return r;
     }

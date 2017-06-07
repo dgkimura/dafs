@@ -18,7 +18,7 @@ namespace dafs
     {
     public:
 
-        virtual void Write(std::string entry) = 0;
+        virtual dafs::Result Write(std::string entry) = 0;
 
         virtual void AddReplica(dafs::Address address, std::string location) = 0;
 
@@ -39,7 +39,7 @@ namespace dafs
         PaxosReplication(
             const PaxosReplication& other);
 
-        void Write(std::string entry) override;
+        dafs::Result Write(std::string entry) override;
 
         void AddReplica(dafs::Address address, std::string location) override;
 

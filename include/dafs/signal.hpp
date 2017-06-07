@@ -2,6 +2,9 @@
 
 #include <condition_variable>
 #include <mutex>
+#include <string>
+
+#include "dafs/result.hpp"
 
 
 namespace dafs
@@ -12,9 +15,9 @@ namespace dafs
 
         Signal();
 
-        void Set();
+        void Set(dafs::Result result);
 
-        void Wait();
+        dafs::Result Wait();
 
     private:
         std::mutex mutex;
@@ -22,5 +25,7 @@ namespace dafs
         std::condition_variable condition;
 
         bool flag;
+
+        dafs::Result result_;
     };
 }

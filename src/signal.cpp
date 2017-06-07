@@ -9,17 +9,19 @@ namespace dafs
     }
 
     void
-    Signal::Set()
+    Signal::Set(dafs::Result result)
     {
         flag = true;
+        result_ = result;
         condition.notify_one();
     }
 
-    void
+    dafs::Result
     Signal::Wait()
     {
         std::unique_lock<std::mutex> lock(mutex);
         condition.wait(lock, [&] { return flag; });
         flag = false;
+        return result_;
     }
 }

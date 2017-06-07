@@ -2,6 +2,7 @@
 #include "dafs/propose.hpp"
 #include "dafs/serialization.hpp"
 #include "dafs/replication.hpp"
+#include "dafs/result.hpp"
 
 
 namespace dafs
@@ -13,7 +14,8 @@ namespace dafs
       parliament(Replica(address.ip, address.port),
                  root.directory,
                  dafs::Commit(root, progress_map),
-                 dafs::Ignore(progress_map))
+                 dafs::Ignore(progress_map)),
+      mutex()
     {
     }
 
@@ -28,7 +30,7 @@ namespace dafs
     }
 
 
-    void
+    dafs::Result
     PaxosReplication::Write(std::string entry)
     {
         // Here mutex is to guard against concurrent write access to
@@ -47,8 +49,9 @@ namespace dafs
 
         parliament.SendProposal(dafs::Serialize(proposal));
 
-        progress_map[proposal.uuid]->Wait();
+        auto result = progress_map[proposal.uuid]->Wait();
         progress_map.erase(proposal.uuid);
+        return result;
     }
 
 

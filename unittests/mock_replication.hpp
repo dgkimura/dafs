@@ -4,6 +4,7 @@
 
 #include "dafs/messages.hpp"
 #include "dafs/replication.hpp"
+#include "dafs/result.hpp"
 
 
 class MockReplication : public dafs::Replication
@@ -15,8 +16,10 @@ public:
     {
     }
 
-    void Write(std::string entry) override
+    dafs::Result Write(std::string entry) override
     {
+        dafs::Result r;
+        return r;
     }
 
     void AddReplica(dafs::Address address, std::string location) override
