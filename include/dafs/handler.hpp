@@ -8,6 +8,12 @@
 namespace dafs
 {
     dafs::Message
+    HandleAllocateBlock(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata);
+
+
+    dafs::Message
     HandleReadBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata);

@@ -4,6 +4,29 @@
 namespace dafs
 {
     dafs::Message
+    HandleAllocateBlock(
+        dafs::Node& node,
+        dafs::MetaDataParser metadata)
+    {
+        dafs::Message m;
+
+        //
+        // Allocate from the zero partition by default?
+        //
+        auto blockinfo = node.GetPartition(dafs::Node::Slot::Zero)->AllocateBlock();
+        m.metadata.push_back(
+            dafs::MetaData
+            {
+                dafs::BlockInfoKey,
+                dafs::Serialize<dafs::BlockInfo>(blockinfo)
+            }
+        );
+
+        return m;
+    }
+
+
+    dafs::Message
     HandleReadBlock(
         dafs::Node& node,
         dafs::MetaDataParser metadata)

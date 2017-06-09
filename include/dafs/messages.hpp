@@ -11,6 +11,11 @@ namespace dafs
     enum class MessageType
     {
         //
+        // Allocation request for a block.
+        //
+        AllocateBlock,
+
+        //
         // Read from a known block.
         //
         ReadBlock,
