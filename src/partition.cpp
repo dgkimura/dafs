@@ -83,6 +83,40 @@ namespace dafs
     }
 
 
+    dafs::BlockInfo
+    ReplicatedPartition::AllocateBlock()
+    {
+        dafs::BlockInfo info;
+        auto index = store.GetIndex().items;
+
+        while (IsLogicallyOrdered(GetNodeSetDetails().zero.identity,
+                                  info.identity,
+                                  GetNodeSetDetails().plus.identity))
+        {
+            if (std::any_of(index.cbegin(), index.cend(),
+                            [=](const BlockInfo& b)
+                            {
+                                return b.identity==info.identity;
+                            }))
+            {
+                info.identity += 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (IsLogicallyOrdered(GetNodeSetDetails().zero.identity,
+                                  info.identity,
+                                  GetNodeSetDetails().plus.identity))
+        {
+            store.InsertIndex(info);
+        }
+        return info;
+    }
+
+
     void
     ReplicatedPartition::DeleteBlock(BlockInfo info)
     {

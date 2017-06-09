@@ -97,72 +97,29 @@ namespace dafs
             return gen(id) >= gen(rhs.id);
         }
 
-        Identity
-        operator+(const Identity& rhs) const
+        Identity&
+        operator+=(int value)
         {
-            std::string raw_result;
+            boost::uuids::uuid raw_id = gen(id);
 
-            bool carry = false;
-            for (int i = id.size() - 1; i >= 0; i--)
+            unsigned char uuid_data[raw_id.size()];
+            std::memcpy(&uuid_data, &raw_id, raw_id.size());
+
+            unsigned char carry = 0;
+            for (int i=raw_id.size()-1; i>0; i--)
             {
-                if (id[i] == '-')
-                {
-                    raw_result = '-' + raw_result;
-                    continue;
-                }
-                int a;
-                int b;
-                int r;
-                std::stringstream(std::string(1, id[i])) >> std::hex >> a;
-                std::stringstream(std::string(1, rhs.id[i])) >> std::hex >> b;
-                r = a + b + (carry ? 1 : 0);
-
-                std::stringstream tmp;
-                tmp << std::hex << (r);
-                raw_result = tmp.str()[tmp.str().size() - 1] + raw_result;
-
-                carry = r > 0xF ? true : false;
+                auto max = std::numeric_limits<unsigned char>::max();
+                int updated = uuid_data[i] + carry + (max & value);
+                uuid_data[i] = updated;
+                carry = (updated > max ? 1 : 0);
+                value = value >> std::numeric_limits<unsigned char>::digits;
             }
-            dafs::Identity result(raw_result);
-            return result;
-        }
 
-        Identity
-        operator-(const Identity& rhs) const
-        {
-            std::string raw_result;
+            boost::uuids::uuid u;
+            std::memcpy(&u, uuid_data, raw_id.size());
+            id = boost::uuids::to_string(u);
 
-            bool borrow = false;
-            for (int i = id.size() - 1; i >= 0; i--)
-            {
-                if (id[i] == '-')
-                {
-                    raw_result = '-' + raw_result;
-                    continue;
-                }
-                int a;
-                int b;
-                std::stringstream(std::string(1, id[i])) >> std::hex >> a;
-                std::stringstream(std::string(1, rhs.id[i])) >> std::hex >> b;
-                if (borrow)
-                {
-                    a -= 1;
-                }
-                if (a < b)
-                {
-                    borrow = true;
-                    a += 0xF + 1;
-                }
-                else
-                {
-                    borrow = false;
-                }
-                std::stringstream tmp;
-                tmp << std::hex << (a - b);
-                raw_result = tmp.str() + raw_result;
-            }
-            dafs::Identity result(raw_result);
-            return result;
+            return *this;
         }
     };
 

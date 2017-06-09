@@ -58,42 +58,6 @@ TEST(FileSystemTest, testsIdentityComparison)
 }
 
 
-TEST(FileSystemTest, testsIdentityArithmatic)
-{
-    dafs::Identity a = dafs::Identity("33333333-3333-3333-3333-333333333333");
-    dafs::Identity b = dafs::Identity("11111111-1111-1111-1111-111111111111");
-
-    // test arithmatic
-    ASSERT_EQ(dafs::Identity("44444444-4444-4444-4444-444444444444"), a + b);
-    ASSERT_EQ(dafs::Identity("22222222-2222-2222-2222-222222222222"), a - b);
-
-    a = dafs::Identity("00000000-0000-0000-0000-000000000991");
-    b = dafs::Identity("00000000-0000-0000-0000-000000000088");
-
-    // test carrying arithmatic
-    ASSERT_EQ(dafs::Identity("00000000-0000-0000-0000-000000000a19"), a + b);
-    ASSERT_EQ(dafs::Identity("00000000-0000-0000-0000-000000000909"), a - b);
-}
-
-
-TEST(FileSystemTest, testsIdentityArithmaticStringRepresentation)
-{
-    dafs::Identity a = dafs::Identity("33333333-3333-3333-3333-333333333333");
-    dafs::Identity b = dafs::Identity("11111111-1111-1111-1111-111111111111");
-
-    // test arithmatic
-    ASSERT_EQ("44444444-4444-4444-4444-444444444444", (a + b).id);
-    ASSERT_EQ("22222222-2222-2222-2222-222222222222", (a - b).id);
-
-    a = dafs::Identity("00000000-0000-0000-0000-000000000991");
-    b = dafs::Identity("00000000-0000-0000-0000-000000000088");
-
-    // test carrying arithmatic
-    ASSERT_EQ("00000000-0000-0000-0000-000000000a19", (a + b).id);
-    ASSERT_EQ("00000000-0000-0000-0000-000000000909", (a - b).id);
-}
-
-
 TEST(FileSystemTest, testsSplitUpperIndexWithNoWrap)
 {
     auto index = SplitUpperIndex(
@@ -219,4 +183,37 @@ TEST(FileSystemTest, testsSplitUpperIndexWithWrapAfterLower)
     );
 
     ASSERT_EQ("10000000-0000-0000-0000-222222222222", index.items[0].identity.id);
+}
+
+
+TEST(FileSystemTest, testsIdentityPostfixIncrement)
+{
+    dafs::Identity a = dafs::Identity("00000000-0000-0000-0000-000000000000");
+
+    a += 1;
+    ASSERT_EQ("00000000-0000-0000-0000-000000000001", a.id);
+
+    a += 10;
+    ASSERT_EQ("00000000-0000-0000-0000-00000000000b", a.id);
+
+    a += 100;
+    ASSERT_EQ("00000000-0000-0000-0000-00000000006f", a.id);
+
+    a += 1000;
+    ASSERT_EQ("00000000-0000-0000-0000-000000000457", a.id);
+
+    a += 10000;
+    ASSERT_EQ("00000000-0000-0000-0000-000000002b67", a.id);
+
+    a += 100000;
+    ASSERT_EQ("00000000-0000-0000-0000-00000001b207", a.id);
+
+    a += 1000000;
+    ASSERT_EQ("00000000-0000-0000-0000-00000010f447", a.id);
+
+    a += 10000000;
+    ASSERT_EQ("00000000-0000-0000-0000-000000a98ac7", a.id);
+
+    a += 100000000;
+    ASSERT_EQ("00000000-0000-0000-0000-0000069f6bc7", a.id);
 }

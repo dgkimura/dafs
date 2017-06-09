@@ -41,6 +41,23 @@ public:
         return true;
     }
 
+    virtual dafs::BlockInfo AllocateBlock() override
+    {
+        dafs::BlockInfo info;
+        dafs::BlockFormat format;
+        while (block_map.find(info) != block_map.end())
+        {
+            info = dafs::BlockInfo
+            {
+                "",
+                boost::uuids::to_string(boost::uuids::random_generator()()),
+                0
+            };
+        }
+        block_map[info] = format;
+        return info;
+    }
+
     virtual void DeleteBlock(dafs::BlockInfo block) override
     {
         block_map.erase(block);
