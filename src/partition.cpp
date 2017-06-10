@@ -113,6 +113,10 @@ namespace dafs
         {
             store.InsertIndex(info);
         }
+        else
+        {
+            info = dafs::BlockInfo{};
+        }
         return info;
     }
 

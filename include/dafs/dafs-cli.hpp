@@ -20,6 +20,11 @@ namespace dafs
         std::vector<std::string> args);
 
 
+    void ExecuteAllocateBlock(
+        dafs::Address address,
+        std::vector<std::string> args);
+
+
     void ExecuteWriteBlock(
         dafs::Address address,
         std::vector<std::string> args);
@@ -53,6 +58,7 @@ namespace dafs
         { "info", dafs::GetNodeDetails },
         { "join", dafs::AddNodeToCluster },
         { "exit", dafs::RemoveNodeFromCluster },
+        { "ab", dafs::ExecuteAllocateBlock },
         { "wb", dafs::ExecuteWriteBlock },
         { "rb", dafs::ExecuteReadBlock },
         { "db", dafs::ExecuteDeleteBlock }

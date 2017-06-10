@@ -83,6 +83,27 @@ namespace dafs
 
 
     void
+    ExecuteAllocateBlock(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        auto message = dafs::Message
+        {
+            address, // from
+            address, // to
+            dafs::MessageType::AllocateBlock,
+            std::vector<dafs::MetaData>
+            {
+            }
+        };
+        auto sender = boost::make_shared<dafs::NetworkSender>();
+        sender->Send(message);
+        auto result = sender->Receive();
+        std::cout << dafs::Serialize(result);
+    }
+
+
+    void
     ExecuteWriteBlock(
         dafs::Address address,
         std::vector<std::string> args)
