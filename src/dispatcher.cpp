@@ -27,6 +27,15 @@ namespace dafs
                   }
               },
               {
+                  dafs::MessageType::AllocateBlock,
+                  [&node](dafs::Message message) -> dafs::Message
+                  {
+                      return dafs::HandleAllocateBlock(
+                          node,
+                          message.metadata);
+                  }
+              },
+              {
                   dafs::MessageType::DeleteBlock,
                   [&node](dafs::Message message) -> dafs::Message
                   {

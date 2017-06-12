@@ -86,13 +86,13 @@ namespace dafs
     dafs::BlockInfo
     ReplicatedPartition::AllocateBlock()
     {
-        dafs::BlockInfo info;
-        auto index = store.GetIndex().items;
+        dafs::BlockInfo info {"", GetNodeSetDetails().zero.identity, 0};
 
         while (IsLogicallyOrdered(GetNodeSetDetails().zero.identity,
                                   info.identity,
                                   GetNodeSetDetails().plus.identity))
         {
+            auto index = store.GetIndex().items;
             if (std::any_of(index.cbegin(), index.cend(),
                             [=](const BlockInfo& b)
                             {
@@ -103,19 +103,9 @@ namespace dafs
             }
             else
             {
+                store.InsertIndex(info);
                 break;
             }
-        }
-
-        if (IsLogicallyOrdered(GetNodeSetDetails().zero.identity,
-                                  info.identity,
-                                  GetNodeSetDetails().plus.identity))
-        {
-            store.InsertIndex(info);
-        }
-        else
-        {
-            info = dafs::BlockInfo{};
         }
         return info;
     }
