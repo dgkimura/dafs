@@ -63,46 +63,11 @@ namespace dafs
     };
 
 
-    //
-    // Describes the file info.
-    //
-    struct FileInfo
-    {
-        Identity current;
-
-        Identity previous;
-
-        Identity next;
-
-        std::string path;
-
-        bool
-        operator==(const FileInfo& rhs) const
-        {
-            return path == rhs.path && current == rhs.current;
-        }
-    };
-
-
-    //
-    // Defines the file structure on disk.
-    //
-    struct FileFormat
-    {
-        FileInfo info;
-
-        BlockInfo blocks[BLOCKS_IN_FILEINFO];
-    };
-
-
     template<typename T>
     struct Index
     {
         std::vector<T> items;
     };
-
-
-    using FileIndex = Index<FileInfo>;
 
 
     using BlockIndex = Index<BlockInfo>;

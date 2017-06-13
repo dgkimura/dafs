@@ -8,9 +8,10 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+#include "blocks.hpp"
 #include "delta.hpp"
 #include "details.hpp"
-#include "filesystem.hpp"
+#include "identity.hpp"
 #include "messages.hpp"
 #include "propose.hpp"
 
@@ -52,27 +53,6 @@ namespace dafs
         ar & obj.path;
         ar & obj.identity;
         ar & obj.revision;
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::FileFormat& obj, const unsigned int version)
-    {
-        ar & obj.info;
-        for (int i=0; i<BLOCKS_IN_FILEINFO; i++)
-        {
-            ar & obj.blocks[i];
-        }
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::FileInfo& obj, const unsigned int version)
-    {
-        ar & obj.current;
-        ar & obj.previous;
-        ar & obj.next;
-        ar & obj.path;
     }
 
 

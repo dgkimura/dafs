@@ -12,16 +12,17 @@ ExternalProject_Add(
 )
 
 set(SOURCES
+    blocks_unittest.cpp
     components_unittest.cpp
     customhash_unittest.cpp
     delta_unittest.cpp
     details_unittest.cpp
-    filesystem_unittest.cpp
+    disk_unittest.cpp
     handler_unittest.cpp
+    identity_unittest.cpp
     metadataparser_unittest.cpp
     node_unittest.cpp
     serialization_unittest.cpp
-    disk_unittest.cpp
 )
 
 add_executable(all_unittests ${SOURCES})

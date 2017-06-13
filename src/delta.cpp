@@ -1,9 +1,9 @@
 #include <sstream>
 
-#include "diflib.h"
+#include <diflib.h>
 
+#include "dafs/blocks.hpp"
 #include "dafs/delta.hpp"
-#include "dafs/filesystem.hpp"
 
 
 namespace dafs

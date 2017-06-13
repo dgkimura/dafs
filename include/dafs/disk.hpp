@@ -1,7 +1,7 @@
 #pragma once
 
 #include "dafs/delta.hpp"
-#include "dafs/filesystem.hpp"
+#include "dafs/blocks.hpp"
 #include "dafs/serialization.hpp"
 
 

@@ -3,10 +3,11 @@
 #include <fstream>
 #include <sys/stat.h>
 
+#include <boost/filesystem.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/uuid/uuid.hpp>
 
-#include "dafs/filesystem.hpp"
+#include "dafs/blocks.hpp"
 #include "dafs/serialization.hpp"
 
 

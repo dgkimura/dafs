@@ -1,13 +1,11 @@
 #pragma once
 
 #include <limits>
+#include <string>
 
-#include <boost/filesystem.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
-
-#include <string>
 
 
 namespace dafs

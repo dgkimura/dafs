@@ -5,8 +5,8 @@
 
 #include <boost/uuid/uuid.hpp>
 
+#include "dafs/blocks.hpp"
 #include "dafs/callback.hpp"
-#include "dafs/filesystem.hpp"
 #include "dafs/signal.hpp"
 
 

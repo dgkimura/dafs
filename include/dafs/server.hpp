@@ -4,7 +4,6 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include "dafs/dispatcher.hpp"
-#include "dafs/filesystem.hpp"
 
 
 namespace dafs

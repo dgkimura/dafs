@@ -3,10 +3,10 @@
 #include <functional>
 #include <string>
 
+#include "dafs/blocks.hpp"
 #include "dafs/constants.hpp"
 #include "dafs/delta.hpp"
 #include "dafs/disk.hpp"
-#include "dafs/filesystem.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/propose.hpp"
 #include "dafs/replication.hpp"

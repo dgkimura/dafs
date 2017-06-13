@@ -5,9 +5,9 @@
 
 #include <boost/uuid/uuid.hpp>
 
+#include "dafs/blocks.hpp"
 #include "dafs/callback.hpp"
 #include "dafs/customhash.hpp"
-#include "dafs/filesystem.hpp"
 #include "dafs/propose.hpp"
 #include "dafs/result.hpp"
 #include "dafs/signal.hpp"
