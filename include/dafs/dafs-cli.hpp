@@ -20,6 +20,16 @@ namespace dafs
         std::vector<std::string> args);
 
 
+    void UploadFile(
+        dafs::Address address,
+        std::vector<std::string> args);
+
+
+    void DownloadFile(
+        dafs::Address address,
+        std::vector<std::string> args);
+
+
     void ExecuteAllocateBlock(
         dafs::Address address,
         std::vector<std::string> args);
@@ -56,6 +66,8 @@ namespace dafs
     > commands =
     {
         { "info", dafs::GetNodeDetails },
+        { "upload", dafs::UploadFile },
+        { "download", dafs::DownloadFile },
         { "join", dafs::AddNodeToCluster },
         { "exit", dafs::RemoveNodeFromCluster },
         { "ab", dafs::ExecuteAllocateBlock },

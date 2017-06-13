@@ -24,6 +24,7 @@ namespace dafs
         return result.str();
     }
 
+
     void
     GetNodeDetails(
         dafs::Address address,
@@ -79,6 +80,38 @@ namespace dafs
             << "          " << EndpointToString(p_plus.zero) << std::endl
             << "     - minus"  << std::endl
             << "          " << EndpointToString(p_plus.minus) << std::endl;
+    }
+
+
+    void
+    UploadFile(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        if (args.size() < 2)
+        {
+            std::cout << "Command requires filename.\n";
+            return;
+        }
+
+        std::string filename = args[1];
+        std::cout << "Uploading file: " << filename << std::endl;
+    }
+
+
+    void
+    DownloadFile(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        if (args.size() < 2)
+        {
+            std::cout << "Command requires filename.\n";
+            return;
+        }
+
+        std::string filename = args[1];
+        std::cout << "Downloading file: " << filename << std::endl;
     }
 
 
@@ -215,6 +248,7 @@ namespace dafs
         if (args.size() < 3)
         {
             std::cout << "Command requires address and port of node in cluster.\n";
+            return;
         }
 
         auto message = dafs::Message
