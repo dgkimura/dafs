@@ -152,27 +152,27 @@ namespace dafs
         {
             "this is rawr contents of the block format..."
         };
-        auto message = dafs::Message
-        {
-            address, // from
-            address, // to
-            dafs::MessageType::WriteBlock,
-            std::vector<dafs::MetaData>
+        dafs::Message result = HardSend(
+            dafs::Message
             {
-                dafs::MetaData
+                address,
+                address,
+                dafs::MessageType::WriteBlock,
+                std::vector<dafs::MetaData>
                 {
-                    dafs::BlockInfoKey,
-                    dafs::Serialize<dafs::BlockInfo>(info)
-                },
-                dafs::MetaData
-                {
-                    dafs::BlockFormatKey,
-                    dafs::Serialize<dafs::BlockFormat>(format)
+                    dafs::MetaData
+                    {
+                        dafs::BlockInfoKey,
+                        dafs::Serialize<dafs::BlockInfo>(info)
+                    },
+                    dafs::MetaData
+                    {
+                        dafs::BlockFormatKey,
+                        dafs::Serialize<dafs::BlockFormat>(format)
+                    }
                 }
             }
-        };
-        auto sender = boost::make_shared<dafs::NetworkSender>();
-        sender->Send(message);
+        );
     }
 
 
@@ -188,23 +188,23 @@ namespace dafs
             0 // revision
         };
 
-        auto message = dafs::Message
-        {
-            address, // from
-            address, // to
-            dafs::MessageType::ReadBlock,
-            std::vector<dafs::MetaData>
+        dafs::Message result = HardSend(
+            dafs::Message
             {
-                dafs::MetaData
+                address,
+                address,
+                dafs::MessageType::ReadBlock,
+                std::vector<dafs::MetaData>
                 {
-                    dafs::BlockInfoKey,
-                    dafs::Serialize<dafs::BlockInfo>(info)
+                    dafs::MetaData
+                    {
+                        dafs::BlockInfoKey,
+                        dafs::Serialize<dafs::BlockInfo>(info)
+                    }
                 }
             }
-        };
-        auto sender = boost::make_shared<dafs::NetworkSender>();
-        sender->Send(message);
-        auto result = sender->Receive();
+        );
+
         std::cout << dafs::Serialize(result);
     }
 
@@ -221,22 +221,22 @@ namespace dafs
             0 // revision
         };
 
-        auto message = dafs::Message
-        {
-            address, // from
-            address, // to
-            dafs::MessageType::DeleteBlock,
-            std::vector<dafs::MetaData>
+        dafs::Message result = HardSend(
+            dafs::Message
             {
-                dafs::MetaData
+                address, // from
+                address, // to
+                dafs::MessageType::DeleteBlock,
+                std::vector<dafs::MetaData>
                 {
-                    dafs::BlockInfoKey,
-                    dafs::Serialize<dafs::BlockInfo>(info)
+                    dafs::MetaData
+                    {
+                        dafs::BlockInfoKey,
+                        dafs::Serialize<dafs::BlockInfo>(info)
+                    }
                 }
             }
-        };
-        auto sender = boost::make_shared<dafs::NetworkSender>();
-        sender->Send(message);
+        );
     }
 
 
@@ -294,6 +294,27 @@ namespace dafs
         std::cout << "RemoveNodeFromCluster: ip:" << address.ip << " port:"<< address.port<<"\n";
         auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
+    }
+
+
+    dafs::Message
+    HardSend(dafs::Message message)
+    {
+        auto address = message.to;
+
+        dafs::Message result;
+        do
+        {
+            auto sender = boost::make_shared<dafs::NetworkSender>();
+            sender->Send(message);
+            result = sender->Receive();
+            if (result.type == dafs::MessageType::Failure)
+            {
+                message.to = dafs::MetaDataParser(result.metadata)
+                                   .GetValue<dafs::Address>(dafs::AddressKey);
+            }
+        } while(result.type == dafs::MessageType::Failure);
+        return result;
     }
 }
 

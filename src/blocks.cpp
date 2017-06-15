@@ -20,9 +20,9 @@ namespace dafs
         dafs::Identity second,
         dafs::Identity third)
     {
-        return ((first <= second) && (second <= third)) ||
-               ((third <= first) && (first <= second)) ||
-               ((second <= third) && (third <= first));
+        return ((first < second) && (second < third)) ||
+               ((third < first) && (first < second)) ||
+               ((second < third) && (third < first));
     }
 
 

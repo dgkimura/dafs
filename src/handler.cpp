@@ -21,7 +21,6 @@ namespace dafs
                 dafs::Serialize<dafs::BlockInfo>(blockinfo)
             }
         );
-
         return m;
     }
 
@@ -32,17 +31,34 @@ namespace dafs
         dafs::MetaDataParser metadata)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
-        auto blockformat = node.GetPartition(blockinfo.identity)->ReadBlock(blockinfo);
+        auto partition = node.GetPartition(blockinfo.identity);
 
         dafs::Message m;
-        m.type = dafs::MessageType::ReadBlock;
-        m.metadata.push_back(
-            dafs::MetaData
+        if (partition->IsActive())
+        {
+            m.metadata.push_back(
+                dafs::MetaData
+                {
+                    dafs::BlockFormatKey,
+                    dafs::Serialize(partition->ReadBlock(blockinfo))
+                }
+            );
+            m.type = dafs::MessageType::Success;
+        }
+        else
+        {
+            m.metadata = std::vector<dafs::MetaData>
             {
-                dafs::BlockFormatKey,
-                dafs::Serialize<dafs::BlockFormat>(blockformat)
-            }
-        );
+                dafs::MetaData
+                {
+                    dafs::AddressKey,
+                    dafs::Serialize(
+                        node.GetPartition(dafs::Node::Slot::Minus)
+                            ->GetNodeSetDetails().minus.management)
+                }
+            };
+            m.type = dafs::MessageType::Failure;
+        }
         return m;
     }
 
@@ -54,9 +70,28 @@ namespace dafs
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
+        auto partition = node.GetPartition(blockinfo.identity);
 
-        node.GetPartition(blockinfo.identity)->WriteBlock(blockinfo, block);
         dafs::Message m;
+        if (partition->IsActive())
+        {
+            partition->WriteBlock(blockinfo, block);
+            m.type = dafs::MessageType::Success;
+        }
+        else
+        {
+            m.metadata = std::vector<dafs::MetaData>
+            {
+                dafs::MetaData
+                {
+                    dafs::AddressKey,
+                    dafs::Serialize(
+                        node.GetPartition(dafs::Node::Slot::Minus)
+                            ->GetNodeSetDetails().minus.management)
+                }
+            };
+            m.type = dafs::MessageType::Failure;
+        }
         return m;
     }
 
@@ -67,9 +102,28 @@ namespace dafs
         dafs::MetaDataParser metadata)
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
+        auto partition = node.GetPartition(blockinfo.identity);
 
-        node.GetPartition(blockinfo.identity)->DeleteBlock(blockinfo);
         dafs::Message m;
+        if (partition->IsActive())
+        {
+            partition->DeleteBlock(blockinfo);
+            m.type = dafs::MessageType::Success;
+        }
+        else
+        {
+            m.metadata = std::vector<dafs::MetaData>
+            {
+                dafs::MetaData
+                {
+                    dafs::AddressKey,
+                    dafs::Serialize(
+                        node.GetPartition(dafs::Node::Slot::Minus)
+                            ->GetNodeSetDetails().minus.management)
+                }
+            };
+            m.type = dafs::MessageType::Failure;
+        }
         return m;
     }
 

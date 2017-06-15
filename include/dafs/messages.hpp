@@ -11,6 +11,16 @@ namespace dafs
     enum class MessageType
     {
         //
+        // Reply indicating operation succeeded.
+        //
+        Success,
+
+        //
+        // Reply indicating operation failed.
+        //
+        Failure,
+
+        //
         // Allocation request for a block.
         //
         AllocateBlock,

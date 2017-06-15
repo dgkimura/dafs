@@ -171,4 +171,7 @@ namespace dafs
         { "rb", dafs::ExecuteReadBlock },
         { "db", dafs::ExecuteDeleteBlock }
     };
+
+
+    dafs::Message HardSend(dafs::Message message);
 }
