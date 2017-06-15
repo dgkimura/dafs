@@ -8,7 +8,6 @@
 #include "dafs/messages.hpp"
 #include "dafs/metadataparser.hpp"
 #include "dafs/sender.hpp"
-#include "dafs/serialization.hpp"
 
 
 namespace dafs
@@ -26,6 +25,31 @@ namespace dafs
 
 
     void
+    InitializeFileService(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        ExecuteWriteBlock(
+            address,
+            dafs::BlockInfo
+            {
+                "00000000-0000-0000-0000-000000000000",
+                dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            },
+            dafs::BlockFormat
+            {
+                dafs::Serialize(
+                    dafs::SuperBlock
+                    {
+                        ExecuteAllocateBlock(address).identity
+                    }
+                )
+            }
+        );
+    }
+
+
+    void
     UploadFile(
         dafs::Address address,
         std::vector<std::string> args)
@@ -38,6 +62,66 @@ namespace dafs
 
         std::string filename = args[1];
         std::cout << "Uploading file: " << filename << std::endl;
+
+        //
+        // Get the superblock.
+        //
+        auto superblock = dafs::Deserialize<dafs::SuperBlock>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    "00000000-0000-0000-0000-000000000000",
+                    dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                }
+            ).contents
+        );
+
+        //
+        // Get the file metadata map.
+        //
+        auto metadata_map = dafs::Deserialize<dafs::FileMetadataMap>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    superblock.filemap.id,
+                    superblock.filemap
+                }
+            ).contents
+        );
+
+        //
+        // Get file metadata.
+        //
+        if (metadata_map.files.find(filename) == metadata_map.files.end())
+        {
+            auto blockinfo = ExecuteAllocateBlock(address);
+            metadata_map.files[filename] = blockinfo.identity;
+
+            ExecuteWriteBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    superblock.filemap.id,
+                    superblock.filemap
+                },
+                dafs::BlockFormat
+                {
+                    dafs::Serialize(metadata_map)
+                }
+            );
+        }
+
+        //
+        // Allocate and write blocks.
+        //
+        //TODO: implement
+
+        //
+        // Update file metadata.
+        //
+        //TODO: implement
     }
 
 
@@ -111,10 +195,9 @@ namespace dafs
     }
 
 
-    void
+    dafs::BlockInfo
     ExecuteAllocateBlock(
-        dafs::Address address,
-        std::vector<std::string> args)
+        dafs::Address address)
     {
         auto message = dafs::Message
         {
@@ -127,28 +210,18 @@ namespace dafs
         };
         auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(message);
-        auto result = sender->Receive();
-        std::cout << dafs::Serialize(result);
+        return dafs::MetaDataParser(sender->Receive().metadata)
+                   .GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
     }
 
 
     void
     ExecuteWriteBlock(
         dafs::Address address,
-        std::vector<std::string> args)
+        dafs::BlockInfo info,
+        dafs::BlockFormat format)
     {
-        dafs::BlockInfo info
-        {
-            "path_to_block_info",
-            dafs::Identity("11111111-1111-1111-1111-111111111111"),
-            0 // revision
-        };
-
-        dafs::BlockFormat format
-        {
-            "this is rawr contents of the block format..."
-        };
-        dafs::Message result = HardSend(
+        HardSend(
             dafs::Message
             {
                 address,
@@ -172,18 +245,11 @@ namespace dafs
     }
 
 
-    void
+    dafs::BlockFormat
     ExecuteReadBlock(
         dafs::Address address,
-        std::vector<std::string> args)
+        dafs::BlockInfo info)
     {
-        dafs::BlockInfo info
-        {
-            "path_to_block_info",
-            dafs::Identity("11111111-1111-1111-1111-111111111111"),
-            0 // revision
-        };
-
         dafs::Message result = HardSend(
             dafs::Message
             {
@@ -200,8 +266,8 @@ namespace dafs
                 }
             }
         );
-
-        std::cout << dafs::Serialize(result);
+        return dafs::MetaDataParser(result.metadata)
+                   .GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
     }
 
 
@@ -217,7 +283,7 @@ namespace dafs
             0 // revision
         };
 
-        dafs::Message result = HardSend(
+        HardSend(
             dafs::Message
             {
                 address, // from
