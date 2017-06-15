@@ -10,6 +10,7 @@ set(SOURCES
     disk.cpp
     dispatcher.cpp
     handler.cpp
+    identity.cpp
     metadataparser.cpp
     node.cpp
     partition.cpp

@@ -90,4 +90,9 @@ namespace dafs
             return *this;
         }
     };
+
+
+    bool IsLogicallyOrdered(dafs::Identity first,
+                            dafs::Identity second,
+                            dafs::Identity third);
 }

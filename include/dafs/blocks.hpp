@@ -79,11 +79,6 @@ namespace dafs
     Bytes CreateBytes(const std::string& data);
 
 
-    bool IsLogicallyOrdered(dafs::Identity first,
-                            dafs::Identity second,
-                            dafs::Identity third);
-
-
     BlockIndex SplitUpperIndex(BlockIndex index,
                                dafs::Identity lower,
                                dafs::Identity divider,
