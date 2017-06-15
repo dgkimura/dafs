@@ -80,15 +80,11 @@ namespace dafs
         auto p_zero = parser.GetValue<dafs::ReplicatedEndpoints>(dafs::ZeroReplicatedEndpointsKey);
         auto p_plus = parser.GetValue<dafs::ReplicatedEndpoints>(dafs::PlusReplicatedEndpointsKey);
 
-        auto p_minus_id = parser.GetValue<dafs::Identity>(dafs::MinusIdentityKey);
-        auto p_zero_id = parser.GetValue<dafs::Identity>(dafs::ZeroIdentityKey);
-        auto p_plus_id = parser.GetValue<dafs::Identity>(dafs::PlusIdentityKey);
-
         std::cout
             << "Node info:\n"
             << " - p-minus" << std::endl
             << "     - identity"  << std::endl
-            << "          " << p_minus_id.id << std::endl
+            << "          " << p_minus.zero.identity.id << std::endl
             << "     - plus"  << std::endl
             << "          " << EndpointToString(p_minus.plus) << std::endl
             << "     - zero"  << std::endl
@@ -97,7 +93,7 @@ namespace dafs
             << "          " << EndpointToString(p_minus.minus) << std::endl
             << " - p-zero" << std::endl
             << "     - identity"  << std::endl
-            << "         " << p_zero_id.id << std::endl
+            << "         " << p_zero.zero.identity.id << std::endl
             << "     - plus"  << std::endl
             << "          " << EndpointToString(p_zero.plus) << std::endl
             << "     - zero"  << std::endl
@@ -105,7 +101,7 @@ namespace dafs
             << "     - minus"  << std::endl
             << "          " << EndpointToString(p_zero.minus) << std::endl
             << " - p-plus" << std::endl
-            << "          " << p_plus_id.id << std::endl
+            << "          " << p_plus.zero.identity.id << std::endl
             << "     - plus"  << std::endl
             << "          " << EndpointToString(p_plus.plus) << std::endl
             << "     - zero"  << std::endl

@@ -217,9 +217,6 @@ TEST_F(HandlerTest, testGetNodeDetails)
     dafs::Message m = HandleGetNodeDetails(GetNode(), parser);
 
     auto parsed = dafs::MetaDataParser(m.metadata);
-    auto m_identity = parsed.GetValue<dafs::Identity>(dafs::MinusIdentityKey);
-    auto z_identity = parsed.GetValue<dafs::Identity>(dafs::ZeroIdentityKey);
-    auto p_identity = parsed.GetValue<dafs::Identity>(dafs::PlusIdentityKey);
 
     auto m_endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::MinusReplicatedEndpointsKey);
     auto z_endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::ZeroReplicatedEndpointsKey);
@@ -227,13 +224,13 @@ TEST_F(HandlerTest, testGetNodeDetails)
 
     ASSERT_EQ(
         "22222222-2222-2222-2222-222222222222",
-        m_identity.id);
+        m_endpoints.zero.identity.id);
     ASSERT_EQ(
         "11111111-1111-1111-1111-111111111111",
-        z_identity.id);
+        z_endpoints.zero.identity.id);
     ASSERT_EQ(
         "33333333-3333-3333-3333-333333333333",
-        p_identity.id);
+        p_endpoints.zero.identity.id);
 
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), m_endpoints.minus.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), m_endpoints.minus.replication);

@@ -145,13 +145,6 @@ namespace dafs
             },
             dafs::MetaData
             {
-                dafs::MinusIdentityKey,
-                dafs::Serialize<dafs::Identity>(
-                    node.GetPartition(dafs::Node::Slot::Minus)->GetIdentity()
-                )
-            },
-            dafs::MetaData
-            {
                 dafs::ZeroReplicatedEndpointsKey,
                 dafs::Serialize<dafs::ReplicatedEndpoints>(
                     node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails()
@@ -159,23 +152,9 @@ namespace dafs
             },
             dafs::MetaData
             {
-                dafs::ZeroIdentityKey,
-                dafs::Serialize<dafs::Identity>(
-                    node.GetPartition(dafs::Node::Slot::Zero)->GetIdentity()
-                )
-            },
-            dafs::MetaData
-            {
                 dafs::PlusReplicatedEndpointsKey,
                 dafs::Serialize<dafs::ReplicatedEndpoints>(
                     node.GetPartition(dafs::Node::Slot::Plus)->GetNodeSetDetails()
-                )
-            },
-            dafs::MetaData
-            {
-                dafs::PlusIdentityKey,
-                dafs::Serialize<dafs::Identity>(
-                    node.GetPartition(dafs::Node::Slot::Plus)->GetIdentity()
                 )
             }
         };
