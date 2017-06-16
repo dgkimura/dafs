@@ -95,4 +95,9 @@ namespace dafs
     bool IsLogicallyOrdered(dafs::Identity first,
                             dafs::Identity second,
                             dafs::Identity third);
+
+
+    bool IsLogicallyBetween(dafs::Identity first,
+                            dafs::Identity second,
+                            dafs::Identity third);
 }

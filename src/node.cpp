@@ -59,21 +59,21 @@ namespace dafs
         {
             return slot_plus;
         }
-        else if (IsLogicallyOrdered(zero_detail.zero.identity,
+        else if (IsLogicallyBetween(zero_detail.zero.identity,
                                     identity,
                                     zero_detail.plus.identity) &&
                  slot_zero->IsActive())
         {
             return slot_zero;
         }
-        else if (IsLogicallyOrdered(minus_detail.zero.identity,
+        else if (IsLogicallyBetween(minus_detail.zero.identity,
                                     identity,
                                     minus_detail.plus.identity) &&
             slot_minus->IsActive())
         {
             return slot_minus;
         }
-        else if (IsLogicallyOrdered(plus_detail.zero.identity,
+        else if (IsLogicallyBetween(plus_detail.zero.identity,
                                     identity,
                                     plus_detail.plus.identity) &&
                  slot_plus->IsActive())

@@ -56,3 +56,91 @@ TEST(FileSystemTest, testsIdentityPostfixIncrement)
     a += 100000000;
     ASSERT_EQ("00000000-0000-0000-0000-0000069f6bc7", a.id);
 }
+
+
+TEST(IdentityTest, testsIdentityIsLogicallyOrdered)
+{
+    ASSERT_TRUE(
+        dafs::IsLogicallyOrdered(
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_TRUE(
+        dafs::IsLogicallyOrdered(
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_TRUE(
+        dafs::IsLogicallyOrdered(
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_FALSE(
+        dafs::IsLogicallyOrdered(
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_TRUE(
+        dafs::IsLogicallyOrdered(
+            dafs::Identity("22222222-2222-2222-2222-222222222222"),
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("11111111-1111-1111-1111-111111111111")
+        )
+    );
+}
+
+
+TEST(IdentityTest, testsIdentityIsLogicallyBetween)
+{
+    ASSERT_TRUE(
+        dafs::IsLogicallyBetween(
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_FALSE(
+        dafs::IsLogicallyBetween(
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_FALSE(
+        dafs::IsLogicallyBetween(
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_FALSE(
+        dafs::IsLogicallyBetween(
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("22222222-2222-2222-2222-222222222222")
+        )
+    );
+
+    ASSERT_TRUE(
+        dafs::IsLogicallyBetween(
+            dafs::Identity("22222222-2222-2222-2222-222222222222"),
+            dafs::Identity("00000000-0000-0000-0000-000000000000"),
+            dafs::Identity("11111111-1111-1111-1111-111111111111")
+        )
+    );
+}
