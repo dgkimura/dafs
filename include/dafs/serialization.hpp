@@ -5,6 +5,7 @@
 
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/vector.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
@@ -52,33 +53,7 @@ namespace dafs
     template <typename Archive, typename T>
     void serialize(Archive& ar, dafs::Index<T>& obj, const unsigned int version)
     {
-        int size;
-
-        if (Archive::is_loading::value)
-        {
-            //
-            // deserialize collection object.
-            //
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                T info;
-                ar & info;
-                obj.items.push_back(info);
-            }
-        }
-        else
-        {
-            //
-            // serialize collection object.
-            //
-            size = obj.items.size();
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                ar & obj.items[i];
-            }
-        }
+        ar & obj.items;
     }
 
 
@@ -122,34 +97,7 @@ namespace dafs
         ar & obj.from;
         ar & obj.to;
         ar & obj.type;
-
-        int size;
-
-        if (Archive::is_loading::value)
-        {
-            //
-            // deserialize collection object.
-            //
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                MetaData md;
-                ar & md;
-                obj.metadata.push_back(md);
-            }
-        }
-        else
-        {
-            //
-            // serialize collection object.
-            //
-            size = obj.metadata.size();
-            ar & size;
-            for (int i=0; i<size; i++)
-            {
-                ar & obj.metadata[i];
-            }
-        }
+        ar & obj.metadata;
     }
 
 
