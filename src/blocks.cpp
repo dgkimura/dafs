@@ -5,15 +5,6 @@
 
 namespace dafs
 {
-    Bytes
-    CreateBytes(const std::string& data)
-    {
-        Bytes bytes;
-        std::memmove(bytes.contents, data.c_str(), data.length());
-        return bytes;
-    }
-
-
     BlockIndex
     SplitUpperIndex(
         BlockIndex index,

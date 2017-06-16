@@ -14,16 +14,6 @@ TEST(BlocksTest, testBlockFieldsAreConstructed)
 }
 
 
-TEST(BlocksTest, testBytesFieldsAreConstructed)
-{
-    std::string data = "the_bytes_contents";
-
-    dafs::Bytes b = dafs::CreateBytes(data);
-
-    ASSERT_EQ(data, b.contents);
-}
-
-
 TEST(BlocksTest, testsBlockInfoFieldsAreConstructed)
 {
     std::string path = "myfile";

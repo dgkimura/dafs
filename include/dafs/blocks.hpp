@@ -10,8 +10,6 @@ namespace dafs
 {
     const int BLOCK_SIZE_IN_BYTES = 65536;
 
-    const int BLOCKS_IN_FILEINFO = 8192;
-
     //
     // Defines directory where partition is located.
     //
@@ -23,15 +21,6 @@ namespace dafs
             : directory(directory)
         {
         }
-    };
-
-
-    //
-    // Defines segment of bytes. (used to write to blocks)
-    //
-    struct Bytes
-    {
-        char contents[BLOCK_SIZE_IN_BYTES];
     };
 
 
@@ -71,12 +60,6 @@ namespace dafs
 
 
     using BlockIndex = Index<BlockInfo>;
-
-
-    //
-    // Function to create Bytes
-    //
-    Bytes CreateBytes(const std::string& data);
 
 
     BlockIndex SplitUpperIndex(BlockIndex index,
