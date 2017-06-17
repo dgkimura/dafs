@@ -37,13 +37,13 @@ namespace dafs
 
 
     void
-    Write(dafs::BlockInfo info, dafs::Delta delta)
+    Write(std::string path, dafs::Delta delta)
     {
-        std::fstream input(boost::filesystem::path(info.path).string(),
+        std::fstream input(boost::filesystem::path(path).string(),
                            std::ios::in | std::ios::binary);
         std::string apply_delta_content = dafs::ApplyDelta(delta, input);
 
-        std::fstream output(boost::filesystem::path(info.path).string(),
+        std::fstream output(boost::filesystem::path(path).string(),
                             std::ios::out | std::ios::binary);
         output << apply_delta_content;
         output.flush();

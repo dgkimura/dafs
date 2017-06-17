@@ -9,7 +9,7 @@
 namespace dafs
 {
     Delta
-    CreateDelta(std::string filename, std::string was, std::string is)
+    CreateDelta(std::string was, std::string is)
     {
         char edit_script[BLOCK_SIZE_IN_BYTES];
         int edit_script_length = BLOCK_SIZE_IN_BYTES;
@@ -24,7 +24,6 @@ namespace dafs
         );
         Delta delta
         {
-            filename,
             std::string(edit_script).erase(length)
         };
         return delta;

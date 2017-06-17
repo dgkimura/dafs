@@ -13,12 +13,11 @@ namespace dafs
     //
     struct Delta
     {
-        std::string filename;
         std::string difference;
     };
 
 
-    Delta CreateDelta(std::string filename, std::string was, std::string is);
+    Delta CreateDelta(std::string was, std::string is);
 
     std::string ApplyDelta(Delta& delta, std::iostream& stream);
 }

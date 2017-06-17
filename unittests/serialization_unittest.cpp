@@ -7,14 +7,12 @@ TEST(SerializationUnitTest, testDeltaIsSerializableAndDeserializable)
 {
     dafs::Delta expected
     {
-        "the-filename",
         "the-difference"
     }, actual;
 
     std::string string_obj = dafs::Serialize(expected);
     actual = dafs::Deserialize<dafs::Delta>(string_obj);
 
-    ASSERT_EQ(expected.filename, actual.filename);
     ASSERT_EQ(expected.difference, actual.difference);
 }
 

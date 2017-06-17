@@ -72,7 +72,6 @@ namespace dafs
     ReplicatedStorage::InsertIndex(BlockInfo info)
     {
         Delta delta = dafs::Insert(rooted(blocks), info);
-        delta.filename = blocks.path;
         Write(blocks, delta);
     }
 
@@ -81,7 +80,6 @@ namespace dafs
     ReplicatedStorage::RemoveIndex(BlockInfo info)
     {
         Delta delta = dafs::Remove(rooted(blocks), info);
-        delta.filename = blocks.path;
         Write(blocks, delta);
     }
 
@@ -100,7 +98,7 @@ namespace dafs
     ReplicatedStorage::WriteBlock(BlockInfo info, BlockFormat data)
     {
         BlockFormat was = dafs::ReadBlock(rooted(info));
-        Delta delta = CreateDelta(info.path, was.contents, data.contents);
+        Delta delta = CreateDelta(was.contents, data.contents);
 
         Write(info, delta);
     }
@@ -318,7 +316,6 @@ namespace dafs
                     dafs::Serialize
                     (
                         CreateDelta(
-                            rooted(lockfile).path,
                             "", // was empty
                             dafs::Serialize(address)
                         )

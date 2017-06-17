@@ -16,7 +16,7 @@ namespace dafs
 
 
     void
-    Write(dafs::BlockInfo info, dafs::Delta delta);
+    Write(std::string path, dafs::Delta delta);
 
 
     template <typename T>
@@ -34,7 +34,6 @@ namespace dafs
         }
         newset.items.push_back(item);
         dafs::Delta delta = dafs::CreateDelta(
-            info.path,
             block.contents,
             dafs::Serialize(dafs::Index<T>(newset)));
         return delta;
@@ -64,7 +63,6 @@ namespace dafs
             newset.items.end()
         );
         dafs::Delta delta = dafs::CreateDelta(
-            info.path,
             block.contents,
             dafs::Serialize(dafs::Index<T>(newset)));
         return delta;

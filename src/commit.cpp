@@ -106,7 +106,7 @@ namespace dafs
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
             dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
-            dafs::Write(edit.info, delta);
+            dafs::Write(edit.info.path, delta);
 
             r.success = true;
         }

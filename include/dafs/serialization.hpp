@@ -22,7 +22,6 @@ namespace dafs
     template <typename Archive>
     void serialize(Archive& ar, dafs::Delta& obj, const unsigned int version)
     {
-        ar & obj.filename;
         ar & obj.difference;
     }
 
