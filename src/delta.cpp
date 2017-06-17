@@ -32,8 +32,13 @@ namespace dafs
 
 
     std::string
-    ApplyDelta(Delta& delta, std::string original)
+    ApplyDelta(Delta& delta, std::iostream& stream)
     {
+        stream.seekg(0, std::ios::beg);
+        std::stringstream buffer;
+        buffer << stream.rdbuf();
+
+        std::string original = buffer.str();
         char new_string[BLOCK_SIZE_IN_BYTES];
         int new_string_length = BLOCK_SIZE_IN_BYTES;
 
@@ -46,16 +51,5 @@ namespace dafs
             new_string_length
         );
         return std::string(new_string).erase(length);
-    }
-
-
-    std::string
-    ApplyDelta(Delta& delta, std::fstream& stream)
-    {
-        stream.seekg(0, std::ios::beg);
-        std::stringstream buffer;
-        buffer << stream.rdbuf();
-
-        return ApplyDelta(delta, buffer.str());
     }
 }

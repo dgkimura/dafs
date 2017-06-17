@@ -20,7 +20,5 @@ namespace dafs
 
     Delta CreateDelta(std::string filename, std::string was, std::string is);
 
-    std::string ApplyDelta(Delta& delta, std::string original);
-
-    std::string ApplyDelta(Delta& delta, std::fstream& stream);
+    std::string ApplyDelta(Delta& delta, std::iostream& stream);
 }

@@ -1,4 +1,6 @@
-#include "gtest/gtest.h"
+#include <sstream>
+
+#include <gtest/gtest.h>
 
 #include "dafs/delta.hpp"
 
@@ -17,7 +19,9 @@ TEST(DeltaTest, testApplyDeltaBasic)
     dafs::Delta d = dafs::CreateDelta("a_filename", "abcdef", "ace");
 
     std::string expect = "ace";
-    std::string actual = dafs::ApplyDelta(d, "abcdef");
+    std::stringstream stream;
+    stream << "abcdef";
+    std::string actual = dafs::ApplyDelta(d, stream);
 
     for (int i=0; i<expect.length(); i++)
     {
