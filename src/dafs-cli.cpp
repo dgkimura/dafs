@@ -207,6 +207,50 @@ namespace dafs
 
 
     void
+    ListFiles(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        //
+        // Get the superblock.
+        //
+        auto superblock = dafs::Deserialize<dafs::SuperBlock>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    "00000000-0000-0000-0000-000000000000",
+                    dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                }
+            ).contents
+        );
+
+        //
+        // Get the file metadata map.
+        //
+        auto metadata_map = dafs::Deserialize<dafs::FileMetadataMap>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    superblock.filemap.id,
+                    superblock.filemap
+                }
+            ).contents
+        );
+
+        if (metadata_map.files.size() == 0)
+        {
+            std::cout << "<empty>" << std::endl;
+        }
+        for (const auto& i : metadata_map.files)
+        {
+            std::cout << "    " << i.first << std::endl;
+        }
+    }
+
+
+    void
     GetNodeDetails(
         dafs::Address address,
         std::vector<std::string> args)

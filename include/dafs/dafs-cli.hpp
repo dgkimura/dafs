@@ -100,6 +100,11 @@ namespace dafs
         std::vector<std::string> args);
 
 
+    void ListFiles(
+        dafs::Address address,
+        std::vector<std::string> args);
+
+
     void GetNodeDetails(
         dafs::Address address,
         std::vector<std::string> args);
@@ -143,6 +148,7 @@ namespace dafs
         { "initialize", dafs::InitializeFileService },
         { "upload", dafs::UploadFile },
         { "download", dafs::DownloadFile },
+        { "list-files", dafs::ListFiles },
         { "info", dafs::GetNodeDetails },
         { "join", dafs::AddNodeToCluster },
         { "exit", dafs::RemoveNodeFromCluster },
