@@ -203,6 +203,67 @@ namespace dafs
 
         std::string filename = args[1];
         std::cout << "Downloading file: " << filename << std::endl;
+
+        //
+        // Get the superblock.
+        //
+        auto superblock = dafs::Deserialize<dafs::SuperBlock>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    "00000000-0000-0000-0000-000000000000",
+                    dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                }
+            ).contents
+        );
+
+        //
+        // Get the file metadata map.
+        //
+        auto metadata_map = dafs::Deserialize<dafs::FileMetadataMap>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    superblock.filemap.id,
+                    superblock.filemap
+                }
+            ).contents
+        );
+
+        //
+        // Get file metadata.
+        //
+        auto metadata = dafs::Deserialize<dafs::FileMetadata>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    metadata_map.files[filename].id,
+                    metadata_map.files[filename]
+                }
+            ).contents
+        );
+
+        std::fstream file((boost::filesystem::path(filename)).string(),
+                          std::ios::out | std::ios::binary);
+        for (const auto& identity : metadata.blocks)
+        {
+            if (identity == dafs::Identity())
+            {
+                break;
+            }
+
+            file << ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    identity.id,
+                    identity
+                }
+            ).contents;
+        }
     }
 
 
