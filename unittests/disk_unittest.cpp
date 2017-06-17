@@ -42,24 +42,20 @@ const dafs::BlockInfo another_block
 
 TEST(DiskTest, testAddBlockInEmptyBlockFormat)
 {
-    auto get_empty_block = [](dafs::BlockInfo info) {
-        dafs::BlockFormat b;
-        return b;
-    };
+    std::stringstream stream;
 
-    dafs::Delta delta = dafs::Insert(the_blocklist, a_block, get_empty_block);
+    dafs::Delta delta = dafs::Insert(stream, a_block);
     ASSERT_EQ(
         delta.difference,
-        "\x7F" "22 serialization::archive 14 0 0 0 0 1 0 0 0 7 a_block 0 0 36 00c000000-0000-0000-0000-000000000000 0"
+        "\xE4" "A1 \xC2y 0 7 a_block 0 0 36 00000000-0000-0000-0000-000000000000 0"
     );
 }
 
 
 TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
 {
-    auto get_block = [](dafs::BlockInfo info) -> dafs::BlockFormat {
-        dafs::BlockFormat block;
-        block.contents = dafs::Serialize(
+    std::stringstream stream(
+        dafs::Serialize(
             dafs::BlockIndex
             {
                 std::vector<dafs::BlockInfo>
@@ -67,11 +63,10 @@ TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
                     a_block
                 }
             }
-        );
-        return block;
-    };
+        )
+    );
 
-    dafs::Delta delta = dafs::Insert(the_blocklist, another_block, get_block);
+    dafs::Delta delta = dafs::Insert(stream, another_block);
     ASSERT_EQ(
         delta.difference,
         "\xE4\x80@2\xFDz 13 another_block 36 00000000-0000-0000-0000-000000000000 0"
@@ -81,9 +76,8 @@ TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
 
 TEST(DiskTest, testRemoveBlockInNonemptyBlockFormat)
 {
-    auto get_block = [](dafs::BlockInfo info) -> dafs::BlockFormat {
-        dafs::BlockFormat block;
-        block.contents = dafs::Serialize(
+    std::stringstream stream(
+        dafs::Serialize(
             dafs::BlockIndex
             {
                 std::vector<dafs::BlockInfo>
@@ -91,11 +85,10 @@ TEST(DiskTest, testRemoveBlockInNonemptyBlockFormat)
                     a_block
                 }
             }
-        );
-        return block;
-    };
+        )
+    );
 
-    dafs::Delta delta = dafs::Remove(the_blocklist, a_block, get_block);
+    dafs::Delta delta = dafs::Remove(stream, a_block);
     ASSERT_EQ(
         delta.difference,
         "\xE4\x81\xC2\xB9"

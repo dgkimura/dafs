@@ -70,7 +70,7 @@ namespace dafs
 
         dafs::Root root;
 
-        dafs::BlockInfo blocks;
+        std::string blocklist;
     };
 
 

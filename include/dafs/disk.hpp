@@ -21,20 +21,15 @@ namespace dafs
 
     template <typename T>
     dafs::Delta Insert(
-        dafs::BlockInfo info,
-        T item,
-        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock)
+        std::iostream& stream,
+        T item)
     {
-        dafs::BlockFormat block = get_block(info);
-
-        auto newset = dafs::Index<T>();
-        if (!block.contents.empty())
-        {
-            newset = dafs::Deserialize<dafs::Index<T>>(block.contents);
-        }
+        auto original = dafs::Deserialize<dafs::Index<T>>(stream);
+        auto newset = original;
         newset.items.push_back(item);
+
         dafs::Delta delta = dafs::CreateDelta(
-            block.contents,
+            dafs::Serialize(original),
             dafs::Serialize(dafs::Index<T>(newset)));
         return delta;
     }
@@ -42,13 +37,11 @@ namespace dafs
 
     template <typename T>
     dafs::Delta Remove(
-        dafs::BlockInfo info,
-        T item,
-        std::function<dafs::BlockFormat(dafs::BlockInfo)> get_block=ReadBlock)
+        std::iostream& stream,
+        T item)
     {
-        dafs::BlockFormat block = get_block(info);
-
-        auto newset = dafs::Deserialize<dafs::Index<T>>(block.contents);
+        auto original = dafs::Deserialize<dafs::Index<T>>(stream);
+        auto newset = original;
         newset.items.erase
         (
             std::remove_if
@@ -62,8 +55,9 @@ namespace dafs
             ),
             newset.items.end()
         );
+
         dafs::Delta delta = dafs::CreateDelta(
-            block.contents,
+            dafs::Serialize(original),
             dafs::Serialize(dafs::Index<T>(newset)));
         return delta;
     }

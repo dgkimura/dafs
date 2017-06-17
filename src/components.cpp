@@ -21,13 +21,8 @@ namespace dafs
         dafs::Root root)
     : replication(replication),
       root(root),
-      blocks(
-          dafs::BlockInfo
-          {
-              boost::filesystem::path(Constant::BlockListName).string(),
-              dafs::Identity()
-          }
-      )
+      blocklist((boost::filesystem::path(root.directory) /
+                 boost::filesystem::path(Constant::BlockListName)).string())
     {
     }
 
@@ -35,8 +30,7 @@ namespace dafs
     ReplicatedStorage::ReplicatedStorage(
         const ReplicatedStorage& other)
     : replication(other.replication),
-      root(other.root),
-      blocks(other.blocks)
+      root(other.root)
     {
     }
 
@@ -71,26 +65,29 @@ namespace dafs
     void
     ReplicatedStorage::InsertIndex(BlockInfo info)
     {
-        Delta delta = dafs::Insert(rooted(blocks), info);
-        Write(blocks, delta);
+        std::fstream stream(blocklist,
+                            std::ios::in | std::ios::out | std::ios::binary);
+        Delta delta = dafs::Insert(stream, info);
+        Write(dafs::BlockInfo{Constant::BlockListName}, delta);
     }
 
 
     void
     ReplicatedStorage::RemoveIndex(BlockInfo info)
     {
-        Delta delta = dafs::Remove(rooted(blocks), info);
-        Write(blocks, delta);
+        std::fstream stream(blocklist,
+                            std::ios::in | std::ios::out | std::ios::binary);
+        Delta delta = dafs::Remove(stream, info);
+        Write(dafs::BlockInfo{Constant::BlockListName}, delta);
     }
 
 
     BlockIndex
     ReplicatedStorage::GetIndex()
     {
-        auto block = ReadBlock(blocks);
-
-        return block.contents.empty() ? BlockIndex() :
-               dafs::Deserialize<BlockIndex>(block.contents);
+        std::fstream stream(blocklist,
+                            std::ios::in | std::ios::out | std::ios::binary);
+        return dafs::Deserialize<BlockIndex>(stream);
     }
 
 

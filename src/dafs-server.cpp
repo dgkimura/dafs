@@ -11,6 +11,7 @@
 #include "dafs/node.hpp"
 #include "dafs/sender.hpp"
 #include "dafs/server.hpp"
+#include "dafs/serialization.hpp"
 
 
 void
@@ -51,6 +52,12 @@ SetupReplicatedFiles(
             directory,
             Constant::DetailsName,
             dafs::Serialize(details)
+        );
+
+        CreateReplicatedFile(
+            directory,
+            Constant::BlockListName,
+            dafs::Serialize(dafs::BlockIndex{})
         );
     }
 }
