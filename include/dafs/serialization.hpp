@@ -145,8 +145,14 @@ namespace dafs
     {
         T object;
         std::stringstream stream(string_obj);
-        boost::archive::text_iarchive oa(stream);
-        oa >> object;
+        try
+        {
+            boost::archive::text_iarchive oa(stream);
+            oa >> object;
+        }
+        catch (boost::archive::archive_exception& e)
+        {
+        }
         return object;
     }
 

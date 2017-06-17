@@ -2,6 +2,7 @@
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
 
 #include "dafs/dafs-cli.hpp"
@@ -92,13 +93,14 @@ namespace dafs
         );
 
         //
-        // Get file metadata.
+        // Create file metadata if it does not exist already.
         //
         if (metadata_map.files.find(filename) == metadata_map.files.end())
         {
             auto blockinfo = ExecuteAllocateBlock(address);
             metadata_map.files[filename] = blockinfo.identity;
 
+            // Update metadata map.
             ExecuteWriteBlock(
                 address,
                 dafs::BlockInfo
@@ -111,17 +113,80 @@ namespace dafs
                     dafs::Serialize(metadata_map)
                 }
             );
+
+            // Update file metadata.
+            ExecuteWriteBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    metadata_map.files[filename].id,
+                    metadata_map.files[filename]
+                },
+                dafs::BlockFormat
+                {
+                    dafs::Serialize(FileMetadata{})
+                }
+            );
         }
+
+        //
+        // Get file metadata.
+        //
+        auto metadata = dafs::Deserialize<dafs::FileMetadata>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    metadata_map.files[filename].id,
+                    metadata_map.files[filename]
+                }
+            ).contents
+        );
+
+        int i = 0;
 
         //
         // Allocate and write blocks.
         //
-        //TODO: implement
+        std::fstream file((boost::filesystem::path(filename)).string(),
+                          std::ios::in | std::ios::binary);
+
+        dafs::FileParser parser(file);
+        dafs::BlockFormat format = parser.Next();
+
+        while (!format.contents.empty())
+        {
+            auto blockinfo = ExecuteAllocateBlock(address);
+            ExecuteWriteBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    blockinfo.identity.id,
+                    blockinfo.identity
+                },
+                format
+            );
+
+            metadata.blocks[i] = blockinfo.identity;
+
+            format = parser.Next();
+        }
 
         //
         // Update file metadata.
         //
-        //TODO: implement
+        ExecuteWriteBlock(
+            address,
+            dafs::BlockInfo
+            {
+                metadata_map.files[filename].id,
+                metadata_map.files[filename]
+            },
+            dafs::BlockFormat
+            {
+                dafs::Serialize(metadata)
+            }
+        );
     }
 
 
@@ -377,6 +442,24 @@ namespace dafs
             }
         } while(result.type == dafs::MessageType::Failure);
         return result;
+    }
+
+
+    FileParser::FileParser(std::iostream& filestream)
+        : stream(filestream)
+    {
+    }
+
+
+    dafs::BlockFormat
+    FileParser::Next()
+    {
+        std::memset(buffer, '\0', dafs::BLOCK_SIZE_IN_BYTES);
+        stream.read(buffer, dafs::BLOCK_SIZE_IN_BYTES);
+
+        dafs::BlockFormat format;
+        format.contents = std::string(buffer);
+        return format;
     }
 }
 

@@ -40,8 +40,6 @@ namespace dafs
 
     struct FileMetadata
     {
-        std::string filename;
-
         std::array<dafs::Identity, 100> blocks;
 
         dafs::Identity extended;
@@ -66,10 +64,25 @@ namespace dafs
     template <typename Archive>
     void serialize(Archive& ar, dafs::FileMetadata& obj, const unsigned int version)
     {
-        ar & obj.filename;
         ar & obj.blocks;
         ar & obj.extended;
     }
+
+
+    class FileParser
+    {
+    public:
+
+        FileParser(std::iostream& filestream);
+
+        dafs::BlockFormat Next();
+
+    private:
+
+        std::iostream& stream;
+
+        char buffer[dafs::BLOCK_SIZE_IN_BYTES];
+    };
 
 
     void InitializeFileService(
