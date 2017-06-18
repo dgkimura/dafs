@@ -215,6 +215,8 @@ namespace dafs
 
         ReplicatedLock lock;
 
+        BlockAllocator allocator;
+
         dafs::BlockInfo details;
     };
 }

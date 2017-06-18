@@ -17,16 +17,10 @@ namespace dafs
           store(replication_, root),
           nodeset(replication_),
           ping(replication_,
-               address,
-               [this]()->dafs::ReplicatedEndpoints
-               {
-                   return GetNodeSetDetails();
-               },
-               [this]()->bool
-               {
-                   return lock.IsLocked();
-               },
-               ping_interval),
+              address,
+              [this]()->dafs::ReplicatedEndpoints { return GetNodeSetDetails(); },
+              [this]()->bool { return lock.IsLocked(); },
+              ping_interval),
           lock(replication_, address, root),
           details(
               dafs::BlockInfo
@@ -34,6 +28,11 @@ namespace dafs
                   boost::filesystem::path(Constant::DetailsName).string(),
                   dafs::Identity()
               }
+          ),
+          allocator(
+              [this]()->dafs::BlockIndex { return store.GetIndex(); },
+              [this](dafs::BlockInfo info) { store.InsertIndex(info); },
+              [this]()->dafs::ReplicatedEndpoints { return GetNodeSetDetails(); }
           )
     {
         ping.Start();
@@ -47,7 +46,8 @@ namespace dafs
           store(other.store),
           nodeset(other.nodeset),
           ping(other.ping),
-          lock(other.lock)
+          lock(other.lock),
+          allocator(other.allocator)
     {
     }
 
@@ -86,28 +86,7 @@ namespace dafs
     dafs::BlockInfo
     ReplicatedPartition::AllocateBlock()
     {
-        dafs::BlockInfo info {"", GetNodeSetDetails().zero.identity, 0};
-
-        while (IsLogicallyOrdered(GetNodeSetDetails().zero.identity,
-                                  info.identity,
-                                  GetNodeSetDetails().plus.identity))
-        {
-            auto index = store.GetIndex().items;
-            if (std::any_of(index.cbegin(), index.cend(),
-                            [=](const BlockInfo& b)
-                            {
-                                return b.identity==info.identity;
-                            }))
-            {
-                info.identity += 1;
-            }
-            else
-            {
-                store.InsertIndex(info);
-                break;
-            }
-        }
-        return info;
+        return allocator.Allocate();
     }
 
 

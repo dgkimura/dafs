@@ -223,5 +223,26 @@ namespace dafs
 
         dafs::Root root;
     };
+
+
+    class BlockAllocator
+    {
+    public:
+
+        BlockAllocator(
+            std::function<dafs::BlockIndex(void)> get_index,
+            std::function<void(dafs::BlockInfo)> insert_index,
+            std::function<dafs::ReplicatedEndpoints(void)> get_endpoints);
+
+        dafs::BlockInfo Allocate();
+
+    private:
+
+        std::function<dafs::BlockIndex(void)> get_index;
+
+        std::function<void(dafs::BlockInfo)> insert_index;
+
+        std::function<dafs::ReplicatedEndpoints(void)> get_endpoints;
+    };
 }
 

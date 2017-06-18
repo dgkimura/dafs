@@ -369,4 +369,44 @@ namespace dafs
                      boost::filesystem::path(info.path)).string();
         return info;
     }
+
+
+    BlockAllocator::BlockAllocator(
+            std::function<dafs::BlockIndex(void)> get_index,
+            std::function<void(dafs::BlockInfo)> insert_index,
+            std::function<dafs::ReplicatedEndpoints(void)> get_endpoints)
+    : get_index(get_index),
+      insert_index(insert_index),
+      get_endpoints(get_endpoints)
+    {
+    }
+
+
+    dafs::BlockInfo
+    BlockAllocator::Allocate()
+    {
+        auto details = get_endpoints();
+
+        dafs::BlockInfo info{"", details.zero.identity, 0};
+        while (IsLogicallyOrdered(details.zero.identity,
+                                  info.identity,
+                                  details.plus.identity))
+        {
+            auto index = get_index().items;
+            if (std::any_of(index.cbegin(), index.cend(),
+                            [=](const BlockInfo& b)
+                            {
+                                return b.identity==info.identity;
+                            }))
+            {
+                info.identity += 1;
+            }
+            else
+            {
+                insert_index(info);
+                return info;
+            }
+        }
+        return dafs::BlockInfo{"", dafs::Identity(), 0};
+    }
 }
