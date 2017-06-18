@@ -268,6 +268,110 @@ namespace dafs
 
 
     void
+    RemoveFile(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        if (args.size() < 2)
+        {
+            std::cout << "Command requires filename.\n";
+            return;
+        }
+
+        std::string filename = args[1];
+        std::cout << "Removing file: " << filename << std::endl;
+
+        //
+        // Get the superblock.
+        //
+        auto superblock = dafs::Deserialize<dafs::SuperBlock>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    "00000000-0000-0000-0000-000000000000",
+                    dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                }
+            ).contents
+        );
+
+        //
+        // Get the file metadata map.
+        //
+        auto metadata_map = dafs::Deserialize<dafs::FileMetadataMap>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    superblock.filemap.id,
+                    superblock.filemap
+                }
+            ).contents
+        );
+
+        //
+        // Get file metadata.
+        //
+        auto metadata = dafs::Deserialize<dafs::FileMetadata>(
+            ExecuteReadBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    metadata_map.files[filename].id,
+                    metadata_map.files[filename]
+                }
+            ).contents
+        );
+
+        for (const auto& identity : metadata.blocks)
+        {
+            if (identity == dafs::Identity())
+            {
+                break;
+            }
+
+            ExecuteDeleteBlock(
+                address,
+                dafs::BlockInfo
+                {
+                    identity.id,
+                    identity
+                }
+            );
+        }
+
+        //
+        // Delete file metadata
+        //
+        ExecuteDeleteBlock(
+            address,
+            dafs::BlockInfo
+            {
+                metadata_map.files[filename].id,
+                metadata_map.files[filename]
+            }
+        );
+
+        //
+        // Update file metadata map.
+        //
+        metadata_map.files.erase(filename);
+        ExecuteWriteBlock(
+            address,
+            dafs::BlockInfo
+            {
+                superblock.filemap.id,
+                superblock.filemap
+            },
+            dafs::BlockFormat
+            {
+                dafs::Serialize(metadata_map)
+            }
+        );
+    }
+
+
+    void
     ListFiles(
         dafs::Address address,
         std::vector<std::string> args)
@@ -444,15 +548,8 @@ namespace dafs
     void
     ExecuteDeleteBlock(
         dafs::Address address,
-        std::vector<std::string> args)
+        dafs::BlockInfo info)
     {
-        dafs::BlockInfo info
-        {
-            "path_to_block_info",
-            dafs::Identity("11111111-1111-1111-1111-111111111111"),
-            0 // revision
-        };
-
         HardSend(
             dafs::Message
             {

@@ -100,6 +100,11 @@ namespace dafs
         std::vector<std::string> args);
 
 
+    void RemoveFile(
+        dafs::Address address,
+        std::vector<std::string> args);
+
+
     void ListFiles(
         dafs::Address address,
         std::vector<std::string> args);
@@ -127,7 +132,7 @@ namespace dafs
 
     void ExecuteDeleteBlock(
         dafs::Address address,
-        std::vector<std::string> args);
+        dafs::BlockInfo info);
 
 
     void AddNodeToCluster(
@@ -148,11 +153,11 @@ namespace dafs
         { "initialize", dafs::InitializeFileService },
         { "upload", dafs::UploadFile },
         { "download", dafs::DownloadFile },
+        { "remove", dafs::RemoveFile },
         { "list-files", dafs::ListFiles },
         { "info", dafs::GetNodeDetails },
         { "join", dafs::AddNodeToCluster },
-        { "exit", dafs::RemoveNodeFromCluster },
-        { "db", dafs::ExecuteDeleteBlock }
+        { "exit", dafs::RemoveNodeFromCluster }
     };
 
 
