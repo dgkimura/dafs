@@ -143,8 +143,6 @@ namespace dafs
             ).contents
         );
 
-        int i = 0;
-
         //
         // Allocate and write blocks.
         //
@@ -154,7 +152,7 @@ namespace dafs
         dafs::FileParser parser(file);
         dafs::BlockFormat format = parser.Next();
 
-        while (!format.contents.empty())
+        for (int i=0; !format.contents.empty(); i+= 1)
         {
             auto blockinfo = ExecuteAllocateBlock(address);
             ExecuteWriteBlock(
@@ -168,7 +166,6 @@ namespace dafs
             );
 
             metadata.blocks[i] = blockinfo.identity;
-
             format = parser.Next();
         }
 

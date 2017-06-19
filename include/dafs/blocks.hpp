@@ -8,7 +8,7 @@
 
 namespace dafs
 {
-    const int BLOCK_SIZE_IN_BYTES = 65536;
+    const int BLOCK_SIZE_IN_BYTES = 16384;
 
     //
     // Defines directory where partition is located.

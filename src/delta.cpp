@@ -11,8 +11,8 @@ namespace dafs
     Delta
     CreateDelta(std::string was, std::string is)
     {
-        char edit_script[BLOCK_SIZE_IN_BYTES];
-        int edit_script_length = BLOCK_SIZE_IN_BYTES;
+        char edit_script[BLOCK_SIZE_IN_BYTES * 2];
+        int edit_script_length = BLOCK_SIZE_IN_BYTES * 2;
 
         int length = ComputeEditScript(
             &was[0],
@@ -38,8 +38,8 @@ namespace dafs
         buffer << stream.rdbuf();
 
         std::string original = buffer.str();
-        char new_string[BLOCK_SIZE_IN_BYTES];
-        int new_string_length = BLOCK_SIZE_IN_BYTES;
+        char new_string[BLOCK_SIZE_IN_BYTES * 2];
+        int new_string_length = BLOCK_SIZE_IN_BYTES * 2;
 
         int length = ApplyEditScript(
             &original[0],
