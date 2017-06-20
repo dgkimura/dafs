@@ -13,6 +13,7 @@ namespace dafs
     {
         char edit_script[BLOCK_SIZE_IN_BYTES * 2];
         int edit_script_length = BLOCK_SIZE_IN_BYTES * 2;
+        std::memset(edit_script, '\0', dafs::BLOCK_SIZE_IN_BYTES * 2);
 
         int length = ComputeEditScript(
             &was[0],
@@ -24,7 +25,7 @@ namespace dafs
         );
         Delta delta
         {
-            std::string(edit_script).erase(length)
+            std::string(edit_script)
         };
         return delta;
     }
@@ -40,6 +41,7 @@ namespace dafs
         std::string original = buffer.str();
         char new_string[BLOCK_SIZE_IN_BYTES * 2];
         int new_string_length = BLOCK_SIZE_IN_BYTES * 2;
+        std::memset(new_string, '\0', dafs::BLOCK_SIZE_IN_BYTES * 2);
 
         int length = ApplyEditScript(
             &original[0],
@@ -49,6 +51,6 @@ namespace dafs
             new_string,
             new_string_length
         );
-        return std::string(new_string).erase(length);
+        return std::string(new_string);
     }
 }

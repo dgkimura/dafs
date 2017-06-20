@@ -658,6 +658,7 @@ namespace dafs
 
         dafs::BlockFormat format;
         format.contents = std::string(buffer);
+        format.contents[dafs::BLOCK_SIZE_IN_BYTES] = '\0';
         return format;
     }
 }
