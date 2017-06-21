@@ -550,39 +550,6 @@ namespace dafs
                 }
             );
         }
-        else
-        {
-            if (!p_zero->Acquire())
-            {
-                //
-                // Did not acquire partition lock.
-                //
-                dafs::Message m;
-                return m;
-            }
-
-            auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
-            auto index = metadata.GetValue<dafs::BlockIndex>(dafs::BlockInfoListKey);
-
-            for (auto info : SplitLowerIndex(index,
-                                             p_zero->GetIdentity(),
-                                             p_plus->GetIdentity(),
-                                             p_plus->GetNodeSetDetails().plus.identity).items)
-            {
-                auto format = p_plus->ReadBlock(info);
-                p_zero->WriteBlock(info, format);
-                p_plus->DeleteBlock(info);
-            }
-
-            p_zero->SetPlus(
-                endpoint.management,
-                endpoint.replication,
-                endpoint.identity,
-                Constant::PartitionMinusName);
-
-            p_plus->Release();
-            p_zero->Release();
-        }
 
         dafs::Message m;
         return m;
@@ -601,57 +568,7 @@ namespace dafs
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
-        if (p_minus->GetIdentity() == identity)
-        {
-            if (!p_zero->Acquire())
-            {
-                //
-                // Did not acquire partition lock.
-                //
-                dafs::Message m;
-                return m;
-            }
-
-            p_zero->SetMinus(
-                p_minus->GetNodeSetDetails().minus.management,
-                p_minus->GetNodeSetDetails().minus.replication,
-                p_minus->GetNodeSetDetails().minus.identity,
-                Constant::PartitionPlusName);
-
-            //
-            // Save minus partition's block info list for pruning on the other
-            // server which will handle the 2nd half of the exit.
-            //
-            auto blockinfo_list = p_minus->GetIndex();
-
-            sender.Send(
-                dafs::Message
-                {
-                    p_zero->GetNodeSetDetails().zero.management,
-                    p_minus->GetNodeSetDetails().minus.management,
-                    dafs::MessageType::_PlusExitCluster,
-                    std::vector<dafs::MetaData>
-                    {
-                        dafs::MetaData
-                        {
-                            dafs::EndpointKey,
-                            dafs::Serialize(p_minus->GetNodeSetDetails().plus)
-                        },
-                        dafs::MetaData
-                        {
-                            dafs::IdentityKey,
-                            dafs::Serialize(identity)
-                        },
-                        dafs::MetaData
-                        {
-                            dafs::BlockInfoListKey,
-                            dafs::Serialize(blockinfo_list)
-                        }
-                    }
-                }
-            );
-        }
-        else
+        if (p_minus->GetIdentity() != identity)
         {
             if (!p_zero->Acquire())
             {
