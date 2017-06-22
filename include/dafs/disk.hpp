@@ -30,7 +30,7 @@ namespace dafs
 
         dafs::Delta delta = dafs::CreateDelta(
             dafs::Serialize(original),
-            dafs::Serialize(dafs::Index<T>(newset)));
+            dafs::Serialize(newset));
         return delta;
     }
 
@@ -58,7 +58,7 @@ namespace dafs
 
         dafs::Delta delta = dafs::CreateDelta(
             dafs::Serialize(original),
-            dafs::Serialize(dafs::Index<T>(newset)));
+            dafs::Serialize(newset));
         return delta;
     }
 }

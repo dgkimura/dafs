@@ -387,7 +387,12 @@ namespace dafs
     {
         auto details = get_endpoints();
 
-        dafs::BlockInfo info{"", details.zero.identity, 0};
+        dafs::BlockInfo info
+        {
+            details.zero.identity.id,
+            details.zero.identity,
+            0
+        };
         while (IsLogicallyOrdered(details.zero.identity,
                                   info.identity,
                                   details.plus.identity))
@@ -400,6 +405,7 @@ namespace dafs
                             }))
             {
                 info.identity += 1;
+                info.path = info.identity.id;
             }
             else
             {

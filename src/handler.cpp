@@ -511,17 +511,21 @@ namespace dafs
                 return m;
             }
 
+            //
+            // Update zero partition to contain blocks that used to be owned by
+            // partition plus.
+            //
+            for (const auto& info : p_plus->GetIndex().items)
+            {
+                auto format = p_plus->ReadBlock(info);
+                p_zero->WriteBlock(info, format);
+            }
+
             p_zero->SetPlus(
                 p_plus->GetNodeSetDetails().plus.management,
                 p_plus->GetNodeSetDetails().plus.replication,
                 p_plus->GetNodeSetDetails().plus.identity,
                 Constant::PartitionMinusName);
-
-            //
-            // Save plus partition's block info list for pruning on the other
-            // server which will handle the 2nd half of the exit.
-            //
-            auto blockinfo_list = p_plus->GetIndex();
 
             sender.Send(
                 dafs::Message
@@ -540,11 +544,6 @@ namespace dafs
                         {
                             dafs::IdentityKey,
                             dafs::Serialize(identity)
-                        },
-                        dafs::MetaData
-                        {
-                            dafs::BlockInfoListKey,
-                            dafs::Serialize(blockinfo_list)
                         }
                     }
                 }
@@ -580,17 +579,6 @@ namespace dafs
             }
 
             auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
-            auto index = metadata.GetValue<dafs::BlockIndex>(dafs::BlockInfoListKey);
-
-            for (auto info : SplitUpperIndex(index,
-                                             p_minus->GetIdentity(),
-                                             p_zero->GetIdentity(),
-                                             p_plus->GetIdentity()).items)
-            {
-                auto format = p_minus->ReadBlock(info);
-                p_zero->WriteBlock(info, format);
-                p_minus->DeleteBlock(info);
-            }
 
             p_zero->SetMinus(
                 endpoint.management,
