@@ -513,12 +513,14 @@ namespace dafs
 
             //
             // Update zero partition to contain blocks that used to be owned by
-            // partition plus.
+            // partition plus. And remove blocks no longer owned by plus
+            // partition.
             //
             for (const auto& info : p_plus->GetIndex().items)
             {
                 auto format = p_plus->ReadBlock(info);
                 p_zero->WriteBlock(info, format);
+                p_plus->DeleteBlock(info);
             }
 
             p_zero->SetPlus(
