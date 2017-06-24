@@ -22,6 +22,9 @@ TEST(IdentityTest, testsIdentityComparison)
 
     ASSERT_FALSE(a == b);
     ASSERT_TRUE(a == a);
+
+    ASSERT_FALSE(a != a);
+    ASSERT_TRUE(a != b);
 }
 
 
