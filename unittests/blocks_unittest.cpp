@@ -3,6 +3,16 @@
 #include "dafs/blocks.hpp"
 
 
+TEST(BlocksTest, testRootFieldsAreConstructed)
+{
+    std::string directory = "a_directory";
+
+    dafs::Root root(directory);
+
+    ASSERT_EQ(directory, root.directory);
+}
+
+
 TEST(BlocksTest, testBlockFieldsAreConstructed)
 {
     std::string contents = "the_block_contents";

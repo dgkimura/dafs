@@ -66,10 +66,4 @@ namespace dafs
                                dafs::Identity lower,
                                dafs::Identity divider,
                                dafs::Identity upper);
-
-
-    BlockIndex SplitLowerIndex(BlockIndex index,
-                               dafs::Identity lower,
-                               dafs::Identity divider,
-                               dafs::Identity upper);
 }

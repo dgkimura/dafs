@@ -98,6 +98,48 @@ TEST(ReplicatedNodeSetTest, testSetMinusUpdatesReplicatedEndpointDetails)
 }
 
 
+TEST(ReplicatedNodeSetTest, testSetZeroUpdatesReplicatedEndpointDetails)
+{
+    auto endpoints = dafs::ReplicatedEndpoints
+    {
+        dafs::Endpoint
+        {
+            dafs::Address{"1.0.0.0", 1000},
+            dafs::Address{"1.0.0.1", 1001},
+            dafs::Identity("10000000-0000-0000-0000-000000000000")
+        },
+        dafs::Endpoint
+        {
+            dafs::Address{"2.0.0.0", 2000},
+            dafs::Address{"2.0.0.1", 2001},
+            dafs::Identity("20000000-0000-0000-0000-000000000000")
+        },
+        dafs::Endpoint
+        {
+            dafs::Address{"3.0.0.0", 3000},
+            dafs::Address{"3.0.0.1", 3001},
+            dafs::Identity("30000000-0000-0000-0000-000000000000")
+        }
+    };
+    MockReplication replication;
+
+    dafs::ReplicatedNodeSet nodeset(replication);
+    auto result = nodeset.SetZero(
+        dafs::Address{"1.1.0.0", 1100},
+        dafs::Address{"1.1.0.1", 1101},
+        dafs::Identity("11111111-1111-1111-1111-111111111111"),
+        "a_location",
+        endpoints
+    );
+
+    ASSERT_EQ("1.1.0.0", result.zero.management.ip);
+    ASSERT_EQ(1100, result.zero.management.port);
+    ASSERT_EQ("1.1.0.1", result.zero.replication.ip);
+    ASSERT_EQ(1101, result.zero.replication.port);
+    ASSERT_EQ("11111111-1111-1111-1111-111111111111", result.zero.identity.id);
+}
+
+
 TEST(ReplicatedNodeSetTest, testSetPlusUpdatesReplicatedEndpointDetails)
 {
     auto endpoints = dafs::ReplicatedEndpoints
@@ -172,9 +214,17 @@ TEST(BlockAllocatorTest, testBasicAllocation)
         }
     );
 
-    ASSERT_EQ("20000000-0000-0000-0000-000000000000", allocator.Allocate().identity.id);
-    ASSERT_EQ("20000000-0000-0000-0000-000000000001", allocator.Allocate().identity.id);
-    ASSERT_EQ("20000000-0000-0000-0000-000000000002", allocator.Allocate().identity.id);
+    auto block_1 = allocator.Allocate();
+    ASSERT_EQ("20000000-0000-0000-0000-000000000000", block_1.identity.id);
+    ASSERT_EQ("20000000-0000-0000-0000-000000000000", block_1.path);
+
+    auto block_2 = allocator.Allocate();
+    ASSERT_EQ("20000000-0000-0000-0000-000000000001", block_2.identity.id);
+    ASSERT_EQ("20000000-0000-0000-0000-000000000001", block_2.path);
+
+    auto block_3 = allocator.Allocate();
+    ASSERT_EQ("20000000-0000-0000-0000-000000000002", block_3.identity.id);
+    ASSERT_EQ("20000000-0000-0000-0000-000000000002", block_3.path);
 }
 
 
