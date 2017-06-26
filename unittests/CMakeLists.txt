@@ -23,6 +23,7 @@ set(SOURCES
     metadataparser_unittest.cpp
     node_unittest.cpp
     serialization_unittest.cpp
+    signal_unittest.cpp
 )
 
 add_executable(all_unittests ${SOURCES})
