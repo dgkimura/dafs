@@ -721,6 +721,8 @@ int main(int argc, char** argv)
         }
     };
 
+    std::string input;
+
     boost::program_options::options_description desc("Allowed options");
     desc.add_options()
         ("help", "produce help message")
@@ -730,6 +732,9 @@ int main(int argc, char** argv)
         ("port",
          boost::program_options::value(&creds.address.port)->default_value(9000),
          "port of the node")
+        ("command",
+         boost::program_options::value(&input)->default_value(""),
+         "command to be run")
     ;
     boost::program_options::variables_map cli_vm;
     boost::program_options::store(
@@ -743,7 +748,14 @@ int main(int argc, char** argv)
         std::exit(EXIT_FAILURE);
     }
 
-    std::string input;
+    if (!input.empty())
+    {
+        std::vector<std::string> tokens;
+        boost::split(tokens, input, boost::is_any_of("\t "));
+
+        dafs::commands[tokens[0]](creds.address, tokens);
+        std::exit(EXIT_SUCCESS);
+    }
 
     while (std::cout << "dafs> " && std::getline(std::cin, input) && input != "quit")
     {
