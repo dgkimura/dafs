@@ -1,3 +1,5 @@
+#include <boost/uuid/uuid.hpp>
+
 #include "dafs/customhash.hpp"
 #include "dafs/propose.hpp"
 #include "dafs/serialization.hpp"
@@ -17,10 +19,12 @@ namespace dafs
         edit.info = info;
         edit.change = item;
         edit.hash = hash;
+        edit.revision = revision;
 
         Proposal p;
         p.type = type;
         p.content = dafs::Serialize(edit);
+        p.uuid = boost::uuids::nil_uuid();
         return p;
     }
 }

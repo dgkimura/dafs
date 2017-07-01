@@ -8,6 +8,26 @@
 #include "mock_sender.hpp"
 
 
+TEST(ReplicatedStorageTest, testDeleteBlockWritesSerializedDeleteMessage)
+{
+    MockReplication replication(
+        std::vector<dafs::Address>
+        {
+        }
+    );
+    dafs::Root root("root_directory");
+
+    dafs::ReplicatedStorage storage(replication, root);
+    dafs::BlockInfo info{"path", dafs::Identity(), 0};
+    storage.DeleteBlock(info);
+
+    ASSERT_TRUE(replication.WasEntryWritten(
+        "22 serialization::archive 14 0 0 1 96 22 serialization::archive 14 "
+        "0 0 0 0 4 path 0 0 36 00000000-0000-0000-0000-000000000000 0 0  0 0 "
+        "00000000-0000-0000-0000-000000000000"));
+}
+
+
 TEST(ReplicatedPingTest, testPingSendsProposeExitCluster)
 {
     MockReplication replication(

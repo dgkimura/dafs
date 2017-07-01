@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <gtest/gtest.h>
+
 #include "dafs/messages.hpp"
 #include "dafs/replication.hpp"
 #include "dafs/result.hpp"
@@ -19,6 +21,7 @@ public:
     dafs::Result Write(std::string entry) override
     {
         dafs::Result r;
+        entries.push_back(entry);
         return r;
     }
 
@@ -35,7 +38,22 @@ public:
         return missing_replicas;
     }
 
+    bool WasEntryWritten(std::string entry)
+    {
+        for (auto e : entries)
+        {
+            std::cerr << e << std::endl;
+            if (e == entry)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 private:
 
     std::vector<dafs::Address> missing_replicas;
+
+    std::vector<std::string> entries;
 };
