@@ -6,8 +6,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_serialize.hpp>
 
 #include "blocks.hpp"
 #include "delta.hpp"
@@ -105,18 +104,7 @@ namespace dafs
     {
         ar & obj.type;
         ar & obj.content;
-        if (Archive::is_loading::value)
-        {
-            std::string uuid_string;
-            ar & uuid_string;
-            boost::uuids::string_generator gen;
-            obj.uuid = gen(uuid_string);
-        }
-        else
-        {
-            auto uuid_string = boost::uuids::to_string(obj.uuid);
-            ar & uuid_string;
-        }
+        ar & obj.uuid;
     }
 
 
