@@ -28,6 +28,50 @@ TEST(ReplicatedStorageTest, testDeleteBlockWritesSerializedDeleteMessage)
 }
 
 
+TEST(ReplicatedStorageTest, testWriteBlockWritesSerializedDeleteMessage)
+{
+    MockReplication replication(
+        std::vector<dafs::Address>
+        {
+        }
+    );
+    dafs::Root root("root_directory");
+
+    dafs::ReplicatedStorage storage(replication, root);
+    dafs::BlockInfo info{"path", dafs::Identity(), 0};
+    dafs::BlockFormat format{"the block format contents."};
+    storage.WriteBlock(info, format);
+
+    ASSERT_TRUE(replication.WasEntryWritten(
+        "22 serialization::archive 14 0 0 0 160 22 serialization::archive 14 "
+        "0 0 0 0 4 path 0 0 36 00000000-0000-0000-0000-000000000000 0 63 22 "
+        "serialization::archive 14 0 0 27 Ythe block format contents. 0 0 "
+        "00000000-0000-0000-0000-000000000000"));
+}
+
+
+TEST(ReplicatedStorageTest, testWriteWritesSerializedDeleteMessage)
+{
+    MockReplication replication(
+        std::vector<dafs::Address>
+        {
+        }
+    );
+    dafs::Root root("root_directory");
+
+    dafs::ReplicatedStorage storage(replication, root);
+    dafs::BlockInfo info{"path", dafs::Identity(), 0};
+    dafs::Delta delta{"the difference string"};
+    storage.Write(info, delta);
+
+    ASSERT_TRUE(replication.WasEntryWritten(
+        "22 serialization::archive 14 0 0 0 154 22 serialization::archive 14 "
+        "0 0 0 0 4 path 0 0 36 00000000-0000-0000-0000-000000000000 0 57 22 "
+        "serialization::archive 14 0 0 21 the difference string 0 0 "
+        "00000000-0000-0000-0000-000000000000"));
+}
+
+
 TEST(ReplicatedPingTest, testPingSendsProposeExitCluster)
 {
     MockReplication replication(

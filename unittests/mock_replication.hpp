@@ -42,7 +42,6 @@ public:
     {
         for (auto e : entries)
         {
-            std::cerr << e << std::endl;
             if (e == entry)
             {
                 return true;
