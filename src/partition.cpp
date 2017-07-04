@@ -9,19 +9,17 @@
 namespace dafs
 {
     ReplicatedPartition::ReplicatedPartition(
-        Address address,
-        Root root,
-        std::chrono::seconds ping_interval
+        std::unique_ptr<Replication> replication,
+        std::shared_ptr<Storage> store_,
+        std::unique_ptr<NodeSet> nodeset_,
+        std::unique_ptr<Ping> ping_,
+        std::shared_ptr<Lock> lock_
     )
-        : replication_(address, root),
-          store(replication_, root),
-          nodeset(replication_),
-          ping(replication_,
-              address,
-              [this]()->dafs::ReplicatedEndpoints { return GetNodeSetDetails(); },
-              [this]()->bool { return lock.IsLocked(); },
-              ping_interval),
-          lock(replication_, address, root),
+        : replication(std::move(replication)),
+          store(std::move(store_)),
+          nodeset(std::move(nodeset_)),
+          ping(std::move(ping_)),
+          lock(std::move(lock_)),
           details(
               dafs::BlockInfo
               {
@@ -30,32 +28,61 @@ namespace dafs
               }
           ),
           allocator(
-              [this]()->dafs::BlockIndex { return store.GetIndex(); },
-              [this](dafs::BlockInfo info) { store.InsertIndex(info); },
+              [this]()->dafs::BlockIndex { return store->GetIndex(); },
+              [this](dafs::BlockInfo info) { store->InsertIndex(info); },
               [this]()->dafs::ReplicatedEndpoints { return GetNodeSetDetails(); }
           )
     {
-        ping.Start();
+        ping->Start();
     }
 
 
-    ReplicatedPartition::ReplicatedPartition(
-        const ReplicatedPartition& other
+    std::unique_ptr<dafs::ReplicatedPartition>
+    ReplicatedPartition::Create(
+        Address address,
+        Root root,
+        std::chrono::seconds ping_interval
     )
-        : replication_(other.replication_),
-          store(other.store),
-          nodeset(other.nodeset),
-          ping(other.ping),
-          lock(other.lock),
-          allocator(other.allocator)
     {
+        auto replication = std::unique_ptr<dafs::Replication>(
+            new dafs::PaxosReplication(address, root));
+        auto store = std::shared_ptr<dafs::Storage>(
+            new dafs::ReplicatedStorage(*replication, root));
+        auto nodeset = std::unique_ptr<dafs::NodeSet>(
+            new dafs::ReplicatedNodeSet(*replication));
+        auto lock = std::shared_ptr<dafs::Lock>(
+            new dafs::ReplicatedLock(*replication, address, root));
+        auto ping = std::unique_ptr<dafs::Ping>(
+            new ReplicatedPing(
+                *replication,
+                address,
+                [store]()
+                {
+                    auto details_block =  store->ReadBlock(
+                        dafs::BlockInfo
+                        {
+                            boost::filesystem::path(Constant::DetailsName).string(),
+                            dafs::Identity()
+                        });
+                    return dafs::Deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
+                },
+                [lock]() { return lock->IsLocked(); },
+                ping_interval));
+
+        return std::unique_ptr<dafs::ReplicatedPartition>(
+            new dafs::ReplicatedPartition(
+                std::move(replication),
+                std::move(store),
+                std::move(nodeset),
+                std::move(ping),
+                std::move(lock)));
     }
 
 
     dafs::Identity
     ReplicatedPartition::GetIdentity()
     {
-        auto details_block =  store.ReadBlock(details);
+        auto details_block =  store->ReadBlock(details);
         auto details = dafs::Deserialize<dafs::ReplicatedEndpoints>(
             details_block.contents);
         return details.zero.identity;
@@ -65,14 +92,14 @@ namespace dafs
     dafs::ReplicatedEndpoints
     ReplicatedPartition::GetNodeSetDetails()
     {
-        auto details_block =  store.ReadBlock(details);
+        auto details_block =  store->ReadBlock(details);
         return dafs::Deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
     }
 
     bool
     ReplicatedPartition::IsAddressResponsive(dafs::Address address)
     {
-        for (auto r : ping.NonresponsiveMembers())
+        for (auto r : ping->NonresponsiveMembers())
         {
             if (r.ip == address.ip && r.port == address.port)
             {
@@ -93,31 +120,31 @@ namespace dafs
     void
     ReplicatedPartition::DeleteBlock(BlockInfo info)
     {
-        store.DeleteBlock(info);
-        store.RemoveIndex(info);
+        store->DeleteBlock(info);
+        store->RemoveIndex(info);
     }
 
 
     BlockFormat
     ReplicatedPartition::ReadBlock(BlockInfo block)
     {
-        return store.ReadBlock(block);
+        return store->ReadBlock(block);
     }
 
 
     void
     ReplicatedPartition::WriteBlock(BlockInfo block, BlockFormat format)
     {
-        store.WriteBlock(block, format);
+        store->WriteBlock(block, format);
 
-        auto index = store.GetIndex().items;
+        auto index = store->GetIndex().items;
         if (!std::any_of(index.cbegin(), index.cend(),
                          [=](const BlockInfo& b)
                          {
                              return b.identity==block.identity;
                          }))
         {
-            store.InsertIndex(block);
+            store->InsertIndex(block);
         }
     }
 
@@ -125,7 +152,7 @@ namespace dafs
     BlockIndex
     ReplicatedPartition::GetIndex()
     {
-        return store.GetIndex();
+        return store->GetIndex();
     }
 
 
@@ -138,12 +165,12 @@ namespace dafs
     {
         dafs::Address removed = GetNodeSetDetails().minus.replication;
 
-        auto endpoints = nodeset.SetMinus(management,
-                                          replication,
-                                          identity,
-                                          location,
-                                          GetNodeSetDetails());
-        store.WriteBlock(
+        auto endpoints = nodeset->SetMinus(management,
+                                           replication,
+                                           identity,
+                                           location,
+                                           GetNodeSetDetails());
+        store->WriteBlock(
             details,
             BlockFormat
             {
@@ -152,7 +179,7 @@ namespace dafs
         );
         if (removed.port != dafs::EmptyAddress().port)
         {
-            nodeset.RemoveNode(removed);
+            nodeset->RemoveNode(removed);
         }
     }
 
@@ -163,12 +190,12 @@ namespace dafs
         dafs::Identity identity,
         std::string location)
     {
-        auto endpoints = nodeset.SetZero(management,
-                                         replication,
-                                         identity,
-                                         location,
-                                         GetNodeSetDetails());
-        store.WriteBlock(
+        auto endpoints = nodeset->SetZero(management,
+                                          replication,
+                                          identity,
+                                          location,
+                                          GetNodeSetDetails());
+        store->WriteBlock(
             details,
             BlockFormat
             {
@@ -186,13 +213,13 @@ namespace dafs
     {
         dafs::Address removed = GetNodeSetDetails().plus.replication;
 
-        auto endpoints = nodeset.SetPlus(management,
-                                         replication,
-                                         identity,
-                                         location,
-                                         GetNodeSetDetails());
+        auto endpoints = nodeset->SetPlus(management,
+                                          replication,
+                                          identity,
+                                          location,
+                                          GetNodeSetDetails());
 
-        store.WriteBlock(
+        store->WriteBlock(
             details,
             BlockFormat
             {
@@ -201,7 +228,7 @@ namespace dafs
         );
         if (removed.port != dafs::EmptyAddress().port)
         {
-            nodeset.RemoveNode(removed);
+            nodeset->RemoveNode(removed);
         }
     }
 
@@ -221,13 +248,13 @@ namespace dafs
     bool
     ReplicatedPartition::Acquire()
     {
-        return lock.Acquire();
+        return lock->Acquire();
     }
 
 
     void
     ReplicatedPartition::Release()
     {
-        lock.Release();
+        lock->Release();
     }
 }

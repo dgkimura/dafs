@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "dafs/blocks.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/replication.hpp"
@@ -153,14 +155,19 @@ namespace dafs
     {
     public:
 
-        ReplicatedPartition(
+        static std::unique_ptr<dafs::ReplicatedPartition>
+        Create(
             Address address,
             Root root,
             std::chrono::seconds ping_interval
         );
 
         ReplicatedPartition(
-            const ReplicatedPartition& other
+            std::unique_ptr<Replication> replication,
+            std::shared_ptr<Storage> store,
+            std::unique_ptr<NodeSet> nodeset,
+            std::unique_ptr<Ping> ping,
+            std::shared_ptr<Lock> lock
         );
 
         virtual dafs::Identity GetIdentity() override;
@@ -205,15 +212,15 @@ namespace dafs
 
     private:
 
-        PaxosReplication replication_;
+        std::unique_ptr<Replication> replication;
 
-        ReplicatedStorage store;
+        std::shared_ptr<Storage> store;
 
-        ReplicatedNodeSet nodeset;
+        std::unique_ptr<NodeSet> nodeset;
 
-        ReplicatedPing ping;
+        std::unique_ptr<Ping> ping;
 
-        ReplicatedLock lock;
+        std::shared_ptr<Lock> lock;
 
         BlockAllocator allocator;
 

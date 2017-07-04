@@ -75,7 +75,7 @@ SetupPartition(
         replication_interface,
         details);
 
-    return std::make_shared<dafs::ReplicatedPartition>(
+    return dafs::ReplicatedPartition::Create(
         replication_interface,
         dafs::Root(directory),
         ping_interval);

@@ -146,6 +146,8 @@ namespace dafs
         virtual std::vector<dafs::Address> NonresponsiveMembers(
             int last_elections=10) = 0;
 
+        virtual void Start() = 0;
+
         virtual void SendPing(std::shared_ptr<dafs::Sender> sender) = 0;
     };
 
@@ -164,7 +166,7 @@ namespace dafs
         std::vector<dafs::Address>
         NonresponsiveMembers(int last_elections=10) override;
 
-        void Start();
+        void Start() override;
 
         void SendPing(std::shared_ptr<dafs::Sender> sender) override;
 
