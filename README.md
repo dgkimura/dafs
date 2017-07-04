@@ -23,6 +23,17 @@ You can start the server by providing an identity for the server.
 $ dafs-server --identity=11111111-1111-1111-1111-111111111111
 ```
 
+You can get information about a server using the command-line tool.
+
+```
+$ dafs-cli --port=9001 --address=127.0.0.1
+dafs> list-servers
+Management          Minus Interface     Zero Interface      Plus Interface      Identity
+127.0.0.1:9001      127.0.0.1:8070      127.0.0.1:8080      127.0.0.1:8090      11111111-1111-1111-1111-111111111111
+dafs> list-files
+<empty>
+```
+
 
 ## Design
 A server is a member of 3 partitions.
