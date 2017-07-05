@@ -5,8 +5,8 @@ include(ExternalProject)
 
 ExternalProject_Add(
     gtest
-    URL https://github.com/google/googletest/archive/release-1.7.0.zip
-    URL_HASH SHA256=b58cb7547a28b2c718d1e38aee18a3659c9e3ff52440297e965f5edffe34b6d0
+    URL https://github.com/google/googletest/archive/release-1.8.0.zip
+    URL_HASH SHA256=f3ed3b58511efd272eb074a3a6d6fb79d7c2e6a0e374323d1e6bcbcc1ef141bf
     UPDATE_COMMAND ""
     INSTALL_COMMAND ""
 )
@@ -40,8 +40,9 @@ endif()
 
 target_link_libraries(all_unittests
     PRIVATE
-        ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}
-        ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}
+        ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/googlemock/gtest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest_main${CMAKE_STATIC_LIBRARY_SUFFIX}
+        ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/googlemock/gtest/${CMAKE_STATIC_LIBRARY_PREFIX}gtest${CMAKE_STATIC_LIBRARY_SUFFIX}
+        ${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest-build/googlemock/${CMAKE_STATIC_LIBRARY_PREFIX}gmock${CMAKE_STATIC_LIBRARY_SUFFIX}
         ${paxos_LIBS}
         ${diflib_LIB}
         Threads::Threads
@@ -54,7 +55,8 @@ add_dependencies(all_unittests diflib)
 add_dependencies(all_unittests paxos)
 add_dependencies(all_unittests dafs-library)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/gtest-prefix/src/gtest/include)
+include_directories(${CMAKE_BINARY_DIR}/unittests/gtest-prefix/src/gtest/googlemock/include)
+include_directories(${CMAKE_BINARY_DIR}/unittests/gtest-prefix/src/gtest/googletest/include)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
