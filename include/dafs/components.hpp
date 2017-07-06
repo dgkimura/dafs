@@ -21,6 +21,8 @@ namespace dafs
     {
     public:
 
+        virtual ~Storage() {}
+
         virtual BlockFormat ReadBlock(BlockInfo block) = 0;
 
         virtual void DeleteBlock(BlockInfo info) = 0;
@@ -77,6 +79,8 @@ namespace dafs
     class NodeSet
     {
     public:
+
+        virtual ~NodeSet() {}
 
         virtual void RemoveNode(dafs::Address address) = 0;
 
@@ -143,6 +147,8 @@ namespace dafs
     {
     public:
 
+        virtual ~Ping() {}
+
         virtual std::vector<dafs::Address> NonresponsiveMembers(
             int last_elections=10) = 0;
 
@@ -191,6 +197,8 @@ namespace dafs
     class Lock
     {
     public:
+
+        virtual ~Lock() {}
 
         virtual bool Acquire() = 0;
 
