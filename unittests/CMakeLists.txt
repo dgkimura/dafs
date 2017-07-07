@@ -23,6 +23,7 @@ set(SOURCES
     identity_unittest.cpp
     metadataparser_unittest.cpp
     node_unittest.cpp
+    partition_unittest.cpp
     serialization_unittest.cpp
     signal_unittest.cpp
 )
