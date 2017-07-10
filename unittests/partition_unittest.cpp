@@ -115,3 +115,28 @@ TEST(PartitionTest, testGetNodeSetDetailsWillParseDetailsFile)
     ASSERT_EQ("3.0.0.1", details.plus.replication.ip);
     ASSERT_EQ(301, details.plus.replication.port);
 }
+
+
+TEST(PartitionTest, testDeleteBlockDeletesBlockAndRemovesIndex)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto storage = std::shared_ptr<MockStorage>(new MockStorage());
+    auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        storage,
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        std::shared_ptr<MockLock>(new MockLock())
+    );
+
+    EXPECT_CALL(*storage, DeleteBlock(info))
+        .Times(1);
+    EXPECT_CALL(*storage, RemoveIndex(info))
+        .Times(1);
+
+    partition.DeleteBlock(info);
+}
