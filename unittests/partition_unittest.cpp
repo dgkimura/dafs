@@ -140,3 +140,28 @@ TEST(PartitionTest, testDeleteBlockDeletesBlockAndRemovesIndex)
 
     partition.DeleteBlock(info);
 }
+
+
+TEST(PartitionTest, testReadBlockParsesBlockFormat)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto storage = std::shared_ptr<MockStorage>(new MockStorage());
+    auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
+    auto format = dafs::BlockFormat { "The contents of a block format." };
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        storage,
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        std::shared_ptr<MockLock>(new MockLock())
+    );
+
+    EXPECT_CALL(*storage, ReadBlock(info))
+        .Times(1)
+        .WillOnce(testing::Return(format));
+
+    ASSERT_EQ(format.contents, partition.ReadBlock(info).contents);
+}
