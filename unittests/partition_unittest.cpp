@@ -165,3 +165,34 @@ TEST(PartitionTest, testReadBlockParsesBlockFormat)
 
     ASSERT_EQ(format.contents, partition.ReadBlock(info).contents);
 }
+
+
+TEST(PartitionTest, testGetIndexReturnsBlockIndex)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto storage = std::shared_ptr<MockStorage>(new MockStorage());
+    auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        storage,
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        std::shared_ptr<MockLock>(new MockLock())
+    );
+
+    EXPECT_CALL(*storage, GetIndex())
+        .Times(1)
+        .WillOnce(testing::Return(
+            dafs::BlockIndex
+            {
+                std::vector<dafs::BlockInfo>{info}
+            }));
+
+    auto index = partition.GetIndex();
+    ASSERT_EQ(info.path, index.items[0].path);
+    ASSERT_EQ(info.identity, index.items[0].identity);
+    ASSERT_EQ(info.revision, index.items[0].revision);
+}
