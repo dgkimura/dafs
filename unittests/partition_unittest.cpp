@@ -196,3 +196,89 @@ TEST(PartitionTest, testGetIndexReturnsBlockIndex)
     ASSERT_EQ(info.identity, index.items[0].identity);
     ASSERT_EQ(info.revision, index.items[0].revision);
 }
+
+
+TEST(PartitionTest, testIsActiveWithNonemptyAddresses)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto storage = std::shared_ptr<MockStorage>(new MockStorage());
+    auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
+    auto format = dafs::BlockFormat {
+        dafs::Serialize(
+            dafs::ReplicatedEndpoints {
+                dafs::Endpoint {
+                    dafs::Address{"1.0.0.0", 100},
+                    dafs::Address{"1.0.0.1", 101},
+                    dafs::Identity("11111111-1111-1111-1111-111111111111") },
+                dafs::Endpoint {
+                    dafs::Address{"2.0.0.0", 200},
+                    dafs::Address{"2.0.0.1", 201},
+                    dafs::Identity("22222222-2222-2222-2222-222222222222") },
+                dafs::Endpoint {
+                    dafs::Address{"3.0.0.0", 300},
+                    dafs::Address{"3.0.0.1", 301},
+                    dafs::Identity("33333333-3333-3333-3333-333333333333") },
+            }
+        )
+    };
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        storage,
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        std::shared_ptr<MockLock>(new MockLock())
+    );
+
+    EXPECT_CALL(*storage, ReadBlock(info))
+        .Times(1)
+        .WillOnce(testing::Return(format));
+
+    ASSERT_TRUE(partition.IsActive());
+}
+
+
+TEST(PartitionTest, testIsActiveWithEmptyAddress)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto storage = std::shared_ptr<MockStorage>(new MockStorage());
+    auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
+
+    // format details contains a dafs::EmptyAddress
+    auto format = dafs::BlockFormat {
+        dafs::Serialize(
+            dafs::ReplicatedEndpoints {
+                dafs::Endpoint {
+                    dafs::Address{"1.0.0.0", 100},
+                    dafs::Address{"1.0.0.1", 101},
+                    dafs::Identity("11111111-1111-1111-1111-111111111111") },
+                dafs::Endpoint {
+                    dafs::Address{"2.0.0.0", 200},
+                    dafs::Address{"2.0.0.1", 201},
+                    dafs::Identity("22222222-2222-2222-2222-222222222222") },
+                dafs::Endpoint {
+                    dafs::Address{"3.0.0.0", 300},
+                    dafs::EmptyAddress(),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333") },
+            }
+        )
+    };
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        storage,
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        std::shared_ptr<MockLock>(new MockLock())
+    );
+
+    EXPECT_CALL(*storage, ReadBlock(info))
+        .Times(1)
+        .WillOnce(testing::Return(format));
+
+    ASSERT_FALSE(partition.IsActive());
+}
