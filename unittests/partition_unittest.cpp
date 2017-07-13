@@ -282,3 +282,30 @@ TEST(PartitionTest, testIsActiveWithEmptyAddress)
 
     ASSERT_FALSE(partition.IsActive());
 }
+
+
+TEST(PartitionTest, testPartitionLockAcquire)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto lock = std::shared_ptr<MockLock>(new MockLock());
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        std::shared_ptr<MockStorage>(new MockStorage()),
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        lock
+    );
+
+    EXPECT_CALL(*lock, Acquire())
+        .Times(1)
+        .WillOnce(testing::Return(true));
+    ASSERT_TRUE(partition.Acquire());
+
+    EXPECT_CALL(*lock, Acquire())
+        .Times(1)
+        .WillOnce(testing::Return(false));
+    ASSERT_FALSE(partition.Acquire());
+}
