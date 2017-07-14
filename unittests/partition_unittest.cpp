@@ -6,6 +6,15 @@
 #include "mocks.hpp"
 
 
+namespace dafs
+{
+    bool operator==(dafs::BlockFormat lhs, dafs::BlockFormat rhs)
+    {
+        return lhs.contents == rhs.contents;
+    }
+}
+
+
 TEST(PartitionTest, testReplicatedPartitionStartsPingComponent)
 {
     auto ping = std::unique_ptr<MockPing>(new MockPing());
@@ -164,6 +173,76 @@ TEST(PartitionTest, testReadBlockParsesBlockFormat)
         .WillOnce(testing::Return(format));
 
     ASSERT_EQ(format.contents, partition.ReadBlock(info).contents);
+}
+
+
+TEST(PartitionTest, testWriteBlockWillInsertIndexWhenIndexDoesNotContainInfo)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto storage = std::shared_ptr<MockStorage>(new MockStorage());
+    auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
+    auto format = dafs::BlockFormat { "The contents of a block format." };
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        storage,
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        std::shared_ptr<MockLock>(new MockLock())
+    );
+
+    EXPECT_CALL(*storage, WriteBlock(info, format))
+        .Times(1);
+    EXPECT_CALL(*storage, GetIndex())
+        .Times(1)
+        .WillOnce(testing::Return(
+            dafs::BlockIndex
+            {
+                std::vector<dafs::BlockInfo>{}
+            }));
+    EXPECT_CALL(*storage, InsertIndex(info))
+        .Times(1);
+
+    partition.WriteBlock(info, format);
+}
+
+
+TEST(PartitionTest, testWriteBlockWillNotInsertIndexWhenIndexAlreadyContainInfo)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto storage = std::shared_ptr<MockStorage>(new MockStorage());
+    auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
+    auto format = dafs::BlockFormat { "The contents of a block format." };
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        storage,
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        std::shared_ptr<MockLock>(new MockLock())
+    );
+
+    EXPECT_CALL(*storage, WriteBlock(info, format))
+        .Times(1);
+
+    // Index already contains info...
+    EXPECT_CALL(*storage, GetIndex())
+        .Times(1)
+        .WillOnce(testing::Return(
+            dafs::BlockIndex
+            {
+                std::vector<dafs::BlockInfo>{info}
+            }));
+
+    // thus we should not insert info again
+    EXPECT_CALL(*storage, InsertIndex(info))
+        .Times(0);
+
+    partition.WriteBlock(info, format);
 }
 
 
