@@ -388,3 +388,24 @@ TEST(PartitionTest, testPartitionLockAcquire)
         .WillOnce(testing::Return(false));
     ASSERT_FALSE(partition.Acquire());
 }
+
+
+TEST(PartitionTest, testPartitionLockRelease)
+{
+    auto ping = std::unique_ptr<MockPing>(new MockPing());
+    auto lock = std::shared_ptr<MockLock>(new MockLock());
+
+    EXPECT_CALL(*ping, Start()).Times(1);
+
+    dafs::ReplicatedPartition partition(
+        std::unique_ptr<MockReplication>(new MockReplication()),
+        std::shared_ptr<MockStorage>(new MockStorage()),
+        std::unique_ptr<MockNodeSet>(new MockNodeSet()),
+        std::move(ping),
+        lock
+    );
+
+    EXPECT_CALL(*lock, Acquire())
+        .Times(1);
+    partition.Acquire();
+}
