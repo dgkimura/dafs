@@ -3,9 +3,11 @@ project(dafs.dependencies.diflib)
 
 include(ExternalProject)
 
+set(DIFLIB_SOURCES https://github.com/gdkimura/diflib/archive/master.zip CACHE STRING "Default path to diflib sources")
+
 ExternalProject_Add(
     diflib
-    GIT_REPOSITORY https://github.com/gdkimura/diflib.git
+    URL ${DIFLIB_SOURCES}
     INSTALL_COMMAND ""
 )
 

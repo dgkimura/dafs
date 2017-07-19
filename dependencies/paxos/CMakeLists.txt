@@ -3,9 +3,11 @@ project(dafs.dependencies.paxos)
 
 include(ExternalProject)
 
+set(PAXOS_SOURCES https://github.com/dgkimura/paxos/archive/master.zip CACHE STRING "Default path to paxos sources")
+
 ExternalProject_Add(
     paxos
-    GIT_REPOSITORY https://github.com/dgkimura/paxos.git
+    URL ${PAXOS_SOURCES}
     INSTALL_COMMAND ""
 )
 
