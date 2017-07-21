@@ -82,39 +82,6 @@ SetupPartition(
 }
 
 
-void
-SetupNode(std::string settings_file)
-{
-    //[partition-minus]
-    //port = 8070
-    //ping-interval-in-seconds = 5
-    //
-    //[partition-zero]
-    //port = 8080
-    //ping-interval-in-seconds = 5
-    //
-    //[partition-plus]
-    //port = 8090
-    //ping-interval-in-seconds = 5
-    // write out node config file
-    std::fstream config(settings_file, std::ios::out | std::ios::trunc);
-
-    config << "[partition-minus]" << std::endl;
-    config << "port = 8070" << std::endl;
-    config << "ping-interval-in-seconds = 5" << std::endl;
-    config << "" << std::endl;
-
-    config << "[partition-zero]" << std::endl;
-    config << "port = 8080" << std::endl;
-    config << "ping-interval-in-seconds = 5" << std::endl;
-    config << "" << std::endl;
-
-    config << "[partition-plus]" << std::endl;
-    config << "port = 8090" << std::endl;
-    config << "ping-interval-in-seconds = 5" << std::endl;
-}
-
-
 int main(int argc, char** argv)
 {
     Options options;
