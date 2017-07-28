@@ -150,6 +150,11 @@ namespace dafs
         std::vector<std::string> args);
 
 
+    void DisplayCommands(
+        dafs::Address address,
+        std::vector<std::string> args);
+
+
     std::unordered_map<
         std::string,
         std::function<void(dafs::Address address, std::vector<std::string>)>
@@ -163,7 +168,8 @@ namespace dafs
         { "list-servers", dafs::ListServers },
         { "info", dafs::GetNodeDetails },
         { "join", dafs::AddNodeToCluster },
-        { "exit", dafs::RemoveNodeFromCluster }
+        { "exit", dafs::RemoveNodeFromCluster },
+        { "help", dafs::DisplayCommands }
     };
 
 

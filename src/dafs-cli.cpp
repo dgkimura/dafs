@@ -669,6 +669,19 @@ namespace dafs
     }
 
 
+    void
+    DisplayCommands(
+        dafs::Address address,
+        std::vector<std::string> args)
+    {
+        std::cout << "List of available commands:" << std::endl;
+        for (auto c : commands)
+        {
+            std::cout << "    " << c.first << std::endl;
+        }
+    }
+
+
     dafs::Message
     HardSend(dafs::Message message)
     {
