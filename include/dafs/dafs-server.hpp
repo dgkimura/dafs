@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 #include <boost/uuid/uuid.hpp>
@@ -13,17 +14,17 @@ struct Options
 
     std::string address;
 
-    short port;
+    uint16_t port;
 
-    short minus_port;
+    uint16_t minus_port;
 
-    short zero_port;
+    uint16_t zero_port;
 
-    short plus_port;
+    uint16_t plus_port;
 
-    long long int minus_ping_interval;
+    int64_t minus_ping_interval;
 
-    long long int zero_ping_interval;
+    int64_t zero_ping_interval;
 
-    long long int plus_ping_interval;
+    int64_t plus_ping_interval;
 };
