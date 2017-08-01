@@ -16,24 +16,21 @@ $ make && ./unittests/all_unittests
 ```
 
 
-## Setup
-You can start the server by providing an identity for the server.
-
-```
-$ dafs-server --identity=11111111-1111-1111-1111-111111111111
-```
-
-You can get information about a server using the command-line tool.
-
-```
-$ dafs-cli --port=9001 --address=127.0.0.1
-dafs> list-servers
-Management          Minus Interface     Zero Interface      Plus Interface      Identity
-127.0.0.1:9001      127.0.0.1:8070      127.0.0.1:8080      127.0.0.1:8090      11111111-1111-1111-1111-111111111111
-dafs> list-files
-<empty>
-```
-
-
 ## Design
-A server is a member of 3 partitions.
+The dafs project uses a decentralized self-healing ring-model architecture. What
+this means is that no single entity knows about the entire system and that each
+entity is fault-tolerant. These features allow the system to scale-out with
+minimal maintenance cost.
+
+Files in the system are represented as blocks. Blocks are replicated on multiple
+servers through a [replication library](https://github.com/dgkimura/paxos).
+Each block and server has a unqiue identifier. Given that an identifier can be
+represented as a number, then each block is guaranteed to most closely match a
+single server. What this means is that the system can be thought of as a map of
+servers to blocks and if we know the identity of the servers then we also know
+where any given block is located.
+
+A client knows how the blocks are used to represent a file. This decoupling
+means that a server has no concept of a file. Instead a server is only concerned
+with ensuring that blocks are safely replicated and returned to the client on
+request.
