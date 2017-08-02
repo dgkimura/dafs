@@ -352,3 +352,24 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
     ASSERT_EQ(dafs::MessageType::_AcceptJoinCluster, sent_message.type);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
 }
+
+
+TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
+{
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+        }
+    );
+    MockSender mock_sender;
+    HandleExitCluster(GetNode(), parser, mock_sender);
+
+    dafs::Message sent_message = mock_sender.sentMessages()[0];
+
+    ASSERT_EQ(dafs::MessageType::_PlusExitCluster, sent_message.type);
+    ASSERT_EQ("11111111-1111-1111-1111-111111111111",
+              dafs::MetaDataParser(sent_message.metadata).GetValue<dafs::Identity>(dafs::IdentityKey).id);
+
+    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), sent_message.to);
+}
