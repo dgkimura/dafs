@@ -33,10 +33,6 @@ namespace dafs
     dafs::Result
     PaxosReplication::Write(std::string entry)
     {
-        // Here mutex is to guard against concurrent write access to
-        // progress_map.
-        std::lock_guard<std::mutex> guard(mutex);
-
         auto proposal = dafs::Deserialize<dafs::Proposal>(entry);
 
         do
