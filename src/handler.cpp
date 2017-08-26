@@ -34,31 +34,14 @@ namespace dafs
         auto partition = node.GetPartition(blockinfo.identity);
 
         dafs::Message m;
-        if (partition->IsActive())
-        {
-            m.metadata.push_back(
-                dafs::MetaData
-                {
-                    dafs::BlockFormatKey,
-                    dafs::Serialize(partition->ReadBlock(blockinfo))
-                }
-            );
-            m.type = dafs::MessageType::Success;
-        }
-        else
-        {
-            m.metadata = std::vector<dafs::MetaData>
+        m.metadata.push_back(
+            dafs::MetaData
             {
-                dafs::MetaData
-                {
-                    dafs::AddressKey,
-                    dafs::Serialize(
-                        node.GetPartition(dafs::Node::Slot::Minus)
-                            ->GetNodeSetDetails().minus.management)
-                }
-            };
-            m.type = dafs::MessageType::Failure;
-        }
+                dafs::BlockFormatKey,
+                dafs::Serialize(partition->ReadBlock(blockinfo))
+            }
+        );
+        m.type = dafs::MessageType::Success;
         return m;
     }
 
@@ -70,28 +53,15 @@ namespace dafs
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
-        auto partition = node.GetPartition(blockinfo.identity);
-
-        dafs::Message m;
+        auto partition = node.GetPartition(dafs::Node::Slot::Zero);
         if (partition->IsActive())
         {
-            partition->WriteBlock(blockinfo, block);
-            m.type = dafs::MessageType::Success;
+            partition = node.GetPartition(blockinfo.identity);
         }
-        else
-        {
-            m.metadata = std::vector<dafs::MetaData>
-            {
-                dafs::MetaData
-                {
-                    dafs::AddressKey,
-                    dafs::Serialize(
-                        node.GetPartition(dafs::Node::Slot::Minus)
-                            ->GetNodeSetDetails().minus.management)
-                }
-            };
-            m.type = dafs::MessageType::Failure;
-        }
+
+        dafs::Message m;
+        partition->WriteBlock(blockinfo, block);
+        m.type = dafs::MessageType::Success;
         return m;
     }
 
@@ -171,6 +141,10 @@ namespace dafs
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
+
+        // TODO: Add check that block list on node is empty in order to ensure
+        //       that add server stays O(1) complexity. Then refuse to join
+        //       cluster if list is non-empty.
 
         sender.Send(
             dafs::Message

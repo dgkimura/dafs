@@ -80,6 +80,10 @@ namespace dafs
         {
             return slot_plus;
         }
+        else if (!slot_zero->IsActive())
+        {
+            return slot_zero;
+        }
         return slot_empty;
     }
 }
