@@ -7,13 +7,13 @@ The dafs project is an elastic file storage service.
 
 
 ## Design
-The dafs project uses a decentralized self-healing ring-model architecture. What
-this means is that no single entity knows about the entire system and that each
-entity is fault-tolerant. These features allow the system to scale-out with
-minimal maintenance cost.
+The dafs project uses a decentralized, self-healing ring-model architecture.
+What this means is that no single entity knows about the entire system and that
+each entity is fault-tolerant. These features allow the system to scale-out
+with minimal maintenance cost.
 
-Files in the system are represented as blocks. Blocks are replicated on multiple
-servers through a [replication library](https://github.com/dgkimura/paxos).
+Files in the system are represented as a collection of blocks. Blocks are
+replicated on multiple servers through a [replication library](https://github.com/dgkimura/paxos).
 Each block and each server have unqiue identifiers. Given that an identifier can
 be represented as a number, then each block is guaranteed to most closely match
 a single server. What this means is that the system can be thought of as a map
