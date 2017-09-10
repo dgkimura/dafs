@@ -34,3 +34,22 @@ $ mkdir build && cd build
 $ cmake ..
 $ make && ./unittests/all_unittests
 ```
+
+
+## Usage
+Start a server...
+```
+$ dafs-server --address=127.0.0.1 --port=9000
+```
+
+Then upload a file...
+```
+$ echo "hello" > myfile.txt
+$ dafs-cli --address=127.0.0.1 --port=9000 --command="upload myfile.txt"
+```
+
+And download the file...
+```
+$ rm myfile.txt
+$ dafs-cli --address=127.0.0.1 --port=9000 --command="download myfile.txt"
+```
