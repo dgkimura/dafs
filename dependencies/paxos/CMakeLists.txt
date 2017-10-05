@@ -3,13 +3,19 @@ project(dafs.dependencies.paxos)
 
 include(ExternalProject)
 
-set(PAXOS_SOURCES https://github.com/dgkimura/paxos/archive/master.zip CACHE STRING "Default path to paxos sources")
-
-ExternalProject_Add(
-    paxos
-    URL ${PAXOS_SOURCES}
-    INSTALL_COMMAND ""
-)
+if (${PAXOS_SOURCES})
+    ExternalProject_Add(
+        paxos
+        URL ${PAXOS_SOURCES}
+        INSTALL_COMMAND ""
+    )
+else()
+    ExternalProject_Add(
+        paxos
+        GIT_REPOSITORY https://github.com/dgkimura/paxos.git
+        INSTALL_COMMAND ""
+    )
+endif()
 
 set(paxos_DEPENDENCIES
     ${CMAKE_CURRENT_BINARY_DIR}/paxos-prefix/src/paxos-build/dependencies/boost/boost-prefix/lib/${CMAKE_SHARED_LIBRARY_PREFIX}boost_filesystem${CMAKE_SHARED_LIBRARY_SUFFIX}
