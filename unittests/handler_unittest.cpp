@@ -68,9 +68,9 @@ class HandlerTest: public testing::Test
                 },
                 dafs::Endpoint
                 {
-                    dafs::Address("1.1.1.1", 1000),
-                    dafs::Address("1.1.1.1", 1111),
-                    dafs::Identity("11111111-1111-1111-1111-111111111111")
+                    dafs::Address("4.4.4.4", 4000),
+                    dafs::Address("4.4.4.4", 4444),
+                    dafs::Identity("44444444-4444-4444-4444-444444444444")
                 }
             )
         );
@@ -131,6 +131,38 @@ TEST_F(HandlerTest, testHandleReadBlock)
 }
 
 
+TEST_F(HandlerTest, testHandleReadBlockForwardsRequests)
+{
+    // identity does not exist on node
+    dafs::BlockInfo info
+    {
+        "path/to/blockinfo",
+        dafs::Identity("55555555-5555-5555-5555-555555555555"),
+        0
+    };
+
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::BlockInfoKey,
+                dafs::Serialize(info)
+            }
+        }
+    );
+    dafs::Message m = HandleReadBlock(GetNode(), parser);
+    dafs::Address result(
+        dafs::MetaDataParser(m.metadata).GetValue<dafs::Address>(
+            dafs::AddressKey)
+    );
+
+    ASSERT_EQ(dafs::MessageType::Failure, m.type);
+    ASSERT_EQ("1.1.1.1", result.ip);
+    ASSERT_EQ(1000, result.port);
+}
+
+
 TEST_F(HandlerTest, testHandleWriteBlock)
 {
     dafs::BlockInfo info
@@ -165,6 +197,49 @@ TEST_F(HandlerTest, testHandleWriteBlock)
         format.contents,
         GetNode().GetPartition(dafs::Identity("22222222-2222-2222-2222-222222222222"))
                  ->ReadBlock(info).contents);
+}
+
+
+TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
+{
+
+    dafs::MetaDataParser parser(
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::BlockInfoKey,
+                dafs::Serialize(
+                    // identity does not belong on node
+                    dafs::BlockInfo
+                    {
+                        "path/to/blockinfo",
+                        dafs::Identity("55555555-5555-5555-5555-555555555555"),
+                        0
+                    }
+                )
+            },
+            dafs::MetaData
+            {
+                dafs::BlockFormatKey,
+                dafs::Serialize(
+                    dafs::BlockFormat
+                    {
+                        "this is the content of the block format.",
+                    }
+                )
+            }
+        }
+    );
+    dafs::Message m = HandleWriteBlock(GetNode(), parser);
+    dafs::Address result(
+        dafs::MetaDataParser(m.metadata).GetValue<dafs::Address>(
+            dafs::AddressKey)
+    );
+
+    ASSERT_EQ(dafs::MessageType::Failure, m.type);
+    ASSERT_EQ("1.1.1.1", result.ip);
+    ASSERT_EQ(1000, result.port);
 }
 
 
@@ -250,8 +325,8 @@ TEST_F(HandlerTest, testGetNodeDetails)
     ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), p_endpoints.minus.replication);
     ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), p_endpoints.zero.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), p_endpoints.zero.replication);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), p_endpoints.plus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), p_endpoints.plus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("4.4.4.4", 4000), p_endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("4.4.4.4", 4444), p_endpoints.plus.replication);
 }
 
 

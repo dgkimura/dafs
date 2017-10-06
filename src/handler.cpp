@@ -34,14 +34,31 @@ namespace dafs
         auto partition = node.GetPartition(blockinfo.identity);
 
         dafs::Message m;
-        m.metadata.push_back(
-            dafs::MetaData
+        if (partition->IsActive())
+        {
+            m.metadata.push_back(
+                dafs::MetaData
+                {
+                    dafs::BlockFormatKey,
+                    dafs::Serialize(partition->ReadBlock(blockinfo))
+                }
+            );
+            m.type = dafs::MessageType::Success;
+        }
+        else
+        {
+            m.metadata = std::vector<dafs::MetaData>
             {
-                dafs::BlockFormatKey,
-                dafs::Serialize(partition->ReadBlock(blockinfo))
-            }
-        );
-        m.type = dafs::MessageType::Success;
+                dafs::MetaData
+                {
+                    dafs::AddressKey,
+                    dafs::Serialize(
+                        node.GetPartition(dafs::Node::Slot::Minus)
+                            ->GetNodeSetDetails().minus.management)
+                }
+            };
+            m.type = dafs::MessageType::Failure;
+        }
         return m;
     }
 
@@ -53,15 +70,28 @@ namespace dafs
     {
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
-        auto partition = node.GetPartition(dafs::Node::Slot::Zero);
-        if (partition->IsActive())
-        {
-            partition = node.GetPartition(blockinfo.identity);
-        }
+        auto partition = node.GetPartition(blockinfo.identity);
 
         dafs::Message m;
-        partition->WriteBlock(blockinfo, block);
-        m.type = dafs::MessageType::Success;
+        if (partition->IsActive())
+        {
+            partition->WriteBlock(blockinfo, block);
+            m.type = dafs::MessageType::Success;
+        }
+        else
+        {
+            m.metadata = std::vector<dafs::MetaData>
+            {
+                dafs::MetaData
+                {
+                    dafs::AddressKey,
+                    dafs::Serialize(
+                        node.GetPartition(dafs::Node::Slot::Minus)
+                            ->GetNodeSetDetails().minus.management)
+                }
+            };
+            m.type = dafs::MessageType::Failure;
+        }
         return m;
     }
 
