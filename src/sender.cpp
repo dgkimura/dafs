@@ -25,27 +25,34 @@ namespace dafs
     void
     NetworkSender::Send(dafs::Message message)
     {
-        tcp::resolver resolver(io_service);
-        auto endpoint = resolver.resolve(
-                            {
-                                message.to.ip,
-                                std::to_string(message.to.port)
-                            });
-        boost::asio::connect(socket, endpoint);
+        try
+        {
+            tcp::resolver resolver(io_service);
+            auto endpoint = resolver.resolve(
+                                {
+                                    message.to.ip,
+                                    std::to_string(message.to.port)
+                                });
+            boost::asio::connect(socket, endpoint);
 
-        // 1. serialize message
-        std::string message_data = dafs::Serialize(message);
-        std::stringstream ss;
-        ss << std::setw(dafs::MessageHeaderSize)
-           << std::to_string(message_data.size());
-        std::string message_header = ss.str();
+            // 1. serialize message
+            std::string message_data = dafs::Serialize(message);
+            std::stringstream ss;
+            ss << std::setw(dafs::MessageHeaderSize)
+               << std::to_string(message_data.size());
+            std::string message_header = ss.str();
 
-        std::string message_full = message_header + message_data;
+            std::string message_full = message_header + message_data;
 
-        // 2. write message
-        boost::asio::write(
-            socket,
-            boost::asio::buffer(message_full.c_str(), message_full.size()));
+            // 2. write message
+            boost::asio::write(
+                socket,
+                boost::asio::buffer(message_full.c_str(), message_full.size()));
+        }
+        catch (boost::system::system_error& e)
+        {
+            // TODO: log an error here
+        }
     }
 
 
