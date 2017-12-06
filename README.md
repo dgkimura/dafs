@@ -3,9 +3,8 @@
 [![Build Status](https://travis-ci.org/dgkimura/dafs.svg?branch=master)](https://travis-ci.org/dgkimura/dafs)
 [![Coverage Status](https://coveralls.io/repos/github/dgkimura/dafs/badge.svg?branch=master)](https://coveralls.io/github/dgkimura/dafs?branch=master)
 
-The dafs project is an elastic file storage service. It can store
-5,575,186,299,632,655,785,383,929,568,162,090,376,495,104 bytes (55 billion
-yotta bytes) of unique data.
+The dafs project is an elastic file storage service. It can store 2^142 bytes
+of unique data with a block size of 2^16 and identifier of 2^128.
 
 
 ## Design
