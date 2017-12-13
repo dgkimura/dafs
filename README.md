@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/dgkimura/dafs/badge.svg?branch=master)](https://coveralls.io/github/dgkimura/dafs?branch=master)
 
 The dafs project is an elastic file storage service. It can store 2^142 bytes
-of unique data with a block size of 2^16 and identifier of 2^128.
+of unique data with a block size of 2^14 and identifier of 2^128.
 
 
 ## Design
