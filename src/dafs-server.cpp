@@ -42,7 +42,7 @@ SetupReplicatedFiles(
         // write out replicaset file
         CreateReplicatedFile(
             directory,
-            ReplicasetFilename,
+            paxos::ReplicasetFilename,
             replication_interface.ip + ":" + std::to_string(
                 replication_interface.port)
         );

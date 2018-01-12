@@ -51,7 +51,7 @@ namespace dafs
 
         std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>> progress_map;
 
-        Parliament parliament;
+        paxos::Parliament parliament;
 
         std::mutex mutex;
     };

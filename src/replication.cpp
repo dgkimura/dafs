@@ -11,7 +11,7 @@ namespace dafs
         dafs::Address address,
         dafs::Root root)
     : progress_map(),
-      parliament(Replica(address.ip, address.port),
+      parliament(paxos::Replica(address.ip, address.port),
                  root.directory,
                  dafs::Commit(root, progress_map),
                  dafs::Ignore(progress_map)),
