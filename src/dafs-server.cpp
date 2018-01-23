@@ -4,6 +4,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/program_options.hpp>
+#include <paxos/logging.hpp>
 
 #include "dafs/constants.hpp"
 #include "dafs/dispatcher.hpp"
@@ -239,6 +240,8 @@ int main(int argc, char** argv)
         },
         std::chrono::seconds(options.plus_ping_interval)
     );
+
+    paxos::DisableLogging();
 
     //
     // Start node and server.
