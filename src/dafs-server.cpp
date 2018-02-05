@@ -255,5 +255,6 @@ int main(int argc, char** argv)
         dispatcher);
 
     server->Start();
+    std::cout << "Server started...\n";
     std::promise<void>().get_future().wait();
 }
