@@ -255,6 +255,7 @@ int main(int argc, char** argv)
         dispatcher);
 
     server->Start();
-    std::cout << "Server started...\n";
+    std::cout << "Server started on " << options.address << ":"
+                                      << options.port << "\n";
     std::promise<void>().get_future().wait();
 }
