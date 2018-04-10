@@ -141,6 +141,9 @@ int main(int argc, char** argv)
         ("partition-plus.ping-interval-in-seconds",
          boost::program_options::value(&options.plus_ping_interval)->default_value(3),
          "ping interval of the plus partition")
+        ("node.fault-domain",
+         boost::program_options::value(&options.fault_domain),
+         "node fault domain")
     ;
 
     std::ifstream config(options.settings_file);

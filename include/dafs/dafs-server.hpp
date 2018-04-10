@@ -14,6 +14,8 @@ struct Options
 
     std::string address;
 
+    std::string fault_domain;
+
     uint16_t port;
 
     uint16_t minus_port;
