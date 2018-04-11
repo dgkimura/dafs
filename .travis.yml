@@ -11,7 +11,7 @@ before_script:
   - ./cmake-3.5.2-Linux-x86_64/bin/cmake -DCODE_COVERAGE=1 .
 
 install:
-  - pip install --upgrade pip
+  - pip install --user --upgrade pip
   - sudo apt-get install lcov
   - pip install --user cpp-coveralls
 
