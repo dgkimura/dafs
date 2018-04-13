@@ -119,7 +119,8 @@ int main(int argc, char** argv)
     }
 
     //
-    // Parse the configuration file.
+    // Parse the configuration file. These are static values that are never
+    // expected to change over the lifetime of the node.
     //
     boost::program_options::options_description desc_settings("Configuration options");
     desc_settings.add_options()
@@ -142,8 +143,10 @@ int main(int argc, char** argv)
          boost::program_options::value(&options.plus_ping_interval)->default_value(3),
          "ping interval of the plus partition")
         ("node.fault-domain",
-         boost::program_options::value(&options.fault_domain),
-         "node fault domain")
+         boost::program_options::value(&options.fault_domain)->default_value(
+         boost::uuids::to_string(options.identity)),
+         "Fault domain ensures that neighboring nodes will never be on the "
+         "same fault domain and therefore should not risk data loss.")
     ;
 
     std::ifstream config(options.settings_file);
