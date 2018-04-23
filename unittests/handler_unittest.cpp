@@ -22,23 +22,23 @@ class HandlerTest: public testing::Test
                 },
                 dafs::Endpoint
                 {
-                    dafs::Address("2.2.2.2", 2000),
-                    dafs::Address("2.2.2.2", 2222),
-                    dafs::Identity("22222222-2222-2222-2222-222222222222")
-                },
-                dafs::Endpoint
-                {
                     dafs::Address("3.3.3.3", 3000),
                     dafs::Address("3.3.3.3", 3333),
                     dafs::Identity("33333333-3333-3333-3333-333333333333")
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("5.5.5.5", 5000),
+                    dafs::Address("5.5.5.5", 5555),
+                    dafs::Identity("55555555-5555-5555-5555-555555555555")
                 }
             ),
             std::make_shared<MockPartition>(
                 dafs::Endpoint
                 {
-                    dafs::Address("3.3.3.3", 3000),
-                    dafs::Address("3.3.3.3", 3333),
-                    dafs::Identity("33333333-3333-3333-3333-333333333333")
+                    dafs::Address("5.5.5.5", 5000),
+                    dafs::Address("5.5.5.5", 5555),
+                    dafs::Identity("55555555-5555-5555-5555-555555555555")
                 },
                 dafs::Endpoint
                 {
@@ -48,18 +48,12 @@ class HandlerTest: public testing::Test
                 },
                 dafs::Endpoint
                 {
-                    dafs::Address("2.2.2.2", 2000),
-                    dafs::Address("2.2.2.2", 2222),
-                    dafs::Identity("22222222-2222-2222-2222-222222222222")
+                    dafs::Address("3.3.3.3", 3000),
+                    dafs::Address("3.3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333")
                 }
             ),
             std::make_shared<MockPartition>(
-                dafs::Endpoint
-                {
-                    dafs::Address("2.2.2.2", 2000),
-                    dafs::Address("2.2.2.2", 2222),
-                    dafs::Identity("22222222-2222-2222-2222-222222222222")
-                },
                 dafs::Endpoint
                 {
                     dafs::Address("3.3.3.3", 3000),
@@ -68,9 +62,15 @@ class HandlerTest: public testing::Test
                 },
                 dafs::Endpoint
                 {
-                    dafs::Address("4.4.4.4", 4000),
-                    dafs::Address("4.4.4.4", 4444),
-                    dafs::Identity("44444444-4444-4444-4444-444444444444")
+                    dafs::Address("5.5.5.5", 5000),
+                    dafs::Address("5.5.5.5", 5555),
+                    dafs::Identity("55555555-5555-5555-5555-555555555555")
+                },
+                dafs::Endpoint
+                {
+                    dafs::Address("7.7.7.7", 7000),
+                    dafs::Address("7.7.7.7", 7777),
+                    dafs::Identity("77777777-7777-7777-7777-777777777777")
                 }
             )
         );
@@ -99,7 +99,7 @@ TEST_F(HandlerTest, testHandleReadBlock)
     dafs::BlockInfo info
     {
         "path/to/blockinfo",
-        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        dafs::Identity("33333333-3333-3333-3333-333333333333"),
         0
     };
     dafs::BlockFormat format
@@ -108,7 +108,7 @@ TEST_F(HandlerTest, testHandleReadBlock)
     };
 
     GetNode().GetPartition(
-        dafs::Identity("22222222-2222-2222-2222-222222222222")
+        dafs::Identity("33333333-3333-3333-3333-333333333333")
     )->WriteBlock(info, format);
 
     dafs::MetaDataParser parser(
@@ -137,7 +137,7 @@ TEST_F(HandlerTest, testHandleReadBlockForwardsRequests)
     dafs::BlockInfo info
     {
         "path/to/blockinfo",
-        dafs::Identity("55555555-5555-5555-5555-555555555555"),
+        dafs::Identity("77777777-7777-7777-7777-777777777777"),
         0
     };
 
@@ -168,7 +168,7 @@ TEST_F(HandlerTest, testHandleWriteBlock)
     dafs::BlockInfo info
     {
         "path/to/blockinfo",
-        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        dafs::Identity("33333333-3333-3333-3333-333333333333"),
         0
     };
     dafs::BlockFormat format
@@ -195,7 +195,7 @@ TEST_F(HandlerTest, testHandleWriteBlock)
 
     ASSERT_EQ(
         format.contents,
-        GetNode().GetPartition(dafs::Identity("22222222-2222-2222-2222-222222222222"))
+        GetNode().GetPartition(dafs::Identity("33333333-3333-3333-3333-333333333333"))
                  ->ReadBlock(info).contents);
 }
 
@@ -214,7 +214,7 @@ TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
                     dafs::BlockInfo
                     {
                         "path/to/blockinfo",
-                        dafs::Identity("55555555-5555-5555-5555-555555555555"),
+                        dafs::Identity("77777777-7777-7777-7777-777777777777"),
                         0
                     }
                 )
@@ -248,7 +248,7 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
     dafs::BlockInfo info
     {
         "path/to/blockinfo",
-        dafs::Identity("22222222-2222-2222-2222-222222222222"),
+        dafs::Identity("33333333-3333-3333-3333-333333333333"),
         0
     };
     dafs::BlockFormat format
@@ -276,7 +276,7 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
 
     ASSERT_EQ(
         "",
-        GetNode().GetPartition(dafs::Identity("22222222-2222-2222-2222-222222222222"))
+        GetNode().GetPartition(dafs::Identity("33333333-3333-3333-3333-333333333333"))
                  ->ReadBlock(info).contents);
 }
 
@@ -298,35 +298,35 @@ TEST_F(HandlerTest, testGetNodeDetails)
     auto p_endpoints = parsed.GetValue<dafs::ReplicatedEndpoints>(dafs::PlusReplicatedEndpointsKey);
 
     ASSERT_EQ(
-        "22222222-2222-2222-2222-222222222222",
+        "33333333-3333-3333-3333-333333333333",
         m_endpoints.zero.identity.id);
     ASSERT_EQ(
         "11111111-1111-1111-1111-111111111111",
         z_endpoints.zero.identity.id);
     ASSERT_EQ(
-        "33333333-3333-3333-3333-333333333333",
+        "55555555-5555-5555-5555-555555555555",
         p_endpoints.zero.identity.id);
 
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), m_endpoints.minus.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), m_endpoints.minus.replication);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), m_endpoints.zero.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), m_endpoints.zero.replication);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), m_endpoints.plus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), m_endpoints.plus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), m_endpoints.zero.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), m_endpoints.zero.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5000), m_endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5555), m_endpoints.plus.replication);
 
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), z_endpoints.minus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), z_endpoints.minus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5000), z_endpoints.minus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5555), z_endpoints.minus.replication);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), z_endpoints.zero.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), z_endpoints.zero.replication);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), z_endpoints.plus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), z_endpoints.plus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), z_endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), z_endpoints.plus.replication);
 
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), p_endpoints.minus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), p_endpoints.minus.replication);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), p_endpoints.zero.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), p_endpoints.zero.replication);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("4.4.4.4", 4000), p_endpoints.plus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("4.4.4.4", 4444), p_endpoints.plus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), p_endpoints.minus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), p_endpoints.minus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5000), p_endpoints.zero.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5555), p_endpoints.zero.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("7.7.7.7", 7000), p_endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("7.7.7.7", 7777), p_endpoints.plus.replication);
 }
 
 
@@ -355,12 +355,12 @@ TEST_F(HandlerTest, testHandleJoinCluster)
 
     ASSERT_EQ("11111111-1111-1111-1111-111111111111", identity.id);
 
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), endpoints.minus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), endpoints.minus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5000), endpoints.minus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("5.5.5.5", 5555), endpoints.minus.replication);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), endpoints.zero.management);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1111), endpoints.zero.replication);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), endpoints.plus.management);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2222), endpoints.plus.replication);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), endpoints.plus.management);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3333), endpoints.plus.replication);
 }
 
 
@@ -373,7 +373,7 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
             {
                 dafs::IdentityKey,
                 dafs::Serialize(
-                    dafs::Identity("11111111-1111-1111-5555-555555555555")
+                    dafs::Identity("22222222-2222-2222-2222-222222222222")
                 )
             },
             dafs::MetaData
@@ -446,5 +446,5 @@ TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
               dafs::MetaDataParser(sent_message.metadata).GetValue<dafs::Identity>(dafs::IdentityKey).id);
 
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("2.2.2.2", 2000), sent_message.to);
+    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), sent_message.to);
 }
