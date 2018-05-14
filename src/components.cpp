@@ -249,6 +249,13 @@ namespace dafs
             {
                 break;
             }
+
+            //
+            // XXX: Propose exit cluster assumes the evicted node is in the
+            //      plus slot. Otherwise this message is treated as a no-op.
+            //      Thus we can iterate over all failover endpoints and let
+            //      the approporiate one take action.
+            //
             sender->Send(
                 dafs::Message
                 {
@@ -265,7 +272,6 @@ namespace dafs
                     }
                 }
             );
-            break;
         }
     }
 
