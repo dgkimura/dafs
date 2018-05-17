@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 #include "dafs/messages.hpp"
 #include "dafs/identity.hpp"
 #include "dafs/partition.hpp"
@@ -27,6 +29,8 @@ namespace dafs
         std::shared_ptr<dafs::Partition> GetPartition(Node::Slot slot);
 
         std::shared_ptr<dafs::Partition> GetPartition(dafs::Identity identity);
+
+        std::mutex lock;
 
     private:
 

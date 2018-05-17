@@ -220,6 +220,12 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
+        //
+        // Here we lock to prevent race-conditions of 2 nodes being
+        // concurrently added into the same place in the cluster.
+        //
+        std::lock_guard<std::mutex> guard(node.lock);
+
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
@@ -257,15 +263,6 @@ namespace dafs
         {
             if (p_minus->IsActive())
             {
-                if (!p_minus->Acquire() || !p_zero->Acquire())
-                {
-                    //
-                    // Did not acquire both partition locks.
-                    //
-                    dafs::Message m;
-                    return m;
-                }
-
                 //
                 // Accept initiation request and update half of topology.
                 //
@@ -356,6 +353,12 @@ namespace dafs
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
+        //
+        // Here we lock to prevent race-conditions of 2 nodes being
+        // concurrently added into the same place in the cluster.
+        //
+        std::lock_guard<std::mutex> guard(node.lock);
+
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
@@ -375,10 +378,6 @@ namespace dafs
             endpoints.plus.replication,
             endpoints.plus.identity,
             Constant::PartitionMinusName);
-
-        p_minus->Release();
-        p_zero->Release();
-        p_plus->Release();
 
         for (auto info : SplitUpperIndex(p_minus->GetIndex(),
                                          p_minus->GetIdentity(),
