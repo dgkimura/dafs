@@ -1,6 +1,7 @@
 #pragma once
 
 #include <condition_variable>
+#include <functional>
 #include <mutex>
 #include <string>
 
@@ -13,7 +14,7 @@ namespace dafs
     {
     public:
 
-        Signal();
+        Signal(std::function<void(void)> retry);
 
         void Set(dafs::Result result);
 
@@ -27,5 +28,7 @@ namespace dafs
         bool flag;
 
         dafs::Result result_;
+
+        std::function<void(void)> retry;
     };
 }

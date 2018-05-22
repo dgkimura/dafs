@@ -8,7 +8,7 @@
 
 TEST(SignalTest, testSetResultAndWait)
 {
-    dafs::Signal s;
+    dafs::Signal s([](){});
     dafs::Result actual, expected{true, "the_contents"};
 
     std::thread t([&s, &actual](){ actual = s.Wait(); });

@@ -27,6 +27,7 @@ namespace dafs
         if (progress_map.find(p.uuid) != progress_map.end())
         {
             dafs::Result r;
+            r.complete = true;
             r.success = false;
             progress_map[p.uuid]->Set(r);
         }
@@ -85,6 +86,7 @@ namespace dafs
         edit.info.path = (boost::filesystem::path(root.directory) /
                          boost::filesystem::path(edit.info.path)).string();
         auto result = proposal_map[p.type](edit);
+        result.complete = true;
 
         if (progress_map.find(p.uuid) != progress_map.end())
         {

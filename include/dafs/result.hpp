@@ -9,6 +9,8 @@ namespace dafs
     {
         bool success;
 
+        bool complete;
+
         std::string content;
     };
 }
