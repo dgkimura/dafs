@@ -220,12 +220,6 @@ namespace dafs
         dafs::MetaDataParser metadata,
         dafs::Sender& sender)
     {
-        //
-        // Here we lock to prevent race-conditions of 2 nodes being
-        // concurrently added into the same place in the cluster.
-        //
-        std::lock_guard<std::mutex> guard(node.lock);
-
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
@@ -263,6 +257,29 @@ namespace dafs
         {
             if (p_minus->IsActive())
             {
+                //
+                // Distributed locks here are used to temporarily prevent
+                // decrees from being proposed by other nodes during add node.
+                // The issue is that the current replication library
+                // implementation requires add replica to be an undisrupted
+                // atomic operation.  If for example we have replica set
+                // {a,b,c} and add replica {d}, then during the bootstrap while
+                // files are being copied to {d}, no further decrees can edit
+                // the distributed files else {d} may end up in corrupted
+                // split-brain state.
+                //
+                // FIXME: This also means that other replicated write
+                //        operations, like write block, must respect this lock.
+                //
+                if (!p_minus->Acquire() || !p_zero->Acquire())
+                {
+                    //
+                    // Did not acquire both partition locks.
+                    //
+                    dafs::Message m;
+                    return m;
+                }
+
                 //
                 // Accept initiation request and update half of topology.
                 //
@@ -353,12 +370,6 @@ namespace dafs
         dafs::Node& node,
         dafs::MetaDataParser metadata)
     {
-        //
-        // Here we lock to prevent race-conditions of 2 nodes being
-        // concurrently added into the same place in the cluster.
-        //
-        std::lock_guard<std::mutex> guard(node.lock);
-
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
@@ -378,6 +389,10 @@ namespace dafs
             endpoints.plus.replication,
             endpoints.plus.identity,
             Constant::PartitionMinusName);
+
+        p_minus->Release();
+        p_zero->Release();
+        p_plus->Release();
 
         for (auto info : SplitUpperIndex(p_minus->GetIndex(),
                                          p_minus->GetIdentity(),
