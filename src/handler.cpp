@@ -390,10 +390,6 @@ namespace dafs
             endpoints.plus.identity,
             Constant::PartitionMinusName);
 
-        p_minus->Release();
-        p_zero->Release();
-        p_plus->Release();
-
         for (auto info : SplitUpperIndex(p_minus->GetIndex(),
                                          p_minus->GetIdentity(),
                                          p_zero->GetIdentity(),

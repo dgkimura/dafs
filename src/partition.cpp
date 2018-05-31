@@ -177,6 +177,13 @@ namespace dafs
                 dafs::Serialize(endpoints)
             }
         );
+
+        //
+        // Release lock here because the node we are removing might be
+        // ourselves. If that is the case then our last act must be to release
+        // our lock.
+        //
+        Release();
         if (removed.port != dafs::EmptyAddress().port)
         {
             nodeset->RemoveNode(removed);
@@ -218,7 +225,6 @@ namespace dafs
                                           identity,
                                           location,
                                           GetNodeSetDetails());
-
         store->WriteBlock(
             details,
             BlockFormat
@@ -226,6 +232,13 @@ namespace dafs
                 dafs::Serialize(endpoints)
             }
         );
+
+        //
+        // Release lock here because the node we are removing might be
+        // ourselves. If that is the case then our last act must be to release
+        // our lock.
+        //
+        Release();
         if (removed.port != dafs::EmptyAddress().port)
         {
             nodeset->RemoveNode(removed);
