@@ -13,8 +13,7 @@ namespace dafs
     : progress_map(),
       parliament(paxos::Replica(address.ip, address.port),
                  root.directory,
-                 dafs::Commit(root, progress_map),
-                 dafs::Ignore(progress_map)),
+                 dafs::Commit(root, progress_map)),
       mutex()
     {
     }
