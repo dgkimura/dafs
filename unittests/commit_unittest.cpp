@@ -6,7 +6,7 @@
 TEST(CommitTest, testIgnoredCommitHasUnsuccessfulResult)
 {
     auto uuid = boost::uuids::nil_uuid();
-    auto signal = std::make_shared<dafs::Signal>([](){});
+    auto signal = std::make_shared<dafs::Signal>();
 
     std::unordered_map<boost::uuids::uuid, std::shared_ptr<dafs::Signal>> progress_map;
     progress_map[uuid] = signal;

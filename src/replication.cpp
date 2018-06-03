@@ -40,12 +40,7 @@ namespace dafs
         }
         while (progress_map.find(proposal.uuid) != progress_map.end());
 
-        progress_map[proposal.uuid] = std::make_shared<dafs::Signal>(
-            [&]()
-            {
-                parliament.SendProposal("");
-            }
-        );
+        progress_map[proposal.uuid] = std::make_shared<dafs::Signal>();
 
         parliament.SendProposal(dafs::Serialize(proposal));
 

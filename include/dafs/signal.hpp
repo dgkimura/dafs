@@ -14,7 +14,7 @@ namespace dafs
     {
     public:
 
-        Signal(std::function<void(void)> retry);
+        Signal();
 
         void Set(dafs::Result result);
 
@@ -28,7 +28,5 @@ namespace dafs
         bool flag;
 
         dafs::Result result_;
-
-        std::function<void(void)> retry;
     };
 }
