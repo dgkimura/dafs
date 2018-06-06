@@ -3,6 +3,7 @@ project(dafs.dependencies)
 
 add_subdirectory(paxos)
 add_subdirectory(diflib)
+add_subdirectory(protobuf)
 
 set(paxos_LIBS ${paxos_LIBS} PARENT_SCOPE)
 set(paxos_HEADERS ${paxos_HEADERS} PARENT_SCOPE)
