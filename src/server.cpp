@@ -19,7 +19,7 @@ namespace dafs
               io_service,
               tcp::endpoint(
                   boost::asio::ip::address::from_string(address), port)),
-          socket(io_service),
+          socket(std::make_shared<boost::asio::ip::tcp::socket>(io_service)),
           dispatcher(dispatcher)
     {
         do_accept();
@@ -44,12 +44,13 @@ namespace dafs
     void
     Server::do_accept()
     {
-        acceptor.async_accept(socket,
+        acceptor.async_accept(*socket,
             [this](boost::system::error_code ec_accept)
             {
                 if (!ec_accept)
                 {
-                    boost::make_shared<Session>(std::move(socket))->Start(
+                    boost::make_shared<Session>(
+                        socket)->Start(
                         dispatcher);
                 }
                 do_accept();
@@ -58,9 +59,9 @@ namespace dafs
 
 
     Server::Session::Session(
-        boost::asio::ip::tcp::socket socket
+        std::shared_ptr<boost::asio::ip::tcp::socket> socket
     )
-        : socket(std::move(socket))
+        : socket(socket)
     {
         std::memset(header, 0, dafs::MessageHeaderSize);
         header[dafs::MessageHeaderSize] = '\0';
@@ -71,7 +72,7 @@ namespace dafs
     Server::Session::Start(Dispatcher& dispatcher)
     {
         // Read header
-        boost::asio::async_read(socket,
+        boost::asio::async_read(*socket,
             boost::asio::buffer(&header, dafs::MessageHeaderSize),
             boost::asio::transfer_at_least(dafs::MessageHeaderSize),
             boost::bind(
@@ -88,7 +89,7 @@ namespace dafs
         const boost::system::error_code& err)
     {
         // Read message
-        boost::asio::async_read(socket, response,
+        boost::asio::async_read(*socket, response,
             boost::asio::transfer_at_least(1),
             boost::bind(
                 &Session::handle_read_message,
@@ -109,7 +110,7 @@ namespace dafs
             std::string content(
                 boost::asio::buffers_begin(bufs),
                 boost::asio::buffers_begin(bufs) + response.size());
-            boost::asio::async_read(socket, response,
+            boost::asio::async_read(*socket, response,
                 boost::asio::transfer_at_least(1),
                 boost::bind(
                     &Session::handle_read_message,
@@ -128,14 +129,8 @@ namespace dafs
             dafs::Message m = Deserialize<Message>(content);
 
             // 2. Route message to dispatcher for handling.
-            auto result = dispatcher.Process(m);
-
-            // 3. Return result to the client.
-            std::string result_str = dafs::Serialize(result);
-            boost::asio::write(
-                socket,
-                boost::asio::buffer(result_str.c_str(), result_str.size()));
-            socket.close();
+            auto sender = std::make_shared<dafs::NetworkSender>(socket);
+            dispatcher.Process(m, sender);
         }
     }
 }

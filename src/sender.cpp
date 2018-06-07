@@ -9,9 +9,18 @@ namespace dafs
     using boost::asio::ip::tcp;
 
 
+    NetworkSender::NetworkSender(std::shared_ptr<boost::asio::ip::tcp::socket> ssocket)
+        : io_service(),
+          socket(io_service),
+          ssocket(ssocket)
+    {
+    }
+
+
     NetworkSender::NetworkSender()
         : io_service(),
-          socket(io_service)
+          socket(io_service),
+          ssocket()
     {
     }
 
@@ -19,6 +28,10 @@ namespace dafs
     NetworkSender::~NetworkSender()
     {
         socket.close();
+        if (ssocket)
+        {
+            ssocket->close();
+        }
     }
 
 
@@ -46,6 +59,20 @@ namespace dafs
         boost::asio::write(
             socket,
             boost::asio::buffer(message_full.c_str(), message_full.size()));
+    }
+
+
+    void
+    NetworkSender::Reply(dafs::Message message)
+    {
+        // 1. serialize message
+        std::string message_data = dafs::Serialize(message);
+
+        // 2. write message
+        boost::asio::write(
+            *ssocket,
+            boost::asio::buffer(message_data.c_str(), message_data.size()));
+        ssocket->close();
     }
 
 

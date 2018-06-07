@@ -7,86 +7,86 @@
 
 namespace dafs
 {
-    dafs::Message
+    void
     HandleAllocateBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleReadBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleWriteBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleDeleteBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleGetNodeDetails(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleJoinCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleRequestJoinCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleAcceptJoinCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleProposeExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandlePlusExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 
 
-    dafs::Message
+    void
     HandleMinusExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender);
+        std::shared_ptr<dafs::Sender> sender);
 }

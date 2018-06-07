@@ -133,8 +133,9 @@ TEST_F(HandlerTest, testHandleReadBlock)
             }
         }
     };
-    MockSender mock_sender;
-    dafs::Message m = HandleReadBlock(GetNode(), message, mock_sender);
+    auto mock_sender = std::make_shared<MockSender>();
+    HandleReadBlock(GetNode(), message, mock_sender);
+    auto m = mock_sender->sentMessages()[0];
     dafs::BlockFormat result(
         dafs::MetaDataParser(m.metadata).GetValue<dafs::BlockFormat>(
             dafs::BlockFormatKey)
@@ -176,8 +177,9 @@ TEST_F(HandlerTest, testHandleReadBlockForwardsRequests)
             }
         }
     };
-    MockSender mock_sender;
-    dafs::Message m = HandleReadBlock(GetNode(), message, mock_sender);
+    auto mock_sender = std::make_shared<MockSender>();
+    HandleReadBlock(GetNode(), message, mock_sender);
+    auto m = mock_sender->sentMessages()[0];
     dafs::Address result(
         dafs::MetaDataParser(m.metadata).GetValue<dafs::Address>(
             dafs::AddressKey)
@@ -229,7 +231,7 @@ TEST_F(HandlerTest, testHandleWriteBlock)
             }
         }
     };
-    MockSender mock_sender;
+    auto mock_sender = std::make_shared<MockSender>();
     HandleWriteBlock(GetNode(), message, mock_sender);
 
     ASSERT_EQ(
@@ -282,8 +284,9 @@ TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
             }
         }
     };
-    MockSender mock_sender;
-    dafs::Message m = HandleWriteBlock(GetNode(), message, mock_sender);
+    auto mock_sender = std::make_shared<MockSender>();
+    HandleWriteBlock(GetNode(), message, mock_sender);
+    auto m = mock_sender->sentMessages()[0];
     dafs::Address result(
         dafs::MetaDataParser(m.metadata).GetValue<dafs::Address>(
             dafs::AddressKey)
@@ -335,7 +338,7 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
             }
         }
     };
-    MockSender mock_sender;
+    auto mock_sender = std::make_shared<MockSender>();
     HandleWriteBlock(GetNode(), message, mock_sender);
     HandleDeleteBlock(GetNode(), message, mock_sender);
 
@@ -365,8 +368,9 @@ TEST_F(HandlerTest, testGetNodeDetails)
         {
         }
     };
-    MockSender mock_sender;
-    dafs::Message m = HandleGetNodeDetails(GetNode(), message, mock_sender);
+    auto mock_sender = std::make_shared<MockSender>();
+    HandleGetNodeDetails(GetNode(), message, mock_sender);
+    auto m = mock_sender->sentMessages()[0];
 
     auto parsed = dafs::MetaDataParser(m.metadata);
 
@@ -431,10 +435,10 @@ TEST_F(HandlerTest, testHandleJoinCluster)
             }
         }
     };
-    MockSender mock_sender;
+    auto mock_sender = std::make_shared<MockSender>();
     HandleJoinCluster(GetNode(), message, mock_sender);
 
-    dafs::Message sent_message = mock_sender.sentMessages()[0];
+    dafs::Message sent_message = mock_sender->sentMessages()[0];
 
     ASSERT_EQ(dafs::MessageType::_RequestJoinCluster, sent_message.type);
 
@@ -488,10 +492,10 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
             }
         }
     };
-    MockSender mock_sender;
+    auto mock_sender = std::make_shared<MockSender>();
     HandleRequestJoinCluster(GetNode(), message, mock_sender);
 
-    dafs::Message sent_message = mock_sender.sentMessages()[0];
+    dafs::Message sent_message = mock_sender->sentMessages()[0];
 
     ASSERT_EQ(dafs::MessageType::_JoinCluster, sent_message.type);
 }
@@ -532,10 +536,10 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
             }
         }
     };
-    MockSender mock_sender;
+    auto mock_sender = std::make_shared<MockSender>();
     HandleRequestJoinCluster(GetNode(), message, mock_sender);
 
-    dafs::Message sent_message = mock_sender.sentMessages()[0];
+    dafs::Message sent_message = mock_sender->sentMessages()[0];
 
     ASSERT_EQ(dafs::MessageType::_AcceptJoinCluster, sent_message.type);
     ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
@@ -561,10 +565,10 @@ TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
         {
         }
     };
-    MockSender mock_sender;
+    auto mock_sender = std::make_shared<MockSender>();
     HandleExitCluster(GetNode(), message, mock_sender);
 
-    dafs::Message sent_message = mock_sender.sentMessages()[0];
+    dafs::Message sent_message = mock_sender->sentMessages()[0];
 
     ASSERT_EQ(dafs::MessageType::_PlusExitCluster, sent_message.type);
     ASSERT_EQ("11111111-1111-1111-1111-111111111111",

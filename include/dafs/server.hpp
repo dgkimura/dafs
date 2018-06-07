@@ -29,7 +29,7 @@ namespace dafs
 
         boost::asio::ip::tcp::acceptor acceptor;
 
-        boost::asio::ip::tcp::socket socket;
+        std::shared_ptr<boost::asio::ip::tcp::socket> socket;
 
         Dispatcher dispatcher;
 
@@ -37,7 +37,7 @@ namespace dafs
         {
         public:
             Session(
-                boost::asio::ip::tcp::socket socket
+                std::shared_ptr<boost::asio::ip::tcp::socket> socket
             );
 
             void Start(Dispatcher& dispatcher);
@@ -54,7 +54,7 @@ namespace dafs
 
             boost::asio::streambuf response;
 
-            boost::asio::ip::tcp::socket socket;
+            std::shared_ptr<boost::asio::ip::tcp::socket> socket;
 
             char header[dafs::MessageHeaderSize + 1];
         };

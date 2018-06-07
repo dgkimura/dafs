@@ -3,11 +3,11 @@
 
 namespace dafs
 {
-    dafs::Message
+    void
     HandleAllocateBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::Message m;
 
@@ -22,15 +22,15 @@ namespace dafs
                 dafs::Serialize<dafs::BlockInfo>(blockinfo)
             }
         );
-        return m;
+        sender->Reply(m);
     }
 
 
-    dafs::Message
+    void
     HandleReadBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
@@ -62,15 +62,15 @@ namespace dafs
             };
             m.type = dafs::MessageType::Failure;
         }
-        return m;
+        sender->Reply(m);
     }
 
 
-    dafs::Message
+    void
     HandleWriteBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
@@ -97,15 +97,15 @@ namespace dafs
             };
             m.type = dafs::MessageType::Failure;
         }
-        return m;
+        sender->Reply(m);
     }
 
 
-    dafs::Message
+    void
     HandleDeleteBlock(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
@@ -131,15 +131,15 @@ namespace dafs
             };
             m.type = dafs::MessageType::Failure;
         }
-        return m;
+        sender->Reply(m);
     }
 
 
-    dafs::Message
+    void
     HandleGetNodeDetails(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::Message m;
         m.metadata = std::vector<dafs::MetaData>
@@ -166,15 +166,15 @@ namespace dafs
                 )
             }
         };
-        return m;
+        sender->Reply(m);
     }
 
 
-    dafs::Message
+    void
     HandleJoinCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
@@ -186,7 +186,7 @@ namespace dafs
         //       that add server stays O(1) complexity. Then refuse to join
         //       cluster if list is non-empty.
 
-        sender.Send(
+        sender->Send(
             dafs::Message
             {
                 node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails().zero.management,
@@ -218,17 +218,14 @@ namespace dafs
                 }
             }
         );
-
-        dafs::Message m;
-        return m;
     }
 
 
-    dafs::Message
+    void
     HandleRequestJoinCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
@@ -247,7 +244,7 @@ namespace dafs
             //
             // Reject initiation request by telling node who to ask next.
             //
-            sender.Send(
+            sender->Send(
                 dafs::Message
                 {
                     p_zero->GetNodeSetDetails().zero.management,
@@ -287,8 +284,7 @@ namespace dafs
                     //
                     // Did not acquire both partition locks.
                     //
-                    dafs::Message m;
-                    return m;
+                    return;
                 }
 
                 //
@@ -313,7 +309,7 @@ namespace dafs
                     Constant::PartitionPlusName);
 
                 // Send accepted messge to node.
-                sender.Send(
+                sender->Send(
                     dafs::Message
                     {
                         p_zero->GetNodeSetDetails().zero.management,
@@ -350,7 +346,7 @@ namespace dafs
                     Constant::PartitionPlusName);
                 endpoints.plus = p_minus->GetNodeSetDetails().plus;
                 endpoints.minus = p_plus->GetNodeSetDetails().minus;
-                sender.Send(
+                sender->Send(
                     dafs::Message
                     {
                         p_zero->GetNodeSetDetails().zero.management,
@@ -370,17 +366,14 @@ namespace dafs
                 );
             }
         }
-
-        dafs::Message m;
-        return m;
     }
 
 
-    dafs::Message
+    void
     HandleAcceptJoinCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
@@ -413,21 +406,20 @@ namespace dafs
             p_minus->DeleteBlock(info);
         }
 
-        dafs::Message m;
-        return m;
+        return;
     }
 
 
-    dafs::Message
+    void
     HandleExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
 
-        sender.Send(
+        sender->Send(
             dafs::Message
             {
                 p_zero->GetNodeSetDetails().zero.management,
@@ -443,17 +435,14 @@ namespace dafs
                 }
             }
         );
-
-        dafs::Message m;
-        return m;
     }
 
 
-    dafs::Message
+    void
     HandleProposeExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
@@ -471,7 +460,7 @@ namespace dafs
         {
             // Here we agree with the proposal that minus partition should be
             // removed.
-            sender.Send(
+            sender->Send(
                 dafs::Message
                 {
                     p_zero->GetNodeSetDetails().zero.management,
@@ -494,7 +483,7 @@ namespace dafs
         {
             // Here we agree with the proposal that plus partition should be
             // removed.
-            sender.Send(
+            sender->Send(
                 dafs::Message
                 {
                     p_zero->GetNodeSetDetails().zero.management,
@@ -511,16 +500,14 @@ namespace dafs
                 }
             );
         }
-        dafs::Message m;
-        return m;
     }
 
 
-    dafs::Message
+    void
     HandlePlusExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
@@ -536,8 +523,7 @@ namespace dafs
                 //
                 // Did not acquire partition lock.
                 //
-                dafs::Message m;
-                return m;
+                return;
             }
 
             //
@@ -558,7 +544,7 @@ namespace dafs
                 p_plus->GetNodeSetDetails().plus.identity,
                 Constant::PartitionMinusName);
 
-            sender.Send(
+            sender->Send(
                 dafs::Message
                 {
                     p_zero->GetNodeSetDetails().zero.management,
@@ -580,17 +566,14 @@ namespace dafs
                 }
             );
         }
-
-        dafs::Message m;
-        return m;
     }
 
 
-    dafs::Message
+    void
     HandleMinusExitCluster(
         dafs::Node& node,
         dafs::Message message,
-        dafs::Sender& sender)
+        std::shared_ptr<dafs::Sender> sender)
     {
         dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
@@ -606,8 +589,7 @@ namespace dafs
                 //
                 // Did not acquire partition lock.
                 //
-                dafs::Message m;
-                return m;
+                return;
             }
 
             auto endpoint = metadata.GetValue<dafs::Endpoint>(dafs::EndpointKey);
@@ -622,7 +604,5 @@ namespace dafs
             p_zero->Release();
         }
 
-        dafs::Message m;
-        return m;
     }
 }

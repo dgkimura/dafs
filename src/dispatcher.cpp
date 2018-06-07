@@ -10,10 +10,9 @@ namespace dafs
         : registered_map {
               {
                   dafs::MessageType::ReadBlock,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleReadBlock(
+                      dafs::HandleReadBlock(
                           node,
                           message,
                           sender);
@@ -21,10 +20,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::WriteBlock,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleWriteBlock(
+                      dafs::HandleWriteBlock(
                           node,
                           message,
                           sender);
@@ -32,10 +30,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::AllocateBlock,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleAllocateBlock(
+                      dafs::HandleAllocateBlock(
                           node,
                           message,
                           sender);
@@ -43,10 +40,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::DeleteBlock,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleDeleteBlock(
+                      dafs::HandleDeleteBlock(
                           node,
                           message,
                           sender);
@@ -54,10 +50,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::GetNodeDetails,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleGetNodeDetails(
+                      dafs::HandleGetNodeDetails(
                           node,
                           message,
                           sender);
@@ -65,10 +60,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::_JoinCluster,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleJoinCluster(
+                      dafs::HandleJoinCluster(
                           node,
                           message,
                           sender);
@@ -76,10 +70,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::_RequestJoinCluster,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleRequestJoinCluster(
+                      dafs::HandleRequestJoinCluster(
                           node,
                           message,
                           sender);
@@ -87,10 +80,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::_AcceptJoinCluster,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleAcceptJoinCluster(
+                      dafs::HandleAcceptJoinCluster(
                           node,
                           message,
                           sender);
@@ -98,10 +90,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::ExitCluster,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleExitCluster(
+                      dafs::HandleExitCluster(
                           node,
                           message,
                           sender);
@@ -109,10 +100,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::_ProposeExitCluster,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleProposeExitCluster(
+                      dafs::HandleProposeExitCluster(
                           node,
                           message,
                           sender);
@@ -120,10 +110,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::_PlusExitCluster,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandlePlusExitCluster(
+                      dafs::HandlePlusExitCluster(
                           node,
                           message,
                           sender);
@@ -131,10 +120,9 @@ namespace dafs
               },
               {
                   dafs::MessageType::_MinusExitCluster,
-                  [&node](dafs::Message message) -> dafs::Message
+                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
                   {
-                      dafs::NetworkSender sender;
-                      return dafs::HandleMinusExitCluster(
+                      dafs::HandleMinusExitCluster(
                           node,
                           message,
                           sender);
@@ -146,9 +134,9 @@ namespace dafs
     }
 
 
-    dafs::Message
-    Dispatcher::Process(dafs::Message message)
+    void
+    Dispatcher::Process(dafs::Message message, std::shared_ptr<dafs::Sender> sender)
     {
-        return registered_map[message.type](message);
+        registered_map[message.type](message, sender);
     }
 }

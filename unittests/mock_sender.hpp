@@ -19,6 +19,11 @@ public:
         sent_messages.push_back(message);
     }
 
+    virtual void Reply(dafs::Message message) override
+    {
+        sent_messages.push_back(message);
+    }
+
     virtual dafs::Message Receive() override
     {
         dafs::Message m;

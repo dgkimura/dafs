@@ -12,7 +12,7 @@ namespace dafs
 {
     using MessageHandler = std::function
     <
-        dafs::Message (dafs::Message message)
+        void(dafs::Message message, std::shared_ptr<dafs::Sender> sender)
     >;
 
 
@@ -32,7 +32,7 @@ namespace dafs
 
         Dispatcher(dafs::Node& node);
 
-        dafs::Message Process(dafs::Message);
+        void Process(dafs::Message, std::shared_ptr<dafs::Sender> sender);
 
     private:
 
