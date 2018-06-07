@@ -111,7 +111,19 @@ TEST_F(HandlerTest, testHandleReadBlock)
         dafs::Identity("33333333-3333-3333-3333-333333333333")
     )->WriteBlock(info, format);
 
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::ReadBlock,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -120,8 +132,9 @@ TEST_F(HandlerTest, testHandleReadBlock)
                 dafs::Serialize(info)
             }
         }
-    );
-    dafs::Message m = HandleReadBlock(GetNode(), parser);
+    };
+    MockSender mock_sender;
+    dafs::Message m = HandleReadBlock(GetNode(), message, mock_sender);
     dafs::BlockFormat result(
         dafs::MetaDataParser(m.metadata).GetValue<dafs::BlockFormat>(
             dafs::BlockFormatKey)
@@ -141,7 +154,19 @@ TEST_F(HandlerTest, testHandleReadBlockForwardsRequests)
         0
     };
 
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::ReadBlock,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -150,8 +175,9 @@ TEST_F(HandlerTest, testHandleReadBlockForwardsRequests)
                 dafs::Serialize(info)
             }
         }
-    );
-    dafs::Message m = HandleReadBlock(GetNode(), parser);
+    };
+    MockSender mock_sender;
+    dafs::Message m = HandleReadBlock(GetNode(), message, mock_sender);
     dafs::Address result(
         dafs::MetaDataParser(m.metadata).GetValue<dafs::Address>(
             dafs::AddressKey)
@@ -176,7 +202,19 @@ TEST_F(HandlerTest, testHandleWriteBlock)
         "this is the content of the block format.",
     };
 
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::WriteBlock,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -190,8 +228,9 @@ TEST_F(HandlerTest, testHandleWriteBlock)
                 dafs::Serialize(format)
             }
         }
-    );
-    HandleWriteBlock(GetNode(), parser);
+    };
+    MockSender mock_sender;
+    HandleWriteBlock(GetNode(), message, mock_sender);
 
     ASSERT_EQ(
         format.contents,
@@ -203,7 +242,19 @@ TEST_F(HandlerTest, testHandleWriteBlock)
 TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
 {
 
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::WriteBlock,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -230,8 +281,9 @@ TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
                 )
             }
         }
-    );
-    dafs::Message m = HandleWriteBlock(GetNode(), parser);
+    };
+    MockSender mock_sender;
+    dafs::Message m = HandleWriteBlock(GetNode(), message, mock_sender);
     dafs::Address result(
         dafs::MetaDataParser(m.metadata).GetValue<dafs::Address>(
             dafs::AddressKey)
@@ -256,7 +308,19 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
         "this is the content of the block format.",
     };
 
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::WriteBlock,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -270,9 +334,10 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
                 dafs::Serialize(format)
             }
         }
-    );
-    HandleWriteBlock(GetNode(), parser);
-    HandleDeleteBlock(GetNode(), parser);
+    };
+    MockSender mock_sender;
+    HandleWriteBlock(GetNode(), message, mock_sender);
+    HandleDeleteBlock(GetNode(), message, mock_sender);
 
     ASSERT_EQ(
         "",
@@ -283,13 +348,25 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
 
 TEST_F(HandlerTest, testGetNodeDetails)
 {
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::GetNodeDetails,
         std::vector<dafs::MetaData>
         {
         }
-    );
+    };
     MockSender mock_sender;
-    dafs::Message m = HandleGetNodeDetails(GetNode(), parser);
+    dafs::Message m = HandleGetNodeDetails(GetNode(), message, mock_sender);
 
     auto parsed = dafs::MetaDataParser(m.metadata);
 
@@ -332,7 +409,19 @@ TEST_F(HandlerTest, testGetNodeDetails)
 
 TEST_F(HandlerTest, testHandleJoinCluster)
 {
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::_JoinCluster,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -341,9 +430,9 @@ TEST_F(HandlerTest, testHandleJoinCluster)
                 dafs::Serialize(dafs::Address("A.B.C.D", 1234))
             }
         }
-    );
+    };
     MockSender mock_sender;
-    HandleJoinCluster(GetNode(), parser, mock_sender);
+    HandleJoinCluster(GetNode(), message, mock_sender);
 
     dafs::Message sent_message = mock_sender.sentMessages()[0];
 
@@ -366,7 +455,19 @@ TEST_F(HandlerTest, testHandleJoinCluster)
 
 TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
 {
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::_RequestJoinCluster,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -386,9 +487,9 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
                 )
             }
         }
-    );
+    };
     MockSender mock_sender;
-    HandleRequestJoinCluster(GetNode(), parser, mock_sender);
+    HandleRequestJoinCluster(GetNode(), message, mock_sender);
 
     dafs::Message sent_message = mock_sender.sentMessages()[0];
 
@@ -398,7 +499,19 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
 
 TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
 {
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::_RequestJoinCluster,
         std::vector<dafs::MetaData>
         {
             dafs::MetaData
@@ -418,9 +531,9 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
                 )
             }
         }
-    );
+    };
     MockSender mock_sender;
-    HandleRequestJoinCluster(GetNode(), parser, mock_sender);
+    HandleRequestJoinCluster(GetNode(), message, mock_sender);
 
     dafs::Message sent_message = mock_sender.sentMessages()[0];
 
@@ -431,13 +544,25 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
 
 TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
 {
-    dafs::MetaDataParser parser(
+    dafs::Message message
+    {
+        dafs::Address
+        {
+            "from-ip",
+            1111
+        },
+        dafs::Address
+        {
+            "to-ip",
+            1111
+        },
+        dafs::MessageType::_PlusExitCluster,
         std::vector<dafs::MetaData>
         {
         }
-    );
+    };
     MockSender mock_sender;
-    HandleExitCluster(GetNode(), parser, mock_sender);
+    HandleExitCluster(GetNode(), message, mock_sender);
 
     dafs::Message sent_message = mock_sender.sentMessages()[0];
 

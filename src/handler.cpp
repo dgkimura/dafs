@@ -6,7 +6,8 @@ namespace dafs
     dafs::Message
     HandleAllocateBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::Message message,
+        dafs::Sender& sender)
     {
         dafs::Message m;
 
@@ -28,8 +29,10 @@ namespace dafs
     dafs::Message
     HandleReadBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::Message message,
+        dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto partition = node.GetPartition(blockinfo.identity);
 
@@ -66,8 +69,10 @@ namespace dafs
     dafs::Message
     HandleWriteBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::Message message,
+        dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto block = metadata.GetValue<dafs::BlockFormat>(dafs::BlockFormatKey);
         auto partition = node.GetPartition(blockinfo.identity);
@@ -99,8 +104,10 @@ namespace dafs
     dafs::Message
     HandleDeleteBlock(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::Message message,
+        dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto blockinfo = metadata.GetValue<dafs::BlockInfo>(dafs::BlockInfoKey);
         auto partition = node.GetPartition(blockinfo.identity);
 
@@ -131,7 +138,8 @@ namespace dafs
     dafs::Message
     HandleGetNodeDetails(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::Message message,
+        dafs::Sender& sender)
     {
         dafs::Message m;
         m.metadata = std::vector<dafs::MetaData>
@@ -165,12 +173,14 @@ namespace dafs
     dafs::Message
     HandleJoinCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
+        dafs::Message message,
         dafs::Sender& sender)
     {
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
+
+        dafs::MetaDataParser metadata(message.metadata);
 
         // TODO: Add check that block list on node is empty in order to ensure
         //       that add server stays O(1) complexity. Then refuse to join
@@ -217,9 +227,10 @@ namespace dafs
     dafs::Message
     HandleRequestJoinCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
+        dafs::Message message,
         dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
             dafs::NodeEndpointsKey);
@@ -368,8 +379,10 @@ namespace dafs
     dafs::Message
     HandleAcceptJoinCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata)
+        dafs::Message message,
+        dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
@@ -408,7 +421,7 @@ namespace dafs
     dafs::Message
     HandleExitCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
+        dafs::Message message,
         dafs::Sender& sender)
     {
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
@@ -439,9 +452,10 @@ namespace dafs
     dafs::Message
     HandleProposeExitCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
+        dafs::Message message,
         dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
 
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
@@ -505,9 +519,10 @@ namespace dafs
     dafs::Message
     HandlePlusExitCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
+        dafs::Message message,
         dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
 
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
@@ -574,9 +589,10 @@ namespace dafs
     dafs::Message
     HandleMinusExitCluster(
         dafs::Node& node,
-        dafs::MetaDataParser metadata,
+        dafs::Message message,
         dafs::Sender& sender)
     {
+        dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
 
         auto p_minus = node.GetPartition(dafs::Node::Slot::Minus);
