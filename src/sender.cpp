@@ -72,7 +72,6 @@ namespace dafs
         boost::asio::write(
             *ssocket,
             boost::asio::buffer(message_data.c_str(), message_data.size()));
-        ssocket->close();
     }
 
 

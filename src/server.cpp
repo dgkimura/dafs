@@ -19,7 +19,6 @@ namespace dafs
               io_service,
               tcp::endpoint(
                   boost::asio::ip::address::from_string(address), port)),
-          socket(std::make_shared<boost::asio::ip::tcp::socket>(io_service)),
           dispatcher(dispatcher)
     {
         do_accept();
@@ -44,8 +43,9 @@ namespace dafs
     void
     Server::do_accept()
     {
+        auto socket = std::make_shared<boost::asio::ip::tcp::socket>(io_service);
         acceptor.async_accept(*socket,
-            [this](boost::system::error_code ec_accept)
+            [this, socket](boost::system::error_code ec_accept)
             {
                 if (!ec_accept)
                 {

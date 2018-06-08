@@ -29,8 +29,6 @@ namespace dafs
 
         boost::asio::ip::tcp::acceptor acceptor;
 
-        std::shared_ptr<boost::asio::ip::tcp::socket> socket;
-
         Dispatcher dispatcher;
 
         class Session : public boost::enable_shared_from_this<Session>

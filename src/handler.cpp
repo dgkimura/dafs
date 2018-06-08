@@ -3,6 +3,14 @@
 
 namespace dafs
 {
+    //
+    // XXX: Hack! Used to keep the sender socket alive. This allows client to
+    //      block until a command finishes which is specifically useful for
+    //      join-cluster.
+    //
+    std::vector<std::shared_ptr<dafs::Sender>> saved_sender;
+
+
     void
     HandleAllocateBlock(
         dafs::Node& node,
@@ -218,6 +226,8 @@ namespace dafs
                 }
             }
         );
+
+        saved_sender.push_back(sender);
     }
 
 
@@ -406,7 +416,7 @@ namespace dafs
             p_minus->DeleteBlock(info);
         }
 
-        return;
+        saved_sender = std::vector<std::shared_ptr<dafs::Sender>>();
     }
 
 
