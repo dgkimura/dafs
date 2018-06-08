@@ -10,7 +10,8 @@ namespace dafs
         : registered_map {
               {
                   dafs::MessageType::ReadBlock,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleReadBlock(
                           node,
@@ -20,7 +21,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::WriteBlock,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleWriteBlock(
                           node,
@@ -30,7 +32,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::AllocateBlock,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleAllocateBlock(
                           node,
@@ -40,7 +43,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::DeleteBlock,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleDeleteBlock(
                           node,
@@ -50,7 +54,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::GetNodeDetails,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleGetNodeDetails(
                           node,
@@ -60,7 +65,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::_JoinCluster,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleJoinCluster(
                           node,
@@ -70,7 +76,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::_RequestJoinCluster,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleRequestJoinCluster(
                           node,
@@ -80,7 +87,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::_AcceptJoinCluster,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleAcceptJoinCluster(
                           node,
@@ -90,7 +98,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::ExitCluster,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleExitCluster(
                           node,
@@ -100,7 +109,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::_ProposeExitCluster,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleProposeExitCluster(
                           node,
@@ -110,7 +120,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::_PlusExitCluster,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandlePlusExitCluster(
                           node,
@@ -120,7 +131,8 @@ namespace dafs
               },
               {
                   dafs::MessageType::_MinusExitCluster,
-                  [&node](dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+                  [&node](const dafs::Message& message,
+                          std::shared_ptr<dafs::Sender> sender)
                   {
                       dafs::HandleMinusExitCluster(
                           node,
@@ -135,7 +147,9 @@ namespace dafs
 
 
     void
-    Dispatcher::Process(dafs::Message message, std::shared_ptr<dafs::Sender> sender)
+    Dispatcher::Process(
+        const dafs::Message& message,
+        std::shared_ptr<dafs::Sender> sender)
     {
         registered_map[message.type](message, sender);
     }
