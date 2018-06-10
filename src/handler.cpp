@@ -464,30 +464,7 @@ namespace dafs
         auto minus_address = p_minus->GetNodeSetDetails().zero.replication;
         auto plus_address = p_plus->GetNodeSetDetails().zero.replication;
 
-        if (minus_address.ip == address.ip &&
-            minus_address.port == address.port &&
-            !p_minus->IsAddressResponsive(address))
-        {
-            // Here we agree with the proposal that minus partition should be
-            // removed.
-            sender->Send(
-                dafs::Message
-                {
-                    p_zero->GetNodeSetDetails().zero.management,
-                    p_zero->GetNodeSetDetails().zero.management,
-                    dafs::MessageType::_MinusExitCluster,
-                    std::vector<dafs::MetaData>
-                    {
-                        dafs::MetaData
-                        {
-                            dafs::IdentityKey,
-                            dafs::Serialize(p_minus->GetIdentity())
-                        }
-                    }
-                }
-            );
-        }
-        else if (plus_address.ip == address.ip &&
+        if (plus_address.ip == address.ip &&
                  plus_address.port == address.port &&
                  !p_plus->IsAddressResponsive(address))
         {
