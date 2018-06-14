@@ -463,10 +463,14 @@ namespace dafs
 
         auto minus_address = p_minus->GetNodeSetDetails().zero.replication;
         auto plus_address = p_plus->GetNodeSetDetails().zero.replication;
+        auto zero_plus_address = p_zero->GetNodeSetDetails().plus.replication;
 
-        if (plus_address.ip == address.ip &&
-                 plus_address.port == address.port &&
-                 !p_plus->IsAddressResponsive(address))
+        if ((plus_address.ip == address.ip &&
+             plus_address.port == address.port &&
+             !p_plus->IsAddressResponsive(address)) ||
+            (zero_plus_address.ip == address.ip &&
+             zero_plus_address.port == address.port &&
+             !p_zero->IsAddressResponsive(address)))
         {
             // Here we agree with the proposal that plus partition should be
             // removed.
