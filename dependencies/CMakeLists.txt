@@ -10,3 +10,6 @@ set(paxos_HEADERS ${paxos_HEADERS} PARENT_SCOPE)
 
 set(diflib_LIB ${diflib_LIB} PARENT_SCOPE)
 set(diflib_HEADERS ${diflib_HEADERS} PARENT_SCOPE)
+
+set(protobuf_BIN ${protobuf_BIN} PARENT_SCOPE)
+set(protobuf_HEADERS ${protobuf_HEADERS} PARENT_SCOPE)

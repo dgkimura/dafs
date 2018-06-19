@@ -38,6 +38,7 @@ target_link_libraries(dafs-library
 )
 add_dependencies(dafs-library diflib)
 add_dependencies(dafs-library paxos)
+add_dependencies(dafs-library dafs-proto)
 
 add_executable(dafs-server dafs-server.cpp)
 target_link_libraries(dafs-server

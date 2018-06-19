@@ -13,3 +13,9 @@ ExternalProject_Add(
     INSTALL_COMMAND make install
 )
 
+set(protobuf_BIN
+    ${CMAKE_CURRENT_BINARY_DIR}/protobuf-prefix/bin
+    PARENT_SCOPE)
+set(protobuf_HEADERS
+    ${CMAKE_CURRENT_BINARY_DIR}/protobuf-prefix/include
+    PARENT_SCOPE)

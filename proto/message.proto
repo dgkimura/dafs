@@ -34,5 +34,6 @@ message Message
     }
     required Address from_address = 1;
     required Address to_address = 2;
-    repeated MetaData metadata = 3;
+    required MessageType type = 3;
+    repeated MetaData metadata = 4;
 }

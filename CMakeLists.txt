@@ -8,5 +8,6 @@ if(CODE_COVERAGE)
 endif()
 
 add_subdirectory(dependencies)
+add_subdirectory(proto)
 add_subdirectory(src)
 add_subdirectory(unittests)
