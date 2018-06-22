@@ -1,17 +1,37 @@
 syntax = "proto2";
 
-package dafs;
+package dafs.proto;
+
+message Identity
+{
+    required string id = 1;
+}
+
+message MetaData
+{
+    enum MetaDataType
+    {
+        BlockInfoKey = 0;
+        BlockFormatKey = 1;
+        AddressKey = 2;
+        EndpointKey = 3;
+        IdentifierKey = 4;
+        NodeEndpointsKey = 5;
+        MinusReplicatedEndpointsKey = 6;
+        ZeroReplicatedEndpointsKey = 7;
+        PlusReplicatedEndpointsKey = 8;
+        MinusIdentityKey = 9;
+        ZeroIdentityKey = 10;
+        PlusIdentityKey = 11;
+    }
+    required MetaDataType type = 1;
+    required string value = 2;
+}
 
 message Address
 {
     required string ip = 1;
     required int32 port = 2;
-}
-
-message MetaData
-{
-    required string key = 1;
-    required string value = 2;
 }
 
 message Message
