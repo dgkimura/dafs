@@ -12,3 +12,7 @@ add_custom_command(
 add_library(dafs-proto message.pb.cc)
 
 include_directories(${protobuf_HEADERS})
+
+set(proto_HEADERS
+    ${CMAKE_CURRENT_BINARY_DIR}
+    PARENT_SCOPE)

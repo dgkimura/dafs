@@ -159,4 +159,7 @@ namespace dafs
         }
         return object;
     }
+
+
+    std::string serialize(const dafs::Address& address);
 }

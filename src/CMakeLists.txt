@@ -17,6 +17,7 @@ set(SOURCES
     propose.cpp
     replication.cpp
     sender.cpp
+    serialization.cpp
     server.cpp
     signal.cpp
 )
@@ -44,19 +45,25 @@ add_executable(dafs-server dafs-server.cpp)
 target_link_libraries(dafs-server
     PRIVATE
         dafs-library
+        dafs-proto
 )
 add_dependencies(dafs-server dafs-library)
+add_dependencies(dafs-server dafs-proto)
 
 add_executable(dafs-cli dafs-cli.cpp)
 target_link_libraries(dafs-cli
     PRIVATE
         dafs-library
+        dafs-proto
 )
 add_dependencies(dafs-cli dafs-library)
+add_dependencies(dafs-cli dafs-proto)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
 include_directories(${diflib_HEADERS})
 include_directories(${paxos_HEADERS})
+include_directories(${proto_HEADERS})
+include_directories(${protobuf_HEADERS})
 
 set_property(TARGET dafs-library PROPERTY CXX_STANDARD 11)
 set_property(TARGET dafs-server PROPERTY CXX_STANDARD 11)
