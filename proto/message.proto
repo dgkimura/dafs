@@ -2,9 +2,26 @@ syntax = "proto2";
 
 package dafs.proto;
 
+message Delta
+{
+    required string difference = 1;
+}
+
 message Identity
 {
     required string id = 1;
+}
+
+message BlockFormat
+{
+    required string contents = 1;
+}
+
+message BlockInfo
+{
+    required string path = 1;
+    required Identity identity = 2;
+    required int32 revision = 3;
 }
 
 message MetaData

@@ -161,5 +161,17 @@ namespace dafs
     }
 
 
-    std::string serialize(const dafs::Address& address);
+    std::string serialize(const dafs::Delta& obj);
+
+
+    std::string serialize(const dafs::Identity& obj);
+
+
+    std::string serialize(const dafs::BlockFormat& obj);
+
+
+    std::string serialize(const dafs::BlockInfo& obj);
+
+
+    std::string serialize(const dafs::Address& obj);
 }
