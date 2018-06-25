@@ -24,6 +24,13 @@ message BlockInfo
     required int32 revision = 3;
 }
 
+message Endpoint
+{
+    required Address management = 1;
+    required Address replication = 2;
+    required Identity identity = 3;
+}
+
 message MetaData
 {
     enum MetaDataType

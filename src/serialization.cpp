@@ -60,4 +60,28 @@ namespace dafs
         _obj.SerializeToString(&data);
         return data;
     }
+
+
+    std::string serialize(const dafs::Endpoint& obj)
+    {
+        std::string data;
+
+        dafs::proto::Identity _obj_id;
+        _obj_id.set_id(obj.identity.id);
+
+        dafs::proto::Address _obj_management;
+        _obj_management.set_ip(obj.management.ip);
+        _obj_management.set_port(obj.management.port);
+
+        dafs::proto::Address _obj_replication;
+        _obj_replication.set_ip(obj.replication.ip);
+        _obj_replication.set_port(obj.replication.port);
+
+        dafs::proto::Endpoint _obj;
+        _obj.set_allocated_management(&_obj_management);
+        _obj.set_allocated_replication(&_obj_replication);
+        _obj.set_allocated_identity(&_obj_id);
+        _obj.SerializeToString(&data);
+        return data;
+    }
 }
