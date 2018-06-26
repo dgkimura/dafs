@@ -205,3 +205,17 @@ TEST(SerializationUnitTest, testEndpointIsSerializableAndDeserializable)
     ASSERT_EQ(expected.replication.port, actual.replication.port);
     ASSERT_EQ(expected.identity, actual.identity);
 }
+
+
+TEST(SerializationUnitTest, _testDeltaIsSerializableAndDeserializable)
+{
+    dafs::Delta expected
+    {
+        "the-difference"
+    }, actual;
+
+    std::string string_obj = dafs::serialize(expected);
+    actual = dafs::deserialize<dafs::Delta>(string_obj);
+
+    ASSERT_EQ(expected.difference, actual.difference);
+}

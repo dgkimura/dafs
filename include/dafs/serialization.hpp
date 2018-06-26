@@ -161,17 +161,10 @@ namespace dafs
     }
 
 
-    std::string serialize(const dafs::Delta& obj);
+    template <typename T>
+    std::string serialize(const T& obj);
 
 
-    std::string serialize(const dafs::Identity& obj);
-
-
-    std::string serialize(const dafs::BlockFormat& obj);
-
-
-    std::string serialize(const dafs::BlockInfo& obj);
-
-
-    std::string serialize(const dafs::Address& obj);
+    template <typename T>
+    T deserialize(std::string obj);
 }

@@ -49,6 +49,8 @@ target_link_libraries(all_unittests
         Threads::Threads
         ${PLATFORM_LIBRARIES}
         dafs-library
+        dafs-proto
+        dependency-protobuf
 )
 
 add_dependencies(all_unittests gtest)

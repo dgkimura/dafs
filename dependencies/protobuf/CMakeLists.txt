@@ -13,6 +13,11 @@ ExternalProject_Add(
     INSTALL_COMMAND make install
 )
 
+add_library(dependency-protobuf STATIC IMPORTED GLOBAL)
+set_target_properties(dependency-protobuf PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES "CXX"
+  IMPORTED_LOCATION "${INSTALL_DIR}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}protobuf${CMAKE_SHARED_LIBRARY_SUFFIX}")
+
 set(protobuf_BIN
     ${CMAKE_CURRENT_BINARY_DIR}/protobuf-prefix/bin
     PARENT_SCOPE)

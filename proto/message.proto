@@ -31,22 +31,42 @@ message Endpoint
     required Identity identity = 3;
 }
 
+message ReplicatedEndpoints
+{
+    required Endpoint minus = 1;
+    required Endpoint zero = 2;
+    required Endpoint plus = 3;
+}
+
+message Proposal
+{
+    enum ProposalType
+    {
+        WRITE_BLOCK = 0;
+        DELETE_BLOCK = 1;
+        PING = 2;
+    }
+    required ProposalType type = 1;
+    required string content = 2;
+    required string uuid = 3;
+}
+
 message MetaData
 {
     enum MetaDataType
     {
-        BlockInfoKey = 0;
-        BlockFormatKey = 1;
-        AddressKey = 2;
-        EndpointKey = 3;
-        IdentifierKey = 4;
-        NodeEndpointsKey = 5;
-        MinusReplicatedEndpointsKey = 6;
-        ZeroReplicatedEndpointsKey = 7;
-        PlusReplicatedEndpointsKey = 8;
-        MinusIdentityKey = 9;
-        ZeroIdentityKey = 10;
-        PlusIdentityKey = 11;
+        BLOCK_INFO = 0;
+        BLOCK_FORMAT = 1;
+        ADDRESS = 2;
+        ENDPOINT = 3;
+        IDENTIFIER = 4;
+        NODE_ENDPOINTS = 5;
+        MINUS_REPLICATED_ENDPOINTS = 6;
+        ZERO_REPLICATED_ENDPOINTS = 7;
+        PLUS_REPLICATED_ENDPOINTS = 8;
+        MINUS_IDENTITY = 9;
+        ZERO_IDENTITY = 10;
+        PLUS_IDENTITY = 11;
     }
     required MetaDataType type = 1;
     required string value = 2;
@@ -74,7 +94,8 @@ message Message
         ACCEPT_JOIN_CLUSTER = 9;
         EXIT_CLUSTER = 10;
         PROPOSE_EXIT_CLUSTER = 11;
-        MINUS_EXIT_CLUSTER = 12;
+        PLUS_EXIT_CLUSTER = 12;
+        MINUS_EXIT_CLUSTER = 13;
     }
     required Address from_address = 1;
     required Address to_address = 2;
