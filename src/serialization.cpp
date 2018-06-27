@@ -263,8 +263,6 @@ namespace dafs
     static dafs::proto::Message
     convert(dafs::Message obj)
     {
-        dafs::proto::Address _obj_from = convert(obj.from);
-        dafs::proto::Address _obj_to = convert(obj.to);
         std::map<dafs::MessageType, dafs::proto::Message::MessageType> mtype_map =
         {
             { dafs::MessageType::Success, dafs::proto::Message::SUCCESS },
@@ -284,14 +282,48 @@ namespace dafs
         };
 
         dafs::proto::Message _obj;
-        _obj.set_allocated_from_address(&_obj_from);
-        _obj.set_allocated_to_address(&_obj_to);
+        *_obj.mutable_from_address() = convert(obj.from);
+        *_obj.mutable_to_address() = convert(obj.to);
         _obj.set_type(mtype_map[obj.type]);
 
         for (auto& md : obj.metadata)
         {
             auto *o = _obj.add_metadata();
             *o = convert(md);
+        }
+        return _obj;
+    }
+
+
+    static dafs::Message
+    convert(dafs::proto::Message obj)
+    {
+        std::map<dafs::proto::Message::MessageType, dafs::MessageType> mtype_map =
+        {
+            { dafs::proto::Message::SUCCESS, dafs::MessageType::Success },
+            { dafs::proto::Message::FAILURE, dafs::MessageType::Failure },
+            { dafs::proto::Message::ALLOCATE_BLOCK, dafs::MessageType::AllocateBlock },
+            { dafs::proto::Message::READ_BLOCK, dafs::MessageType::ReadBlock },
+            { dafs::proto::Message::WRITE_BLOCK, dafs::MessageType::WriteBlock },
+            { dafs::proto::Message::DELETE_BLOCK, dafs::MessageType::DeleteBlock },
+            { dafs::proto::Message::GET_NODE_DETAILS, dafs::MessageType::GetNodeDetails },
+            { dafs::proto::Message::JOIN_CLUSTER, dafs::MessageType::_JoinCluster },
+            { dafs::proto::Message::REQUEST_JOIN_CLUSTER, dafs::MessageType::_RequestJoinCluster },
+            { dafs::proto::Message::ACCEPT_JOIN_CLUSTER, dafs::MessageType::_AcceptJoinCluster },
+            { dafs::proto::Message::EXIT_CLUSTER, dafs::MessageType::ExitCluster },
+            { dafs::proto::Message::PROPOSE_EXIT_CLUSTER, dafs::MessageType::_ProposeExitCluster },
+            { dafs::proto::Message::PLUS_EXIT_CLUSTER, dafs::MessageType::_PlusExitCluster },
+            { dafs::proto::Message::MINUS_EXIT_CLUSTER, dafs::MessageType::_MinusExitCluster }
+        };
+
+        dafs::Message _obj;
+        _obj.from = convert(obj.from_address());
+        _obj.to = convert(obj.to_address());
+        _obj.type = mtype_map[obj.type()];
+
+        for (auto& md : obj.metadata())
+        {
+            _obj.metadata.push_back(convert(md));
         }
         return _obj;
     }
@@ -482,6 +514,25 @@ namespace dafs
     dafs::MetaData deserialize(std::string obj)
     {
         dafs::proto::MetaData _obj;
+        _obj.ParseFromString(obj);
+        return convert(_obj);
+    }
+
+
+    template <>
+    std::string serialize(const dafs::Message& obj)
+    {
+        std::string data;
+        auto _obj = convert(obj);
+        _obj.SerializeToString(&data);
+        return data;
+    }
+
+
+    template <>
+    dafs::Message deserialize(std::string obj)
+    {
+        dafs::proto::Message _obj;
         _obj.ParseFromString(obj);
         return convert(_obj);
     }

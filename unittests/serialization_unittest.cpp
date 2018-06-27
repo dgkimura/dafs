@@ -266,7 +266,7 @@ TEST(SerializationUnitTest, _testBlockInfoIsSerializableAndDeserializable)
 }
 
 
-TEST(SerializationUnitTest, _testMessageIsSerializableAndDeserializable)
+TEST(SerializationUnitTest, _testAddressIsSerializableAndDeserializable)
 {
     dafs::Address expected
     {
@@ -444,4 +444,44 @@ TEST(SerializationUnitTest, _testMetaDataIsSerializableAndDeserializable)
 
     ASSERT_EQ(expected.key, actual.key);
     ASSERT_EQ(expected.value, actual.value);
+}
+
+
+TEST(SerializationUnitTest, _testMessageIsSerializableAndDeserializable)
+{
+    dafs::Message expected
+    {
+        dafs::Address
+        {
+            "1.1.1.1", 1111
+        },
+        dafs::Address
+        {
+            "2.2.2.2", 2222
+        },
+        dafs::MessageType::ReadBlock,
+        {
+            {
+                "BlockInfo",
+                "block-info-value"
+            },
+            {
+                "BlockFormat",
+                "block-format-value"
+            }
+        }
+    }, actual;
+
+    std::string string_obj = dafs::serialize(expected);
+    actual = dafs::deserialize<dafs::Message>(string_obj);
+
+    ASSERT_EQ(expected.to.ip, actual.to.ip);
+    ASSERT_EQ(expected.to.port, actual.to.port);
+    ASSERT_EQ(expected.from.ip, actual.from.ip);
+    ASSERT_EQ(expected.from.port, actual.from.port);
+    ASSERT_EQ(expected.type, actual.type);
+    ASSERT_EQ(expected.metadata[0].key, actual.metadata[0].key);
+    ASSERT_EQ(expected.metadata[0].value, actual.metadata[0].value);
+    ASSERT_EQ(expected.metadata[1].key, actual.metadata[1].key);
+    ASSERT_EQ(expected.metadata[1].value, actual.metadata[1].value);
 }
