@@ -24,6 +24,11 @@ message BlockInfo
     required int32 revision = 3;
 }
 
+message BlockIndex
+{
+    repeated BlockInfo items = 1;
+}
+
 message Endpoint
 {
     required Address management = 1;
