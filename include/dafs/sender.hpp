@@ -11,7 +11,7 @@ namespace dafs
     {
     public:
 
-        virtual void Send(dafs::Message message) = 0;
+        virtual void Send(dafs::Address address, dafs::Message message) = 0;
 
         virtual void Reply(dafs::Message message) = 0;
 
@@ -29,7 +29,7 @@ namespace dafs
 
         ~NetworkSender();
 
-        virtual void Send(dafs::Message message) override;
+        virtual void Send(dafs::Address address, dafs::Message message) override;
 
         virtual void Reply(dafs::Message message) override;
 

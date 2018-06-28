@@ -205,8 +205,6 @@ namespace dafs
         };
 
         dafs::proto::Message _obj;
-        *_obj.mutable_from_address() = convert(obj.from);
-        *_obj.mutable_to_address() = convert(obj.to);
         _obj.set_type(mtype_map[obj.type]);
 
         for (auto& md : obj.metadata)
@@ -240,8 +238,6 @@ namespace dafs
         };
 
         dafs::Message _obj;
-        _obj.from = convert(obj.from_address());
-        _obj.to = convert(obj.to_address());
         _obj.type = mtype_map[obj.type()];
 
         for (auto& md : obj.metadata())

@@ -14,7 +14,7 @@ public:
     {
     }
 
-    virtual void Send(dafs::Message message) override
+    virtual void Send(dafs::Address address, dafs::Message message) override
     {
         sent_messages.push_back(message);
     }

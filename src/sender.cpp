@@ -36,13 +36,13 @@ namespace dafs
 
 
     void
-    NetworkSender::Send(dafs::Message message)
+    NetworkSender::Send(dafs::Address address, dafs::Message message)
     {
         tcp::resolver resolver(io_service);
         auto endpoint = resolver.resolve(
                             {
-                                message.to.ip,
-                                std::to_string(message.to.port)
+                                address.ip,
+                                std::to_string(address.port)
                             });
         boost::asio::connect(socket, endpoint);
 

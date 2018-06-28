@@ -120,16 +120,7 @@ namespace dafs
 
     struct Message
     {
-        Address from;
-        Address to;
         dafs::MessageType type;
         std::vector<dafs::MetaData> metadata;
-    };
-
-
-    struct EmptyMessage : public Message
-    {
-        EmptyAddress from;
-        EmptyAddress to;
     };
 }

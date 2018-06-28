@@ -173,5 +173,5 @@ namespace dafs
     };
 
 
-    dafs::Message HardSend(dafs::Message message);
+    dafs::Message HardSend(dafs::Address address, dafs::Message message);
 }

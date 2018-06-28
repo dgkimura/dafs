@@ -113,16 +113,6 @@ TEST_F(HandlerTest, testHandleReadBlock)
 
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::ReadBlock,
         std::vector<dafs::MetaData>
         {
@@ -157,16 +147,6 @@ TEST_F(HandlerTest, testHandleReadBlockForwardsRequests)
 
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::ReadBlock,
         std::vector<dafs::MetaData>
         {
@@ -206,16 +186,6 @@ TEST_F(HandlerTest, testHandleWriteBlock)
 
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::WriteBlock,
         std::vector<dafs::MetaData>
         {
@@ -246,16 +216,6 @@ TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
 
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::WriteBlock,
         std::vector<dafs::MetaData>
         {
@@ -313,16 +273,6 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
 
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::WriteBlock,
         std::vector<dafs::MetaData>
         {
@@ -353,16 +303,6 @@ TEST_F(HandlerTest, testGetNodeDetails)
 {
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::GetNodeDetails,
         std::vector<dafs::MetaData>
         {
@@ -415,16 +355,6 @@ TEST_F(HandlerTest, testHandleJoinCluster)
 {
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::_JoinCluster,
         std::vector<dafs::MetaData>
         {
@@ -461,16 +391,6 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
 {
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::_RequestJoinCluster,
         std::vector<dafs::MetaData>
         {
@@ -505,16 +425,6 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
 {
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::_RequestJoinCluster,
         std::vector<dafs::MetaData>
         {
@@ -542,7 +452,6 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
     dafs::Message sent_message = mock_sender->sentMessages()[0];
 
     ASSERT_EQ(dafs::MessageType::_AcceptJoinCluster, sent_message.type);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
 }
 
 
@@ -550,16 +459,6 @@ TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
 {
     dafs::Message message
     {
-        dafs::Address
-        {
-            "from-ip",
-            1111
-        },
-        dafs::Address
-        {
-            "to-ip",
-            1111
-        },
         dafs::MessageType::_PlusExitCluster,
         std::vector<dafs::MetaData>
         {
@@ -573,7 +472,4 @@ TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
     ASSERT_EQ(dafs::MessageType::_PlusExitCluster, sent_message.type);
     ASSERT_EQ("11111111-1111-1111-1111-111111111111",
               dafs::MetaDataParser(sent_message.metadata).GetValue<dafs::Identity>(dafs::IdentityKey).id);
-
-    ASSERT_ADDRESS_EQUAL(dafs::Address("1.1.1.1", 1000), sent_message.from);
-    ASSERT_ADDRESS_EQUAL(dafs::Address("3.3.3.3", 3000), sent_message.to);
 }

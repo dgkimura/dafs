@@ -195,10 +195,9 @@ namespace dafs
         //       cluster if list is non-empty.
 
         sender->Send(
+            metadata.GetValue<dafs::Address>(dafs::AddressKey),
             dafs::Message
             {
-                node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails().zero.management,
-                metadata.GetValue<dafs::Address>(dafs::AddressKey),
                 dafs::MessageType::_RequestJoinCluster,
                 std::vector<dafs::MetaData>
                 {
@@ -255,10 +254,9 @@ namespace dafs
             // Reject initiation request by telling node who to ask next.
             //
             sender->Send(
+                endpoints.zero.management,
                 dafs::Message
                 {
-                    p_zero->GetNodeSetDetails().zero.management,
-                    endpoints.zero.management,
                     dafs::MessageType::_JoinCluster,
                     std::vector<dafs::MetaData>
                     {
@@ -320,10 +318,9 @@ namespace dafs
 
                 // Send accepted messge to node.
                 sender->Send(
+                    endpoints.zero.management,
                     dafs::Message
                     {
-                        p_zero->GetNodeSetDetails().zero.management,
-                        endpoints.zero.management,
                         dafs::MessageType::_AcceptJoinCluster,
                         std::vector<dafs::MetaData>
                         {
@@ -357,10 +354,9 @@ namespace dafs
                 endpoints.plus = p_minus->GetNodeSetDetails().plus;
                 endpoints.minus = p_plus->GetNodeSetDetails().minus;
                 sender->Send(
+                    endpoints.zero.management,
                     dafs::Message
                     {
-                        p_zero->GetNodeSetDetails().zero.management,
-                        endpoints.zero.management,
                         dafs::MessageType::_AcceptJoinCluster,
                         std::vector<dafs::MetaData>
                         {
@@ -430,10 +426,9 @@ namespace dafs
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
 
         sender->Send(
+            p_minus->GetNodeSetDetails().zero.management,
             dafs::Message
             {
-                p_zero->GetNodeSetDetails().zero.management,
-                p_minus->GetNodeSetDetails().zero.management,
                 dafs::MessageType::_PlusExitCluster,
                 std::vector<dafs::MetaData>
                 {
@@ -471,10 +466,9 @@ namespace dafs
             // Here we agree with the proposal that plus partition should be
             // removed.
             sender->Send(
+                p_zero->GetNodeSetDetails().zero.management,
                 dafs::Message
                 {
-                    p_zero->GetNodeSetDetails().zero.management,
-                    p_zero->GetNodeSetDetails().zero.management,
                     dafs::MessageType::_PlusExitCluster,
                     std::vector<dafs::MetaData>
                     {
@@ -532,10 +526,9 @@ namespace dafs
                 Constant::PartitionMinusName);
 
             sender->Send(
+                p_plus->GetNodeSetDetails().plus.management,
                 dafs::Message
                 {
-                    p_zero->GetNodeSetDetails().zero.management,
-                    p_plus->GetNodeSetDetails().plus.management,
                     dafs::MessageType::_MinusExitCluster,
                     std::vector<dafs::MetaData>
                     {

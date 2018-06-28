@@ -257,10 +257,9 @@ namespace dafs
             //      the approporiate one take action.
             //
             sender->Send(
+                endpoint.management,
                 dafs::Message
                 {
-                    dafs::EmptyAddress(),
-                    endpoint.management,
                     dafs::MessageType::_ProposeExitCluster,
                     std::vector<dafs::MetaData>
                     {
