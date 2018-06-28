@@ -11,7 +11,7 @@ TEST(MessagesTest, testMetaDataParserCanGetValue)
         dafs::MetaData
         {
             dafs::IdentityKey,
-            dafs::Serialize<dafs::Identity>(
+            dafs::serialize<dafs::Identity>(
                 dafs::Identity
                 {
                     "11111111-1111-1111-1111-111111111111",

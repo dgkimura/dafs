@@ -27,7 +27,7 @@ namespace dafs
             dafs::MetaData
             {
                 dafs::BlockInfoKey,
-                dafs::Serialize<dafs::BlockInfo>(blockinfo)
+                dafs::serialize<dafs::BlockInfo>(blockinfo)
             }
         );
         sender->Reply(m);
@@ -51,7 +51,7 @@ namespace dafs
                 dafs::MetaData
                 {
                     dafs::BlockFormatKey,
-                    dafs::Serialize(partition->ReadBlock(blockinfo))
+                    dafs::serialize(partition->ReadBlock(blockinfo))
                 }
             );
             m.type = dafs::MessageType::Success;
@@ -63,7 +63,7 @@ namespace dafs
                 dafs::MetaData
                 {
                     dafs::AddressKey,
-                    dafs::Serialize(
+                    dafs::serialize(
                         node.GetPartition(dafs::Node::Slot::Minus)
                             ->GetNodeSetDetails().minus.management)
                 }
@@ -98,7 +98,7 @@ namespace dafs
                 dafs::MetaData
                 {
                     dafs::AddressKey,
-                    dafs::Serialize(
+                    dafs::serialize(
                         node.GetPartition(dafs::Node::Slot::Minus)
                             ->GetNodeSetDetails().minus.management)
                 }
@@ -132,7 +132,7 @@ namespace dafs
                 dafs::MetaData
                 {
                     dafs::AddressKey,
-                    dafs::Serialize(
+                    dafs::serialize(
                         node.GetPartition(dafs::Node::Slot::Minus)
                             ->GetNodeSetDetails().minus.management)
                 }
@@ -155,21 +155,21 @@ namespace dafs
             dafs::MetaData
             {
                 dafs::MinusReplicatedEndpointsKey,
-                dafs::Serialize<dafs::ReplicatedEndpoints>(
+                dafs::serialize<dafs::ReplicatedEndpoints>(
                     node.GetPartition(dafs::Node::Slot::Minus)->GetNodeSetDetails()
                 )
             },
             dafs::MetaData
             {
                 dafs::ZeroReplicatedEndpointsKey,
-                dafs::Serialize<dafs::ReplicatedEndpoints>(
+                dafs::serialize<dafs::ReplicatedEndpoints>(
                     node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails()
                 )
             },
             dafs::MetaData
             {
                 dafs::PlusReplicatedEndpointsKey,
-                dafs::Serialize<dafs::ReplicatedEndpoints>(
+                dafs::serialize<dafs::ReplicatedEndpoints>(
                     node.GetPartition(dafs::Node::Slot::Plus)->GetNodeSetDetails()
                 )
             }
@@ -205,7 +205,7 @@ namespace dafs
                     dafs::MetaData
                     {
                         dafs::NodeEndpointsKey,
-                        dafs::Serialize(
+                        dafs::serialize(
                             dafs::ReplicatedEndpoints
                             {
                                 p_minus->GetNodeSetDetails().plus,
@@ -217,7 +217,7 @@ namespace dafs
                     dafs::MetaData
                     {
                         dafs::IdentityKey,
-                        dafs::Serialize(
+                        dafs::serialize(
                             node.GetPartition(
                                 dafs::Node::Slot::Zero
                             )->GetIdentity()
@@ -265,7 +265,7 @@ namespace dafs
                         dafs::MetaData
                         {
                             dafs::AddressKey,
-                            dafs::Serialize(p_minus->GetNodeSetDetails().zero.management)
+                            dafs::serialize(p_minus->GetNodeSetDetails().zero.management)
                         }
                     }
                 }
@@ -330,7 +330,7 @@ namespace dafs
                             dafs::MetaData
                             {
                                 dafs::NodeEndpointsKey,
-                                dafs::Serialize(
+                                dafs::serialize(
                                     updated
                                 )
                             }
@@ -367,7 +367,7 @@ namespace dafs
                             dafs::MetaData
                             {
                                 dafs::NodeEndpointsKey,
-                                dafs::Serialize(
+                                dafs::serialize(
                                     endpoints
                                 )
                             }
@@ -440,7 +440,7 @@ namespace dafs
                     dafs::MetaData
                     {
                         dafs::IdentityKey,
-                        dafs::Serialize(p_zero->GetIdentity())
+                        dafs::serialize(p_zero->GetIdentity())
                     }
                 }
             }
@@ -465,8 +465,8 @@ namespace dafs
         auto plus_address = p_plus->GetNodeSetDetails().zero.replication;
 
         if (plus_address.ip == address.ip &&
-                 plus_address.port == address.port &&
-                 !p_plus->IsAddressResponsive(address))
+            plus_address.port == address.port &&
+            !p_plus->IsAddressResponsive(address))
         {
             // Here we agree with the proposal that plus partition should be
             // removed.
@@ -481,7 +481,7 @@ namespace dafs
                         dafs::MetaData
                         {
                             dafs::IdentityKey,
-                            dafs::Serialize(p_plus->GetIdentity())
+                            dafs::serialize(p_plus->GetIdentity())
                         }
                     }
                 }
@@ -542,12 +542,12 @@ namespace dafs
                         dafs::MetaData
                         {
                             dafs::EndpointKey,
-                            dafs::Serialize(p_plus->GetNodeSetDetails().minus)
+                            dafs::serialize(p_plus->GetNodeSetDetails().minus)
                         },
                         dafs::MetaData
                         {
                             dafs::IdentityKey,
-                            dafs::Serialize(identity)
+                            dafs::serialize(identity)
                         }
                     }
                 }

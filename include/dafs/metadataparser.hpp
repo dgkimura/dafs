@@ -28,7 +28,7 @@ namespace dafs
                     break;
                 }
             }
-            return dafs::Deserialize<T>(value);
+            return dafs::deserialize<T>(value);
         }
 
     private:

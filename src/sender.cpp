@@ -47,7 +47,7 @@ namespace dafs
         boost::asio::connect(socket, endpoint);
 
         // 1. serialize message
-        std::string message_data = dafs::Serialize(message);
+        std::string message_data = dafs::serialize(message);
         std::stringstream ss;
         ss << std::setw(dafs::MessageHeaderSize)
            << std::to_string(message_data.size());
@@ -66,7 +66,7 @@ namespace dafs
     NetworkSender::Reply(dafs::Message message)
     {
         // 1. serialize message
-        std::string message_data = dafs::Serialize(message);
+        std::string message_data = dafs::serialize(message);
 
         // 2. write message
         boost::asio::write(
@@ -90,6 +90,6 @@ namespace dafs
         std::string content(
             boost::asio::buffers_begin(bufs),
             boost::asio::buffers_begin(bufs) + reply.size());
-        return dafs::Deserialize<dafs::Message>(content);
+        return dafs::deserialize<dafs::Message>(content);
     }
 }

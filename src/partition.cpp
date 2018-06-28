@@ -83,9 +83,9 @@ namespace dafs
     ReplicatedPartition::GetIdentity()
     {
         auto details_block =  store->ReadBlock(details);
-        auto details = dafs::Deserialize<dafs::ReplicatedEndpoints>(
+        auto _details = dafs::Deserialize<dafs::ReplicatedEndpoints>(
             details_block.contents);
-        return details.zero.identity;
+        return _details.zero.identity;
     }
 
 

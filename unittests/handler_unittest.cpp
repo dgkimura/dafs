@@ -129,7 +129,7 @@ TEST_F(HandlerTest, testHandleReadBlock)
             dafs::MetaData
             {
                 dafs::BlockInfoKey,
-                dafs::Serialize(info)
+                dafs::serialize(info)
             }
         }
     };
@@ -173,7 +173,7 @@ TEST_F(HandlerTest, testHandleReadBlockForwardsRequests)
             dafs::MetaData
             {
                 dafs::BlockInfoKey,
-                dafs::Serialize(info)
+                dafs::serialize(info)
             }
         }
     };
@@ -222,12 +222,12 @@ TEST_F(HandlerTest, testHandleWriteBlock)
             dafs::MetaData
             {
                 dafs::BlockInfoKey,
-                dafs::Serialize(info)
+                dafs::serialize(info)
             },
             dafs::MetaData
             {
                 dafs::BlockFormatKey,
-                dafs::Serialize(format)
+                dafs::serialize(format)
             }
         }
     };
@@ -262,7 +262,7 @@ TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
             dafs::MetaData
             {
                 dafs::BlockInfoKey,
-                dafs::Serialize(
+                dafs::serialize(
                     // identity does not belong on node
                     dafs::BlockInfo
                     {
@@ -275,7 +275,7 @@ TEST_F(HandlerTest, testHandleWriteBlockForwardsRequests)
             dafs::MetaData
             {
                 dafs::BlockFormatKey,
-                dafs::Serialize(
+                dafs::serialize(
                     dafs::BlockFormat
                     {
                         "this is the content of the block format.",
@@ -329,12 +329,12 @@ TEST_F(HandlerTest, testHandleDeleteBlock)
             dafs::MetaData
             {
                 dafs::BlockInfoKey,
-                dafs::Serialize(info)
+                dafs::serialize(info)
             },
             dafs::MetaData
             {
                 dafs::BlockFormatKey,
-                dafs::Serialize(format)
+                dafs::serialize(format)
             }
         }
     };
@@ -431,7 +431,7 @@ TEST_F(HandlerTest, testHandleJoinCluster)
             dafs::MetaData
             {
                 dafs::AddressKey,
-                dafs::Serialize(dafs::Address("A.B.C.D", 1234))
+                dafs::serialize(dafs::Address("A.B.C.D", 1234))
             }
         }
     };
@@ -477,14 +477,14 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
             dafs::MetaData
             {
                 dafs::IdentityKey,
-                dafs::Serialize(
+                dafs::serialize(
                     dafs::Identity("22222222-2222-2222-2222-222222222222")
                 )
             },
             dafs::MetaData
             {
                 dafs::NodeEndpointsKey,
-                dafs::Serialize(
+                dafs::serialize(
                     dafs::ReplicatedEndpoints
                     {
                     }
@@ -521,14 +521,14 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
             dafs::MetaData
             {
                 dafs::IdentityKey,
-                dafs::Serialize(
+                dafs::serialize(
                     dafs::Identity("00000000-0000-0000-0000-000000000000")
                 )
             },
             dafs::MetaData
             {
                 dafs::NodeEndpointsKey,
-                dafs::Serialize(
+                dafs::serialize(
                     dafs::ReplicatedEndpoints
                     {
                     }

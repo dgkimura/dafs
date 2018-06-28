@@ -13,9 +13,6 @@ namespace dafs
     };
 
 
-    const std::string BlockInfoListKey = "BlockInfoList";
-
-
     const std::string BlockInfoKey = "BlockInfo";
 
 

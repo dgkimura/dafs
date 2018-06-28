@@ -46,6 +46,7 @@ target_link_libraries(dafs-server
     PRIVATE
         dafs-library
         dafs-proto
+        dependency-protobuf
 )
 add_dependencies(dafs-server dafs-library)
 add_dependencies(dafs-server dafs-proto)
@@ -55,6 +56,7 @@ target_link_libraries(dafs-cli
     PRIVATE
         dafs-library
         dafs-proto
+        dependency-protobuf
 )
 add_dependencies(dafs-cli dafs-library)
 add_dependencies(dafs-cli dafs-proto)

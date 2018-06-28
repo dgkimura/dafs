@@ -267,7 +267,7 @@ namespace dafs
                         dafs::MetaData
                         {
                             dafs::AddressKey,
-                            dafs::Serialize(a)
+                            dafs::serialize(a)
                         }
                     }
                 }

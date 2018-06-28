@@ -126,7 +126,7 @@ namespace dafs
                 boost::asio::buffers_begin(bufs) + response.size());
 
             // 1. Deserialize message
-            dafs::Message m = Deserialize<Message>(content);
+            dafs::Message m = dafs::deserialize<dafs::Message>(content);
 
             // 2. Route message to dispatcher for handling.
             auto sender = std::make_shared<dafs::NetworkSender>(socket);

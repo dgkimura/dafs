@@ -9,24 +9,6 @@
 
 namespace dafs
 {
-    static dafs::proto::Delta
-    convert(const dafs::Delta& obj)
-    {
-        dafs::proto::Delta _obj;
-        _obj.set_difference(obj.difference);
-        return _obj;
-    }
-
-
-    static dafs::Delta
-    convert(const dafs::proto::Delta& obj)
-    {
-        dafs::Delta _obj;
-        _obj.difference = obj.difference();
-        return _obj;
-    }
-
-
     static dafs::proto::Identity
     convert(const dafs::Identity& obj)
     {
@@ -151,65 +133,6 @@ namespace dafs
     }
 
 
-    static dafs::proto::Proposal
-    convert(const dafs::Proposal& obj)
-    {
-        std::map<dafs::ProposalType, dafs::proto::Proposal::ProposalType> mtype_map =
-        {
-            { dafs::ProposalType::WriteBlock, dafs::proto::Proposal::WRITE_BLOCK },
-            { dafs::ProposalType::DeleteBlock, dafs::proto::Proposal::DELETE_BLOCK },
-            { dafs::ProposalType::Ping, dafs::proto::Proposal::PING }
-        };
-        dafs::proto::Proposal _obj;
-        _obj.set_type(mtype_map[obj.type]);
-        _obj.set_content(obj.content);
-        _obj.set_uuid(boost::uuids::to_string(obj.uuid));
-        return _obj;
-    }
-
-
-    static dafs::Proposal
-    convert(const dafs::proto::Proposal& obj)
-    {
-        std::map<dafs::proto::Proposal::ProposalType, dafs::ProposalType> mtype_map =
-        {
-            { dafs::proto::Proposal::WRITE_BLOCK, dafs::ProposalType::WriteBlock  },
-            { dafs::proto::Proposal::DELETE_BLOCK, dafs::ProposalType::DeleteBlock  },
-            { dafs::proto::Proposal::PING, dafs::ProposalType::Ping  }
-        };
-        dafs::Proposal _obj;
-        _obj.type = mtype_map[obj.type()];
-        _obj.content = obj.content();
-        _obj.uuid = boost::lexical_cast<boost::uuids::uuid>(obj.uuid());
-        return _obj;
-    }
-
-
-    static dafs::proto::BlockIndex
-    convert(const dafs::BlockIndex& obj)
-    {
-        dafs::proto::BlockIndex _obj;
-        for (auto& block_info : obj.items)
-        {
-            auto *o = _obj.add_items();
-            *o = convert(block_info);
-        }
-        return _obj;
-    }
-
-
-    static dafs::BlockIndex
-    convert(const dafs::proto::BlockIndex& obj)
-    {
-        dafs::BlockIndex _obj;
-        for (auto& block_info : obj.items())
-        {
-            _obj.items.push_back(convert(block_info));
-        }
-        return _obj;
-    }
-
-
     static dafs::proto::MetaData
     convert(dafs::MetaData obj)
     {
@@ -330,25 +253,6 @@ namespace dafs
 
 
     template <>
-    std::string serialize(const dafs::Delta& obj)
-    {
-        std::string data;
-        auto _obj = convert(obj);
-        _obj.SerializeToString(&data);
-        return data;
-    }
-
-
-    template <>
-    dafs::Delta deserialize(std::string obj)
-    {
-        dafs::proto::Delta _obj;
-        _obj.ParseFromString(obj);
-        return convert(_obj);
-    }
-
-
-    template <>
     std::string serialize(const dafs::Identity& obj)
     {
         std::string data;
@@ -457,44 +361,6 @@ namespace dafs
     dafs::ReplicatedEndpoints deserialize(std::string obj)
     {
         dafs::proto::ReplicatedEndpoints _obj;
-        _obj.ParseFromString(obj);
-        return convert(_obj);
-    }
-
-
-    template <>
-    std::string serialize(const dafs::Proposal& obj)
-    {
-        std::string data;
-        auto _obj = convert(obj);
-        _obj.SerializeToString(&data);
-        return data;
-    }
-
-
-    template <>
-    dafs::Proposal deserialize(std::string obj)
-    {
-        dafs::proto::Proposal _obj;
-        _obj.ParseFromString(obj);
-        return convert(_obj);
-    }
-
-
-    template <>
-    std::string serialize(const dafs::BlockIndex& obj)
-    {
-        std::string data;
-        auto _obj = convert(obj);
-        _obj.SerializeToString(&data);
-        return data;
-    }
-
-
-    template <>
-    dafs::BlockIndex deserialize(std::string obj)
-    {
-        dafs::proto::BlockIndex _obj;
         _obj.ParseFromString(obj);
         return convert(_obj);
     }

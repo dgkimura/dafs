@@ -549,12 +549,12 @@ namespace dafs
                     dafs::MetaData
                     {
                         dafs::BlockInfoKey,
-                        dafs::Serialize<dafs::BlockInfo>(info)
+                        dafs::serialize<dafs::BlockInfo>(info)
                     },
                     dafs::MetaData
                     {
                         dafs::BlockFormatKey,
-                        dafs::Serialize<dafs::BlockFormat>(format)
+                        dafs::serialize<dafs::BlockFormat>(format)
                     }
                 }
             }
@@ -578,7 +578,7 @@ namespace dafs
                     dafs::MetaData
                     {
                         dafs::BlockInfoKey,
-                        dafs::Serialize<dafs::BlockInfo>(info)
+                        dafs::serialize<dafs::BlockInfo>(info)
                     }
                 }
             }
@@ -604,7 +604,7 @@ namespace dafs
                     dafs::MetaData
                     {
                         dafs::BlockInfoKey,
-                        dafs::Serialize<dafs::BlockInfo>(info)
+                        dafs::serialize<dafs::BlockInfo>(info)
                     }
                 }
             }
@@ -633,7 +633,7 @@ namespace dafs
                 dafs::MetaData
                 {
                     dafs::AddressKey,
-                    dafs::Serialize<dafs::Address>(
+                    dafs::serialize<dafs::Address>(
                         dafs::Address
                         {
                             args[1],

@@ -56,14 +56,6 @@ namespace dafs
 
 
     template <typename Archive>
-    void serialize(Archive& ar, dafs::MetaData& obj, const unsigned int version)
-    {
-        ar & obj.key;
-        ar & obj.value;
-    }
-
-
-    template <typename Archive>
     void serialize(Archive& ar, dafs::Address& obj, const unsigned int version)
     {
         ar & obj.ip;
@@ -86,16 +78,6 @@ namespace dafs
         ar & obj.minus;
         ar & obj.zero;
         ar & obj.plus;
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::Message& obj, const unsigned int version)
-    {
-        ar & obj.from;
-        ar & obj.to;
-        ar & obj.type;
-        ar & obj.metadata;
     }
 
 

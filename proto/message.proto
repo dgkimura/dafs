@@ -2,11 +2,6 @@ syntax = "proto2";
 
 package dafs.proto;
 
-message Delta
-{
-    required string difference = 1;
-}
-
 message Identity
 {
     required string id = 1;
@@ -14,7 +9,7 @@ message Identity
 
 message BlockFormat
 {
-    required string contents = 1;
+    required bytes contents = 1;
 }
 
 message BlockInfo
@@ -22,11 +17,6 @@ message BlockInfo
     required string path = 1;
     required Identity identity = 2;
     required int32 revision = 3;
-}
-
-message BlockIndex
-{
-    repeated BlockInfo items = 1;
 }
 
 message Endpoint
@@ -41,19 +31,6 @@ message ReplicatedEndpoints
     required Endpoint minus = 1;
     required Endpoint zero = 2;
     required Endpoint plus = 3;
-}
-
-message Proposal
-{
-    enum ProposalType
-    {
-        WRITE_BLOCK = 0;
-        DELETE_BLOCK = 1;
-        PING = 2;
-    }
-    required ProposalType type = 1;
-    required string content = 2;
-    required string uuid = 3;
 }
 
 message MetaData
@@ -74,7 +51,7 @@ message MetaData
         PLUS_IDENTITY = 11;
     }
     required MetaDataType type = 1;
-    required string value = 2;
+    required bytes value = 2;
 }
 
 message Address
@@ -102,8 +79,8 @@ message Message
         PLUS_EXIT_CLUSTER = 12;
         MINUS_EXIT_CLUSTER = 13;
     }
-    required Address from_address = 1;
-    required Address to_address = 2;
-    required MessageType type = 3;
+    optional Address from_address = 1;
+    optional Address to_address = 2;
+    optional MessageType type = 3;
     repeated MetaData metadata = 4;
 }
