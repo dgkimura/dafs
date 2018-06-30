@@ -75,6 +75,19 @@ namespace dafs
     }
 
 
+    void
+    NetworkSender::Wait()
+    {
+        boost::system::error_code error;
+        boost::asio::streambuf reply;
+        while (boost::asio::read(
+            socket,
+            reply,
+            boost::asio::transfer_at_least(1),
+            error));
+    }
+
+
     dafs::Message
     NetworkSender::Receive()
     {

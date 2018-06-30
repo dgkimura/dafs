@@ -15,6 +15,8 @@ namespace dafs
 
         virtual void Reply(dafs::Message message) = 0;
 
+        virtual void Wait() = 0;
+
         virtual dafs::Message Receive() = 0;
     };
 
@@ -32,6 +34,8 @@ namespace dafs
         virtual void Send(dafs::Address address, dafs::Message message) override;
 
         virtual void Reply(dafs::Message message) override;
+
+        virtual void Wait() override;
 
         virtual dafs::Message Receive() override;
 

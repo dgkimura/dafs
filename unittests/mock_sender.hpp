@@ -24,6 +24,10 @@ public:
         sent_messages.push_back(message);
     }
 
+    virtual void Wait() override
+    {
+    }
+
     virtual dafs::Message Receive() override
     {
         dafs::Message m;

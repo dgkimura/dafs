@@ -174,6 +174,7 @@ namespace dafs
                 )
             }
         };
+        m.type = dafs::MessageType::Success;
         sender->Reply(m);
     }
 

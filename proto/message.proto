@@ -79,6 +79,6 @@ message Message
         PLUS_EXIT_CLUSTER = 12;
         MINUS_EXIT_CLUSTER = 13;
     }
-    optional MessageType type = 3;
+    required MessageType type = 3;
     repeated MetaData metadata = 4;
 }

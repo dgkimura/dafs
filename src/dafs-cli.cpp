@@ -636,7 +636,7 @@ namespace dafs
         std::cout << "AddNodeToCluster: ip:" << address.ip << " port:"<< address.port<<"\n";
         auto sender = boost::make_shared<dafs::NetworkSender>();
         sender->Send(address, message);
-        auto reply = sender->Receive();
+        sender->Wait();
     }
 
 
