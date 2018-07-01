@@ -72,5 +72,6 @@ set_property(TARGET dafs-server PROPERTY CXX_STANDARD 11)
 set_property(TARGET dafs-cli PROPERTY CXX_STANDARD 11)
 
 set(CMAKE_INSTALL_RPATH ${paxos_LIBS} ${diflib_LIB})
+install(TARGETS dafs-library dafs-server dafs-cli DESTINATION bin)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.ini ${CMAKE_CURRENT_BINARY_DIR}/config.ini COPYONLY)
