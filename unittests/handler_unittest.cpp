@@ -387,6 +387,29 @@ TEST_F(HandlerTest, testHandleJoinCluster)
 }
 
 
+TEST_F(HandlerTest, testHandleJoinClusterRequestToJoinItself)
+{
+    dafs::Message message
+    {
+        dafs::MessageType::_JoinCluster,
+        std::vector<dafs::MetaData>
+        {
+            dafs::MetaData
+            {
+                dafs::AddressKey,
+                dafs::serialize(dafs::Address("1.1.1.1", 1000))
+            }
+        }
+    };
+    auto mock_sender = std::make_shared<MockSender>();
+    HandleJoinCluster(GetNode(), message, mock_sender);
+
+    dafs::Message sent_message = mock_sender->sentMessages()[0];
+
+    ASSERT_EQ(dafs::MessageType::Failure, sent_message.type);
+}
+
+
 TEST_F(HandlerTest, testHandleMinusInitiationWithOutOfOrderIdentity)
 {
     dafs::Message message

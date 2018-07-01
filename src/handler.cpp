@@ -191,6 +191,19 @@ namespace dafs
 
         dafs::MetaDataParser metadata(message.metadata);
 
+        auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
+        if (address.ip == p_zero->GetNodeSetDetails().zero.management.ip &&
+            address.port == p_zero->GetNodeSetDetails().zero.management.port)
+        {
+            //
+            // Bad request: a node is not allowed to join itself.
+            //
+            dafs::Message m;
+            m.type = dafs::MessageType::Failure;
+            sender->Reply(m);
+            return;
+        }
+
         // TODO: Add check that block list on node is empty in order to ensure
         //       that add server stays O(1) complexity. Then refuse to join
         //       cluster if list is non-empty.
