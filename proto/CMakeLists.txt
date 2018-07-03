@@ -10,6 +10,7 @@ add_custom_command(
 )
 
 add_library(dafs-proto message.pb.cc)
+add_dependencies(dafs-proto protobuf)
 
 include_directories(${protobuf_HEADERS})
 
