@@ -94,7 +94,8 @@ int main(int argc, char** argv)
     desc.add_options()
         ("help", "produce help message")
         ("identity",
-         boost::program_options::value(&options.identity),
+         boost::program_options::value(&options.identity)->default_value(
+         boost::uuids::random_generator()()),
          "uuid identity of the node")
         ("address",
          boost::program_options::value(&options.address)->default_value("127.0.0.1"),
