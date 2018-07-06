@@ -27,13 +27,12 @@ with ensuring that blocks are safely replicated and returned to the client on
 request.
 
 
-## Build
+## Build / Install
 You will need a compiler with full C++11 support. You can then use CMake to
 generate MakeFiles for this project.
 ```
-$ mkdir build && cd build
-$ cmake ..
-$ make && ./unittests/all_unittests
+$ mkdir build && cd build && cmake ..
+$ make install && ./unittests/all_unittests
 ```
 
 
