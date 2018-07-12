@@ -13,7 +13,7 @@ else()
     ExternalProject_Add(
         paxos
         GIT_REPOSITORY https://github.com/dgkimura/paxos.git
-        GIT_TAG 1.0.6
+        GIT_TAG 1.0.7
         INSTALL_COMMAND ""
     )
 endif()
