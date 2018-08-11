@@ -1,22 +1,56 @@
-sudo: required
-dist: trusty
 language: cpp
-compiler:
-  - gcc
-  - clang
+compiler: gcc
 
-before_script:
-  - wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz
-  - tar zvfx cmake-3.5.2-Linux-x86_64.tar.gz
-  - ./cmake-3.5.2-Linux-x86_64/bin/cmake -DCODE_COVERAGE=1 .
+matrix:
+  fast_finish: true
+  include:
+    - os: linux
+      addons:
+        apt:
+          config:
+             retries: true
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+    - os: linux
+      addons:
+        apt:
+          config:
+             retries: true
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+    - os: linux
+      addons:
+        apt:
+          config:
+             retries: true
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+before_install:
+    - eval "${MATRIX_EVAL}"
 
 install:
   - pip install --user --upgrade pip
   - sudo apt-get install lcov
   - pip install --user cpp-coveralls
 
+before_script:
+  - cmake -DCODE_COVERAGE=1 .
+
 script:
-  - make
+  - make -j2
   - ./unittests/all_unittests
 
 after_success:
