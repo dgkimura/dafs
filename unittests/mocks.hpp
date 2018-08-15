@@ -43,24 +43,27 @@ public:
 
     MOCK_METHOD1(RemoveNode, void(dafs::Address address));
 
-    MOCK_METHOD5(SetMinus, dafs::ReplicatedEndpoints(
+    MOCK_METHOD6(SetMinus, dafs::ReplicatedEndpoints(
         const dafs::Address management,
         const dafs::Address replication,
         const dafs::Identity identity,
+        const std::string fault_domain,
         const std::string location,
         dafs::ReplicatedEndpoints details));
 
-    MOCK_METHOD5(SetZero, dafs::ReplicatedEndpoints(
+    MOCK_METHOD6(SetZero, dafs::ReplicatedEndpoints(
         const dafs::Address management,
         const dafs::Address replication,
         const dafs::Identity identity,
+        const std::string fault_domain,
         const std::string location,
         dafs::ReplicatedEndpoints details));
 
-    MOCK_METHOD5(SetPlus, dafs::ReplicatedEndpoints(
+    MOCK_METHOD6(SetPlus, dafs::ReplicatedEndpoints(
         const dafs::Address management,
         const dafs::Address replication,
         const dafs::Identity identity,
+        const std::string fault_domain,
         const std::string location,
         dafs::ReplicatedEndpoints details));
 };

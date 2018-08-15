@@ -88,6 +88,7 @@ namespace dafs
             const dafs::Address management,
             const dafs::Address replication,
             const dafs::Identity identity,
+            const std::string fault_domain,
             const std::string location,
             dafs::ReplicatedEndpoints details) = 0;
 
@@ -95,6 +96,7 @@ namespace dafs
             const dafs::Address management,
             const dafs::Address replication,
             const dafs::Identity identity,
+            const std::string fault_domain,
             const std::string location,
             dafs::ReplicatedEndpoints details) = 0;
 
@@ -102,6 +104,7 @@ namespace dafs
             const dafs::Address management,
             const dafs::Address replication,
             const dafs::Identity identity,
+            const std::string fault_domain,
             const std::string location,
             dafs::ReplicatedEndpoints details) = 0;
     };
@@ -120,6 +123,7 @@ namespace dafs
             const dafs::Address management,
             const dafs::Address replication,
             const dafs::Identity identity,
+            const std::string fault_domain,
             const std::string location,
             dafs::ReplicatedEndpoints details) override;
 
@@ -127,6 +131,7 @@ namespace dafs
             const dafs::Address management,
             const dafs::Address replication,
             const dafs::Identity identity,
+            const std::string fault_domain,
             const std::string location,
             dafs::ReplicatedEndpoints details) override;
 
@@ -134,6 +139,7 @@ namespace dafs
             const dafs::Address management,
             const dafs::Address replication,
             const dafs::Identity identity,
+            const std::string fault_domain,
             const std::string location,
             dafs::ReplicatedEndpoints details) override;
 

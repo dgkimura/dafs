@@ -171,21 +171,22 @@ int main(int argc, char** argv)
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
-                dafs::Identity("00000000-0000-0000-0000-000000000000")
+                dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                ""
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
-                dafs::Identity("00000000-0000-0000-0000-000000000000")
-
+                dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                ""
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::Address(options.address, options.minus_port),
-                dafs::Identity(boost::uuids::to_string(options.identity))
-
+                dafs::Identity(boost::uuids::to_string(options.identity)),
+                options.fault_domain
             }
         },
         std::chrono::seconds(options.minus_ping_interval)
@@ -199,22 +200,22 @@ int main(int argc, char** argv)
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
-                dafs::Identity("00000000-0000-0000-0000-000000000000")
-
+                dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                ""
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::Address(options.address, options.zero_port),
-                dafs::Identity(boost::uuids::to_string(options.identity))
-
+                dafs::Identity(boost::uuids::to_string(options.identity)),
+                options.fault_domain
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
-                dafs::Identity("00000000-0000-0000-0000-000000000000")
-
+                dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                ""
             }
         },
         std::chrono::seconds(options.zero_ping_interval)
@@ -228,21 +229,22 @@ int main(int argc, char** argv)
             {
                 dafs::Address(options.address, options.port),
                 dafs::Address(options.address, options.plus_port),
-                dafs::Identity(boost::uuids::to_string(options.identity))
+                dafs::Identity(boost::uuids::to_string(options.identity)),
+                options.fault_domain
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
-                dafs::Identity("00000000-0000-0000-0000-000000000000")
-
+                dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                ""
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
-                dafs::Identity("00000000-0000-0000-0000-000000000000")
-
+                dafs::Identity("00000000-0000-0000-0000-000000000000"),
+                ""
             }
         },
         std::chrono::seconds(options.plus_ping_interval)

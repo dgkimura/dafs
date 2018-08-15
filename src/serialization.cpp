@@ -96,6 +96,7 @@ namespace dafs
         *_obj.mutable_management() = convert(obj.management);
         *_obj.mutable_replication() = convert(obj.replication);
         *_obj.mutable_identity() = convert(obj.identity);
+        _obj.set_fault_domain(obj.fault_domain);
         return _obj;
     }
 
@@ -107,6 +108,7 @@ namespace dafs
         _obj.management = convert(obj.management());
         _obj.replication = convert(obj.replication());
         _obj.identity = convert(obj.identity());
+        _obj.fault_domain = obj.fault_domain();
         return _obj;
     }
 

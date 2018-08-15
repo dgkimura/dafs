@@ -161,6 +161,7 @@ namespace dafs
         dafs::Address management,
         dafs::Address replication,
         dafs::Identity identity,
+        std::string fault_domain,
         std::string location)
     {
         dafs::Address removed = GetNodeSetDetails().minus.replication;
@@ -168,6 +169,7 @@ namespace dafs
         auto endpoints = nodeset->SetMinus(management,
                                            replication,
                                            identity,
+                                           fault_domain,
                                            location,
                                            GetNodeSetDetails());
         store->WriteBlock(
@@ -195,11 +197,13 @@ namespace dafs
         dafs::Address management,
         dafs::Address replication,
         dafs::Identity identity,
+        std::string fault_domain,
         std::string location)
     {
         auto endpoints = nodeset->SetZero(management,
                                           replication,
                                           identity,
+                                          fault_domain,
                                           location,
                                           GetNodeSetDetails());
         store->WriteBlock(
@@ -216,6 +220,7 @@ namespace dafs
         dafs::Address management,
         dafs::Address replication,
         dafs::Identity identity,
+        std::string fault_domain,
         std::string location)
     {
         dafs::Address removed = GetNodeSetDetails().plus.replication;
@@ -223,6 +228,7 @@ namespace dafs
         auto endpoints = nodeset->SetPlus(management,
                                           replication,
                                           identity,
+                                          fault_domain,
                                           location,
                                           GetNodeSetDetails());
         store->WriteBlock(

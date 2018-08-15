@@ -90,6 +90,7 @@ public:
         dafs::Address management,
         dafs::Address replication,
         dafs::Identity identity,
+        std::string fault_domain,
         std::string location) override
     {
         minus.management = management;
@@ -100,6 +101,7 @@ public:
         dafs::Address management,
         dafs::Address replication,
         dafs::Identity identity,
+        std::string fault_domain,
         std::string location) override
     {
         zero.management = management;
@@ -110,6 +112,7 @@ public:
         dafs::Address management,
         dafs::Address replication,
         dafs::Identity identity,
+        std::string fault_domain,
         std::string location) override
     {
         plus.management = management;

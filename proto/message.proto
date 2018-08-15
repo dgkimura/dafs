@@ -24,6 +24,7 @@ message Endpoint
     required Address management = 1;
     required Address replication = 2;
     required Identity identity = 3;
+    required string fault_domain = 4;
 }
 
 message ReplicatedEndpoints

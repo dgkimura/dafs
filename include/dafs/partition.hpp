@@ -34,18 +34,21 @@ namespace dafs
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) = 0;
 
         virtual void SetZero(
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) = 0;
 
         virtual void SetPlus(
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) = 0;
 
         virtual bool IsActive() = 0;
@@ -110,6 +113,7 @@ namespace dafs
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) override
         {
         }
@@ -118,6 +122,7 @@ namespace dafs
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) override
         {
         }
@@ -126,6 +131,7 @@ namespace dafs
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) override
         {
         }
@@ -190,18 +196,21 @@ namespace dafs
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) override;
 
         virtual void SetZero(
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) override;
 
         virtual void SetPlus(
             dafs::Address management,
             dafs::Address replication,
             dafs::Identity identity,
+            std::string fault_domain,
             std::string location) override;
 
         virtual bool IsActive() override;

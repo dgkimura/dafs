@@ -253,8 +253,8 @@ TEST(SerializationUnitTest, _testReplicatedEndpointsIsSerializableAndDeserializa
             {
                 "2.2.2.2", 2222
             },
-            dafs::Identity("11111111-1111-1111-1111-111111111111")
-
+            dafs::Identity("11111111-1111-1111-1111-111111111111"),
+            "fault-domain-1"
         },
         dafs::Endpoint
         {
@@ -266,8 +266,8 @@ TEST(SerializationUnitTest, _testReplicatedEndpointsIsSerializableAndDeserializa
             {
                 "4.4.4.4", 4444
             },
-            dafs::Identity("22222222-2222-2222-2222-222222222222")
-
+            dafs::Identity("22222222-2222-2222-2222-222222222222"),
+            "fault-domain-2"
         },
         dafs::Endpoint
         {
@@ -279,8 +279,8 @@ TEST(SerializationUnitTest, _testReplicatedEndpointsIsSerializableAndDeserializa
             {
                 "6.6.6.6", 6666
             },
-            dafs::Identity("33333333-3333-3333-3333-333333333333")
-
+            dafs::Identity("33333333-3333-3333-3333-333333333333"),
+            "fault-domain-3"
         },
     }, actual;
 
@@ -292,18 +292,21 @@ TEST(SerializationUnitTest, _testReplicatedEndpointsIsSerializableAndDeserializa
     ASSERT_EQ(expected.minus.replication.ip, actual.minus.replication.ip);
     ASSERT_EQ(expected.minus.replication.port, actual.minus.replication.port);
     ASSERT_EQ(expected.minus.identity, actual.minus.identity);
+    ASSERT_EQ(expected.minus.fault_domain, actual.minus.fault_domain);
 
     ASSERT_EQ(expected.zero.management.ip, actual.zero.management.ip);
     ASSERT_EQ(expected.zero.management.port, actual.zero.management.port);
     ASSERT_EQ(expected.zero.replication.ip, actual.zero.replication.ip);
     ASSERT_EQ(expected.zero.replication.port, actual.zero.replication.port);
     ASSERT_EQ(expected.zero.identity, actual.zero.identity);
+    ASSERT_EQ(expected.zero.fault_domain, actual.zero.fault_domain);
 
     ASSERT_EQ(expected.plus.management.ip, actual.plus.management.ip);
     ASSERT_EQ(expected.plus.management.port, actual.plus.management.port);
     ASSERT_EQ(expected.plus.replication.ip, actual.plus.replication.ip);
     ASSERT_EQ(expected.plus.replication.port, actual.plus.replication.port);
     ASSERT_EQ(expected.plus.identity, actual.plus.identity);
+    ASSERT_EQ(expected.plus.fault_domain, actual.plus.fault_domain);
 }
 
 

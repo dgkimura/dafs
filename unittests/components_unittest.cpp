@@ -150,6 +150,7 @@ TEST(ReplicatedNodeSetTest, testSetMinusUpdatesReplicatedEndpointDetails)
         dafs::Address{"1.1.0.0", 1100},
         dafs::Address{"1.1.0.1", 1101},
         dafs::Identity("11111111-1111-1111-1111-111111111111"),
+        "a_fault_domain",
         "a_location",
         endpoints
     );
@@ -192,6 +193,7 @@ TEST(ReplicatedNodeSetTest, testSetZeroUpdatesReplicatedEndpointDetails)
         dafs::Address{"1.1.0.0", 1100},
         dafs::Address{"1.1.0.1", 1101},
         dafs::Identity("11111111-1111-1111-1111-111111111111"),
+        "a_fault_domain",
         "a_location",
         endpoints
     );
@@ -234,6 +236,7 @@ TEST(ReplicatedNodeSetTest, testSetPlusUpdatesReplicatedEndpointDetails)
         dafs::Address{"1.1.0.0", 1100},
         dafs::Address{"1.1.0.1", 1101},
         dafs::Identity("11111111-1111-1111-1111-111111111111"),
+        "a_fault_domain",
         "a_location",
         endpoints
     );

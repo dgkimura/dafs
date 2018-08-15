@@ -150,6 +150,7 @@ namespace dafs
         const dafs::Address management,
         const dafs::Address replication,
         const dafs::Identity identity,
+        const std::string fault_domain,
         const std::string location,
         dafs::ReplicatedEndpoints details)
     {
@@ -157,6 +158,7 @@ namespace dafs
         details.minus.management = management;
         details.minus.replication = replication;
         details.minus.identity = identity;
+        details.minus.fault_domain = fault_domain;
         return details;
     }
 
@@ -166,6 +168,7 @@ namespace dafs
         const dafs::Address management,
         const dafs::Address replication,
         const dafs::Identity identity,
+        const std::string fault_domain,
         const std::string location,
         dafs::ReplicatedEndpoints details)
     {
@@ -173,6 +176,7 @@ namespace dafs
         details.zero.management = management;
         details.zero.replication = replication;
         details.zero.identity = identity;
+        details.zero.fault_domain = fault_domain;
         return details;
     }
 
@@ -182,6 +186,7 @@ namespace dafs
         const dafs::Address management,
         const dafs::Address replication,
         const dafs::Identity identity,
+        const std::string fault_domain,
         const std::string location,
         dafs::ReplicatedEndpoints details)
     {
@@ -189,6 +194,7 @@ namespace dafs
         details.plus.management = management;
         details.plus.replication = replication;
         details.plus.identity = identity;
+        details.plus.fault_domain = fault_domain;
         return details;
     }
 

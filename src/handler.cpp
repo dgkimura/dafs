@@ -322,12 +322,14 @@ namespace dafs
                     endpoints.minus.management,
                     endpoints.minus.replication,
                     endpoints.minus.identity,
+                    endpoints.minus.fault_domain,
                     Constant::PartitionMinusName);
 
                 p_zero->SetMinus(
                     endpoints.plus.management,
                     endpoints.plus.replication,
                     endpoints.plus.identity,
+                    endpoints.plus.fault_domain,
                     Constant::PartitionPlusName);
 
                 // Send accepted messge to node.
@@ -359,11 +361,13 @@ namespace dafs
                     endpoints.minus.management,
                     endpoints.minus.replication,
                     endpoints.plus.identity,
+                    endpoints.plus.fault_domain,
                     Constant::PartitionMinusName);
                 p_zero->SetMinus(
                     endpoints.plus.management,
                     endpoints.plus.replication,
                     endpoints.plus.identity,
+                    endpoints.plus.fault_domain,
                     Constant::PartitionPlusName);
                 endpoints.plus = p_minus->GetNodeSetDetails().plus;
                 endpoints.minus = p_plus->GetNodeSetDetails().minus;
@@ -409,11 +413,13 @@ namespace dafs
             endpoints.minus.management,
             endpoints.minus.replication,
             endpoints.minus.identity,
+            endpoints.minus.fault_domain,
             Constant::PartitionPlusName);
         p_zero->SetPlus(
             endpoints.plus.management,
             endpoints.plus.replication,
             endpoints.plus.identity,
+            endpoints.plus.fault_domain,
             Constant::PartitionMinusName);
 
         for (auto info : SplitUpperIndex(p_minus->GetIndex(),
@@ -537,6 +543,7 @@ namespace dafs
                 p_plus->GetNodeSetDetails().plus.management,
                 p_plus->GetNodeSetDetails().plus.replication,
                 p_plus->GetNodeSetDetails().plus.identity,
+                p_plus->GetNodeSetDetails().plus.fault_domain,
                 Constant::PartitionMinusName);
 
             sender->Send(
@@ -592,6 +599,7 @@ namespace dafs
                 endpoint.management,
                 endpoint.replication,
                 endpoint.identity,
+                endpoint.fault_domain,
                 Constant::PartitionPlusName);
 
             p_minus->Release();

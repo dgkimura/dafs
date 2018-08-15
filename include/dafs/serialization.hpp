@@ -69,6 +69,7 @@ namespace dafs
         ar & obj.management;
         ar & obj.replication;
         ar & obj.identity;
+        ar & obj.fault_domain;
     }
 
 

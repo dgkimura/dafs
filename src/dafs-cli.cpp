@@ -489,6 +489,8 @@ namespace dafs
             << "          " << EndpointToString(p_minus.zero) << std::endl
             << "     - minus"  << std::endl
             << "          " << EndpointToString(p_minus.minus) << std::endl
+            << "     - fault-domain"  << std::endl
+            << "          " << p_minus.zero.fault_domain << std::endl
             << " - p-zero" << std::endl
             << "     - identity"  << std::endl
             << "         " << p_zero.zero.identity.id << std::endl
@@ -498,6 +500,8 @@ namespace dafs
             << "          " << EndpointToString(p_zero.zero) << std::endl
             << "     - minus"  << std::endl
             << "          " << EndpointToString(p_zero.minus) << std::endl
+            << "     - fault-domain"  << std::endl
+            << "          " << p_zero.zero.fault_domain << std::endl
             << " - p-plus" << std::endl
             << "          " << p_plus.zero.identity.id << std::endl
             << "     - plus"  << std::endl
@@ -505,7 +509,9 @@ namespace dafs
             << "     - zero"  << std::endl
             << "          " << EndpointToString(p_plus.zero) << std::endl
             << "     - minus"  << std::endl
-            << "          " << EndpointToString(p_plus.minus) << std::endl;
+            << "          " << EndpointToString(p_plus.minus) << std::endl
+            << "     - fault-domain"  << std::endl
+            << "          " << p_plus.zero.fault_domain << std::endl;
     }
 
 

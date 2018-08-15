@@ -22,6 +22,11 @@ namespace dafs
         // Identity associated with the management endpoint.
         //
         dafs::Identity identity;
+
+        //
+        // Fault domain associated with the node.
+        //
+        std::string fault_domain;
     };
 
 
