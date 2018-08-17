@@ -22,7 +22,7 @@ namespace dafs
     void
     Ignore::operator()(std::string proposal)
     {
-        Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
+        Proposal p = dafs::deserialize<dafs::Proposal>(proposal);
 
         if (progress_map.find(p.uuid) != progress_map.end())
         {
@@ -80,8 +80,8 @@ namespace dafs
     void
     Commit::operator()(std::string proposal)
     {
-        Proposal p = dafs::Deserialize<dafs::Proposal>(proposal);
-        dafs::ProposalContent edit = dafs::Deserialize<dafs::ProposalContent>(p.content);
+        Proposal p = dafs::deserialize<dafs::Proposal>(proposal);
+        dafs::ProposalContent edit = dafs::deserialize<dafs::ProposalContent>(p.content);
 
         edit.info.path = (boost::filesystem::path(root.directory) /
                          boost::filesystem::path(edit.info.path)).string();
@@ -107,7 +107,7 @@ namespace dafs
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            dafs::Delta delta = dafs::Deserialize<dafs::Delta>(edit.change);
+            dafs::Delta delta = dafs::deserialize<dafs::Delta>(edit.change);
             dafs::Write(edit.info.path, delta);
 
             r.success = true;
@@ -132,7 +132,7 @@ namespace dafs
         // TODO: Add revision check
         if (edit.hash == std::hash<dafs::BlockInfo>{}(edit.info))
         {
-            r.content = dafs::Serialize(dafs::DeleteBlock(edit.info));
+            r.content = dafs::serialize(dafs::DeleteBlock(edit.info));
             r.success = true;
         }
         else

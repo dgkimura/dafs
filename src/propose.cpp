@@ -23,7 +23,7 @@ namespace dafs
 
         Proposal p;
         p.type = type;
-        p.content = dafs::Serialize(edit);
+        p.content = dafs::serialize(edit);
         p.uuid = boost::uuids::nil_uuid();
         return p;
     }

@@ -13,7 +13,7 @@ TEST(CommitTest, testIgnoredCommitHasUnsuccessfulResult)
 
     dafs::Ignore ignore(progress_map);
     ignore(
-        dafs::Serialize(
+        dafs::serialize(
             dafs::Proposal
             {
                 dafs::ProposalType::Ping,

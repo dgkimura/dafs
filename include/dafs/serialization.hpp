@@ -19,23 +19,9 @@
 namespace dafs
 {
     template <typename Archive>
-    void serialize(Archive& ar, dafs::Delta& obj, const unsigned int version)
-    {
-        ar & obj.difference;
-    }
-
-
-    template <typename Archive>
     void serialize(Archive& ar, dafs::Identity& obj, const unsigned int version)
     {
         ar & obj.id;
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::BlockFormat& obj, const unsigned int version)
-    {
-        ar & obj.contents;
     }
 
 
@@ -79,25 +65,6 @@ namespace dafs
         ar & obj.minus;
         ar & obj.zero;
         ar & obj.plus;
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::Proposal& obj, const unsigned int version)
-    {
-        ar & obj.type;
-        ar & obj.content;
-        ar & obj.uuid;
-    }
-
-
-    template <typename Archive>
-    void serialize(Archive& ar, dafs::ProposalContent& obj, const unsigned int version)
-    {
-        ar & obj.info;
-        ar & obj.change;
-        ar & obj.hash;
-        ar & obj.revision;
     }
 
 

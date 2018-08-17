@@ -250,6 +250,86 @@ namespace dafs
     }
 
 
+    static dafs::proto::Proposal
+    convert(dafs::Proposal obj)
+    {
+        std::map<dafs::ProposalType, dafs::proto::Proposal::ProposalType> ptype_map =
+        {
+            { dafs::ProposalType::WriteBlock, dafs::proto::Proposal::WRITE_BLOCK },
+            { dafs::ProposalType::DeleteBlock, dafs::proto::Proposal::DELETE_BLOCK },
+            { dafs::ProposalType::Ping, dafs::proto::Proposal::PING }
+        };
+
+        dafs::proto::Proposal _obj;
+        _obj.set_type(ptype_map[obj.type]);
+        _obj.set_content(obj.content);
+        _obj.set_uuid(boost::uuids::to_string(obj.uuid));
+
+        return _obj;
+    }
+
+
+    static dafs::Proposal
+    convert(dafs::proto::Proposal obj)
+    {
+        std::map<dafs::proto::Proposal::ProposalType, dafs::ProposalType> ptype_map =
+        {
+            { dafs::proto::Proposal::WRITE_BLOCK, dafs::ProposalType::WriteBlock },
+            { dafs::proto::Proposal::DELETE_BLOCK, dafs::ProposalType::DeleteBlock },
+            { dafs::proto::Proposal::PING, dafs::ProposalType::Ping }
+        };
+
+        dafs::Proposal _obj;
+        _obj.type = ptype_map[obj.type()];
+        _obj.content = obj.content();
+        _obj.uuid = boost::lexical_cast<boost::uuids::uuid>(obj.uuid());
+
+        return _obj;
+    }
+
+
+    static dafs::proto::ProposalContent
+    convert(const dafs::ProposalContent& obj)
+    {
+        dafs::proto::ProposalContent _obj;
+        *_obj.mutable_info() = convert(obj.info);
+        _obj.set_change(obj.change);
+        _obj.set_hash(obj.hash);
+        _obj.set_revision(obj.revision);
+        return _obj;
+    }
+
+
+    static dafs::ProposalContent
+    convert(const dafs::proto::ProposalContent& obj)
+    {
+        dafs::ProposalContent _obj;
+        _obj.info = convert(obj.info());
+        _obj.change = obj.change();
+        _obj.hash = obj.hash();
+        _obj.revision = obj.revision();
+        return _obj;
+    }
+
+
+    static dafs::proto::Delta
+    convert(const dafs::Delta& obj)
+    {
+        dafs::proto::Delta _obj;
+        _obj.set_difference(obj.difference);
+        return _obj;
+    }
+
+
+    static dafs::Delta
+    convert(const dafs::proto::Delta& obj)
+    {
+        dafs::Delta _obj;
+        _obj.difference = obj.difference();
+        return _obj;
+    }
+
+
     template <>
     std::string serialize(const dafs::Identity& obj)
     {
@@ -397,6 +477,63 @@ namespace dafs
     dafs::Message deserialize(std::string obj)
     {
         dafs::proto::Message _obj;
+        _obj.ParseFromString(obj);
+        return convert(_obj);
+    }
+
+
+    template <>
+    std::string serialize(const dafs::Proposal& obj)
+    {
+        std::string data;
+        auto _obj = convert(obj);
+        _obj.SerializeToString(&data);
+        return data;
+    }
+
+
+    template <>
+    dafs::Proposal deserialize(std::string obj)
+    {
+        dafs::proto::Proposal _obj;
+        _obj.ParseFromString(obj);
+        return convert(_obj);
+    }
+
+
+    template <>
+    std::string serialize(const dafs::ProposalContent& obj)
+    {
+        std::string data;
+        auto _obj = convert(obj);
+        _obj.SerializeToString(&data);
+        return data;
+    }
+
+
+    template <>
+    dafs::ProposalContent deserialize(std::string obj)
+    {
+        dafs::proto::ProposalContent _obj;
+        _obj.ParseFromString(obj);
+        return convert(_obj);
+    }
+
+
+    template <>
+    std::string serialize(const dafs::Delta& obj)
+    {
+        std::string data;
+        auto _obj = convert(obj);
+        _obj.SerializeToString(&data);
+        return data;
+    }
+
+
+    template <>
+    dafs::Delta deserialize(std::string obj)
+    {
+        dafs::proto::Delta _obj;
         _obj.ParseFromString(obj);
         return convert(_obj);
     }

@@ -83,3 +83,32 @@ message Message
     required MessageType type = 3;
     repeated MetaData metadata = 4;
 }
+
+
+message Delta
+{
+    required bytes difference = 1;
+}
+
+
+message Proposal
+{
+    enum ProposalType
+    {
+        WRITE_BLOCK = 0;
+        DELETE_BLOCK = 1;
+        PING = 2;
+    }
+    required ProposalType type = 1;
+    required bytes content = 2;
+    required string uuid = 3;
+}
+
+
+message ProposalContent
+{
+    required BlockInfo info = 1;
+    required bytes change = 2;
+    required int32 hash = 3;
+    required int32 revision = 4;
+}

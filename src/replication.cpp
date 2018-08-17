@@ -32,7 +32,7 @@ namespace dafs
     dafs::Result
     PaxosReplication::Write(std::string entry)
     {
-        auto proposal = dafs::Deserialize<dafs::Proposal>(entry);
+        auto proposal = dafs::deserialize<dafs::Proposal>(entry);
 
         do
         {
@@ -42,7 +42,7 @@ namespace dafs
 
         progress_map[proposal.uuid] = std::make_shared<dafs::Signal>();
 
-        parliament.SendProposal(dafs::Serialize(proposal));
+        parliament.SendProposal(dafs::serialize(proposal));
 
         auto result = progress_map[proposal.uuid]->Wait();
         progress_map.erase(proposal.uuid);

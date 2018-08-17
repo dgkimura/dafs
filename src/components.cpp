@@ -47,7 +47,7 @@ namespace dafs
     {
         replication.Write
         (
-            dafs::Serialize<dafs::Proposal>
+            dafs::serialize<dafs::Proposal>
             (
                 CreateProposal
                 (
@@ -106,12 +106,12 @@ namespace dafs
     {
         replication.Write
         (
-            dafs::Serialize<dafs::Proposal>
+            dafs::serialize<dafs::Proposal>
             (
                 CreateProposal
                 (
                     dafs::ProposalType::WriteBlock,
-                    dafs::Serialize(delta),
+                    dafs::serialize(delta),
                     info,
                     info.revision,
                     std::hash<dafs::BlockInfo>{}(rooted(info))
@@ -237,12 +237,12 @@ namespace dafs
     {
         replication.Write
         (
-            dafs::Serialize<dafs::Proposal>
+            dafs::serialize<dafs::Proposal>
             (
                 Proposal
                 {
                     dafs::ProposalType::Ping,
-                    dafs::Serialize(dafs::ProposalContent{})
+                    dafs::serialize(dafs::ProposalContent{})
                 }
             )
         );
@@ -316,12 +316,12 @@ namespace dafs
 
         replication.Write
         (
-            dafs::Serialize<dafs::Proposal>
+            dafs::serialize<dafs::Proposal>
             (
                 CreateProposal
                 (
                     dafs::ProposalType::WriteBlock,
-                    dafs::Serialize
+                    dafs::serialize
                     (
                         CreateDelta(
                             "", // was empty
@@ -357,7 +357,7 @@ namespace dafs
 
         replication.Write
         (
-            dafs::Serialize<dafs::Proposal>
+            dafs::serialize<dafs::Proposal>
             (
                 CreateProposal
                 (
