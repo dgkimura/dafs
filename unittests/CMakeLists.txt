@@ -13,6 +13,7 @@ ExternalProject_Add(
 
 set(SOURCES
     blocks_unittest.cpp
+    callback_unittest.cpp
     commit_unittest.cpp
     components_unittest.cpp
     customhash_unittest.cpp
