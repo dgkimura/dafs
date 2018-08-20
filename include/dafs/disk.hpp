@@ -19,46 +19,10 @@ namespace dafs
     Write(std::string path, dafs::Delta delta);
 
 
-    template <typename T>
-    dafs::Delta Insert(
-        std::iostream& stream,
-        T item)
-    {
-        auto original = dafs::Deserialize<dafs::Index<T>>(stream);
-        auto newset = original;
-        newset.items.push_back(item);
-
-        dafs::Delta delta = dafs::CreateDelta(
-            dafs::Serialize(original),
-            dafs::Serialize(newset));
-        return delta;
-    }
+    dafs::Delta
+    Insert(std::iostream& stream, dafs::BlockInfo item);
 
 
-    template <typename T>
-    dafs::Delta Remove(
-        std::iostream& stream,
-        T item)
-    {
-        auto original = dafs::Deserialize<dafs::Index<T>>(stream);
-        auto newset = original;
-        newset.items.erase
-        (
-            std::remove_if
-            (
-                newset.items.begin(),
-                newset.items.end(),
-                [=](const T& current)
-                {
-                    return current == item;
-                }
-            ),
-            newset.items.end()
-        );
-
-        dafs::Delta delta = dafs::CreateDelta(
-            dafs::Serialize(original),
-            dafs::Serialize(newset));
-        return delta;
-    }
+    dafs::Delta
+    Remove(std::iostream& stream, dafs::BlockInfo item);
 }

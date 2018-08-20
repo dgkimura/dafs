@@ -48,4 +48,44 @@ namespace dafs
         output << apply_delta_content;
         output.flush();
     }
+
+
+    dafs::Delta
+    Insert(std::iostream& stream, dafs::BlockInfo item)
+    {
+        auto original = dafs::Deserialize<dafs::BlockIndex>(stream);
+        auto newset = original;
+        newset.items.push_back(item);
+
+        dafs::Delta delta = dafs::CreateDelta(
+            dafs::Serialize(original),
+            dafs::Serialize(newset));
+        return delta;
+    }
+
+
+    dafs::Delta
+    Remove(std::iostream& stream, dafs::BlockInfo item)
+    {
+        auto original = dafs::Deserialize<dafs::BlockIndex>(stream);
+        auto newset = original;
+        newset.items.erase
+        (
+            std::remove_if
+            (
+                newset.items.begin(),
+                newset.items.end(),
+                [=](const dafs::BlockInfo& current)
+                {
+                    return current == item;
+                }
+            ),
+            newset.items.end()
+        );
+
+        dafs::Delta delta = dafs::CreateDelta(
+            dafs::Serialize(original),
+            dafs::Serialize(newset));
+        return delta;
+    }
 }
