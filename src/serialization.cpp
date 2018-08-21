@@ -330,6 +330,31 @@ namespace dafs
     }
 
 
+    static dafs::proto::BlockIndex
+    convert(dafs::BlockIndex obj)
+    {
+        dafs::proto::BlockIndex _obj;
+        for (auto& i : obj.items)
+        {
+            auto *o = _obj.add_items();
+            *o = convert(i);
+        }
+        return _obj;
+    }
+
+
+    static dafs::BlockIndex
+    convert(dafs::proto::BlockIndex obj)
+    {
+        dafs::BlockIndex _obj;
+        for (auto& i : obj.items())
+        {
+            _obj.items.push_back(convert(i));
+        }
+        return _obj;
+    }
+
+
     template <>
     std::string serialize(const dafs::Identity& obj)
     {
@@ -534,6 +559,25 @@ namespace dafs
     dafs::Delta deserialize(std::string obj)
     {
         dafs::proto::Delta _obj;
+        _obj.ParseFromString(obj);
+        return convert(_obj);
+    }
+
+
+    template <>
+    std::string serialize(const dafs::BlockIndex& obj)
+    {
+        std::string data;
+        auto _obj = convert(obj);
+        _obj.SerializeToString(&data);
+        return data;
+    }
+
+
+    template <>
+    dafs::BlockIndex deserialize(std::string obj)
+    {
+        dafs::proto::BlockIndex _obj;
         _obj.ParseFromString(obj);
         return convert(_obj);
     }

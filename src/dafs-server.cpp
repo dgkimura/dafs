@@ -58,7 +58,7 @@ SetupReplicatedFiles(
         CreateReplicatedFile(
             directory,
             Constant::BlockListName,
-            dafs::Serialize(dafs::BlockIndex{})
+            " " // Empty BlockIndex
         );
     }
 }

@@ -87,7 +87,9 @@ namespace dafs
     {
         std::fstream stream(blocklist,
                             std::ios::in | std::ios::out | std::ios::binary);
-        return dafs::Deserialize<BlockIndex>(stream);
+        std::stringstream buffer;
+        buffer << stream.rdbuf();
+        return dafs::deserialize<BlockIndex>(buffer.str());
     }
 
 

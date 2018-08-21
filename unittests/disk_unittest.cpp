@@ -47,7 +47,7 @@ TEST(DiskTest, testAddBlockInEmptyBlockFormat)
     dafs::Delta delta = dafs::Insert(stream, a_block);
     ASSERT_EQ(
         delta.difference,
-        "\xE4" "A1 \xC2y 0 7 a_block 0 0 36 00000000-0000-0000-0000-000000000000 0"
+        "t\n3\n\aa_block\x12&\n$00000000-0000-0000-0000-000000000000\x18"
     );
 }
 
@@ -55,7 +55,7 @@ TEST(DiskTest, testAddBlockInEmptyBlockFormat)
 TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
 {
     std::stringstream stream(
-        dafs::Serialize(
+        dafs::serialize(
             dafs::BlockIndex
             {
                 std::vector<dafs::BlockInfo>
@@ -69,7 +69,7 @@ TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
     dafs::Delta delta = dafs::Insert(stream, another_block);
     ASSERT_EQ(
         delta.difference,
-        "\xE4\x80@2\xFDz 13 another_block 36 00000000-0000-0000-0000-000000000000 0"
+        "\xF4z\n9\n\ranother_block\x12&\n$00000000-0000-0000-0000-000000000000\x18"
     );
 }
 
@@ -77,7 +77,7 @@ TEST(DiskTest, testAddBlockInNonemptyBlockFormat)
 TEST(DiskTest, testRemoveBlockInNonemptyBlockFormat)
 {
     std::stringstream stream(
-        dafs::Serialize(
+        dafs::serialize(
             dafs::BlockIndex
             {
                 std::vector<dafs::BlockInfo>
@@ -91,6 +91,6 @@ TEST(DiskTest, testRemoveBlockInNonemptyBlockFormat)
     dafs::Delta delta = dafs::Remove(stream, a_block);
     ASSERT_EQ(
         delta.difference,
-        "\xE4\x81\xC2\xB9"
+        "\xB4"
     );
 }

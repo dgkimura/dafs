@@ -26,22 +26,6 @@ namespace dafs
 
 
     template <typename Archive>
-    void serialize(Archive& ar, dafs::BlockInfo& obj, const unsigned int version)
-    {
-        ar & obj.path;
-        ar & obj.identity;
-        ar & obj.revision;
-    }
-
-
-    template <typename Archive, typename T>
-    void serialize(Archive& ar, dafs::Index<T>& obj, const unsigned int version)
-    {
-        ar & obj.items;
-    }
-
-
-    template <typename Archive>
     void serialize(Archive& ar, dafs::Address& obj, const unsigned int version)
     {
         ar & obj.ip;

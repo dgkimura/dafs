@@ -112,3 +112,9 @@ message ProposalContent
     required int32 hash = 3;
     required int32 revision = 4;
 }
+
+
+message BlockIndex
+{
+    repeated BlockInfo items = 1;
+}

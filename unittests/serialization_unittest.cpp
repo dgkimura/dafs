@@ -3,26 +3,6 @@
 #include "dafs/serialization.hpp"
 
 
-TEST(SerializationUnitTest, testBlockInfoIsSerializableAndDeserializable)
-{
-    dafs::BlockInfo expected
-    {
-        "the-path",
-        dafs::Identity
-        {
-            "00000000-0000-0000-0000-000000000000",
-        },
-        23  //revision
-    }, actual;
-
-    std::string string_obj = dafs::Serialize(expected);
-    actual = dafs::Deserialize<dafs::BlockInfo>(string_obj);
-
-    ASSERT_EQ(expected.path, actual.path);
-    ASSERT_EQ(expected.identity, actual.identity);
-}
-
-
 TEST(SerializationUnitTest, testBlockFormatIsSerializableAndDeserializable)
 {
     dafs::BlockFormat expected
@@ -64,30 +44,11 @@ TEST(SerializationUnitTest, testBlockIndexIsSerializableAndDeserializable)
         }
     }, actual;
 
-    std::string string_obj = dafs::Serialize(expected);
-    actual = dafs::Deserialize<dafs::Index<dafs::BlockInfo>>(string_obj);
+    std::string string_obj = dafs::serialize(expected);
+    actual = dafs::deserialize<dafs::Index<dafs::BlockInfo>>(string_obj);
 
     ASSERT_EQ(expected.items[0].path, actual.items[0].path);
     ASSERT_EQ(expected.items[1].identity, actual.items[1].identity);
-}
-
-
-TEST(SerializationUnitTest, testNodeSetIsSerializableAndDeserializable)
-{
-    dafs::Index<std::string> expected
-    {
-        std::vector<std::string>
-        {
-            { "address-1:80" },
-            { "address-2:80" }
-        }
-    }, actual;
-
-    std::string string_obj = dafs::Serialize(expected);
-    actual = dafs::Deserialize<dafs::Index<std::string>>(string_obj);
-
-    ASSERT_EQ(expected.items[0], actual.items[0]);
-    ASSERT_EQ(expected.items[1], actual.items[1]);
 }
 
 

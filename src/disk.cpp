@@ -2,6 +2,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include "dafs/blocks.hpp"
 #include "dafs/disk.hpp"
 
 
@@ -53,13 +54,15 @@ namespace dafs
     dafs::Delta
     Insert(std::iostream& stream, dafs::BlockInfo item)
     {
-        auto original = dafs::Deserialize<dafs::BlockIndex>(stream);
+        std::stringstream buffer;
+        buffer << stream.rdbuf();
+        auto original = dafs::deserialize<dafs::BlockIndex>(buffer.str());
         auto newset = original;
         newset.items.push_back(item);
 
         dafs::Delta delta = dafs::CreateDelta(
-            dafs::Serialize(original),
-            dafs::Serialize(newset));
+            dafs::serialize(original),
+            dafs::serialize(newset));
         return delta;
     }
 
@@ -67,7 +70,9 @@ namespace dafs
     dafs::Delta
     Remove(std::iostream& stream, dafs::BlockInfo item)
     {
-        auto original = dafs::Deserialize<dafs::BlockIndex>(stream);
+        std::stringstream buffer;
+        buffer << stream.rdbuf();
+        auto original = dafs::deserialize<dafs::BlockIndex>(buffer.str());
         auto newset = original;
         newset.items.erase
         (
@@ -84,8 +89,8 @@ namespace dafs
         );
 
         dafs::Delta delta = dafs::CreateDelta(
-            dafs::Serialize(original),
-            dafs::Serialize(newset));
+            dafs::serialize(original),
+            dafs::serialize(newset));
         return delta;
     }
 }
