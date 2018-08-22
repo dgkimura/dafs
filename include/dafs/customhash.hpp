@@ -9,6 +9,7 @@
 
 #include "dafs/blocks.hpp"
 #include "dafs/serialization.hpp"
+#include "dafs/messages.hpp"
 
 
 namespace std

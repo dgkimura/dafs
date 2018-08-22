@@ -52,7 +52,7 @@ SetupReplicatedFiles(
         CreateReplicatedFile(
             directory,
             Constant::DetailsName,
-            dafs::Serialize(details)
+            dafs::serialize(details)
         );
 
         CreateReplicatedFile(

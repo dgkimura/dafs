@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include "dafs/blocks.hpp"
+#include "dafs/details.hpp"
 #include "dafs/serialization.hpp"
 
 
@@ -68,8 +70,8 @@ TEST(SerializationUnitTest, testEndpointIsSerializableAndDeserializable)
 
     }, actual;
 
-    std::string string_obj = dafs::Serialize(expected);
-    actual = dafs::Deserialize<dafs::Endpoint>(string_obj);
+    std::string string_obj = dafs::serialize(expected);
+    actual = dafs::deserialize<dafs::Endpoint>(string_obj);
 
     ASSERT_EQ(expected.management.ip, actual.management.ip);
     ASSERT_EQ(expected.management.port, actual.management.port);

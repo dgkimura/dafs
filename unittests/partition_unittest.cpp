@@ -37,7 +37,7 @@ TEST(PartitionTest, testGetIdentityWillParseDetailsFile)
     auto storage = std::shared_ptr<MockStorage>(new MockStorage());
     auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
     auto format = dafs::BlockFormat {
-        dafs::Serialize(
+        dafs::serialize(
             dafs::ReplicatedEndpoints {
                 dafs::Endpoint {},
                 dafs::Endpoint {
@@ -74,7 +74,7 @@ TEST(PartitionTest, testGetNodeSetDetailsWillParseDetailsFile)
     auto storage = std::shared_ptr<MockStorage>(new MockStorage());
     auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
     auto format = dafs::BlockFormat {
-        dafs::Serialize(
+        dafs::serialize(
             dafs::ReplicatedEndpoints {
                 dafs::Endpoint {
                     dafs::Address{"1.0.0.0", 100},
@@ -283,7 +283,7 @@ TEST(PartitionTest, testIsActiveWithNonemptyAddresses)
     auto storage = std::shared_ptr<MockStorage>(new MockStorage());
     auto info = dafs::BlockInfo { Constant::DetailsName, dafs::Identity() };
     auto format = dafs::BlockFormat {
-        dafs::Serialize(
+        dafs::serialize(
             dafs::ReplicatedEndpoints {
                 dafs::Endpoint {
                     dafs::Address{"1.0.0.0", 100},
@@ -327,7 +327,7 @@ TEST(PartitionTest, testIsActiveWithEmptyAddress)
 
     // format details contains a dafs::EmptyAddress
     auto format = dafs::BlockFormat {
-        dafs::Serialize(
+        dafs::serialize(
             dafs::ReplicatedEndpoints {
                 dafs::Endpoint {
                     dafs::Address{"1.0.0.0", 100},

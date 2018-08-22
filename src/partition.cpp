@@ -64,7 +64,7 @@ namespace dafs
                             boost::filesystem::path(Constant::DetailsName).string(),
                             dafs::Identity()
                         });
-                    return dafs::Deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
+                    return dafs::deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
                 },
                 [lock]() { return lock->IsLocked(); },
                 ping_interval));
@@ -83,7 +83,7 @@ namespace dafs
     ReplicatedPartition::GetIdentity()
     {
         auto details_block =  store->ReadBlock(details);
-        auto _details = dafs::Deserialize<dafs::ReplicatedEndpoints>(
+        auto _details = dafs::deserialize<dafs::ReplicatedEndpoints>(
             details_block.contents);
         return _details.zero.identity;
     }
@@ -93,7 +93,7 @@ namespace dafs
     ReplicatedPartition::GetNodeSetDetails()
     {
         auto details_block =  store->ReadBlock(details);
-        return dafs::Deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
+        return dafs::deserialize<dafs::ReplicatedEndpoints>(details_block.contents);
     }
 
     bool
@@ -176,7 +176,7 @@ namespace dafs
             details,
             BlockFormat
             {
-                dafs::Serialize(endpoints)
+                dafs::serialize(endpoints)
             }
         );
 
@@ -210,7 +210,7 @@ namespace dafs
             details,
             BlockFormat
             {
-                dafs::Serialize(endpoints)
+                dafs::serialize(endpoints)
             }
         );
     }
@@ -235,7 +235,7 @@ namespace dafs
             details,
             BlockFormat
             {
-                dafs::Serialize(endpoints)
+                dafs::serialize(endpoints)
             }
         );
 

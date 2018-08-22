@@ -3,8 +3,14 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 
-#include "message.pb.h"
+#include "dafs/blocks.hpp"
+#include "dafs/delta.hpp"
+#include "dafs/details.hpp"
+#include "dafs/identity.hpp"
+#include "dafs/messages.hpp"
+#include "dafs/propose.hpp"
 #include "dafs/serialization.hpp"
+#include "message.pb.h"
 
 
 namespace dafs

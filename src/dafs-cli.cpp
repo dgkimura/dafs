@@ -6,6 +6,7 @@
 #include <boost/program_options.hpp>
 
 #include "dafs/dafs-cli.hpp"
+#include "dafs/details.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/metadataparser.hpp"
 #include "dafs/sender.hpp"

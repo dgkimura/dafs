@@ -6,6 +6,7 @@
 #include "dafs/blocks.hpp"
 #include "dafs/constants.hpp"
 #include "dafs/delta.hpp"
+#include "dafs/details.hpp"
 #include "dafs/disk.hpp"
 #include "dafs/messages.hpp"
 #include "dafs/propose.hpp"

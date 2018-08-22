@@ -5,6 +5,7 @@
 #include <typeindex>
 #include <vector>
 
+#include "dafs/metadata.hpp"
 #include "dafs/serialization.hpp"
 
 

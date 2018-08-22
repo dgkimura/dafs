@@ -47,6 +47,13 @@ namespace dafs
 
 
     template <typename Archive>
+    void serialize(Archive& ar, dafs::Identity& obj, const unsigned int version)
+    {
+        ar & obj.id;
+    }
+
+
+    template <typename Archive>
     void serialize(Archive& ar, dafs::SuperBlock& obj, const unsigned int version)
     {
         ar & obj.filemap;
@@ -66,6 +73,33 @@ namespace dafs
     {
         ar & obj.blocks;
         ar & obj.extended;
+    }
+
+
+    template <typename T>
+    std::string Serialize(T object)
+    {
+        std::stringstream stream;
+        boost::archive::text_oarchive oa(stream);
+        oa << object;
+        return stream.str();
+    }
+
+
+    template <typename T>
+    T Deserialize(std::string string_obj)
+    {
+        T object;
+        std::stringstream stream(string_obj);
+        try
+        {
+            boost::archive::text_iarchive oa(stream);
+            oa >> object;
+        }
+        catch (boost::archive::archive_exception& e)
+        {
+        }
+        return object;
     }
 
 

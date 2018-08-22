@@ -1,4 +1,5 @@
 #include "dafs/handler.hpp"
+#include "dafs/metadataparser.hpp"
 
 
 namespace dafs
@@ -357,18 +358,18 @@ namespace dafs
                 // Case of standalone node - accept initiation request and
                 // update both halves of topology.
                 //
-                p_zero->SetPlus(
-                    endpoints.minus.management,
-                    endpoints.minus.replication,
-                    endpoints.plus.identity,
-                    endpoints.plus.fault_domain,
-                    Constant::PartitionMinusName);
                 p_zero->SetMinus(
                     endpoints.plus.management,
                     endpoints.plus.replication,
                     endpoints.plus.identity,
                     endpoints.plus.fault_domain,
                     Constant::PartitionPlusName);
+                p_zero->SetPlus(
+                    endpoints.minus.management,
+                    endpoints.minus.replication,
+                    endpoints.plus.identity,
+                    endpoints.plus.fault_domain,
+                    Constant::PartitionMinusName);
                 endpoints.plus = p_minus->GetNodeSetDetails().plus;
                 endpoints.minus = p_plus->GetNodeSetDetails().minus;
                 sender->Send(

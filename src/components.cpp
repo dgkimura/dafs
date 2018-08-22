@@ -327,7 +327,7 @@ namespace dafs
                     (
                         CreateDelta(
                             "", // was empty
-                            dafs::Serialize(address)
+                            dafs::serialize(address)
                         )
                     ),
                     lockfile,
@@ -337,7 +337,7 @@ namespace dafs
             )
         );
 
-        return dafs::ReadBlock(rooted(lockfile)).contents == dafs::Serialize(address);
+        return dafs::ReadBlock(rooted(lockfile)).contents == dafs::serialize(address);
     }
 
 
@@ -367,7 +367,7 @@ namespace dafs
                     "",
                     lockfile,
                     lockfile.revision,
-                    std::hash<dafs::BlockInfo>{}(lockfile)
+                    std::hash<dafs::BlockInfo>{}(rooted(lockfile))
                 )
             )
         );
