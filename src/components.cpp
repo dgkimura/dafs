@@ -404,7 +404,7 @@ namespace dafs
         {
             details.zero.identity.id,
             details.zero.identity,
-            0
+            1
         };
         while (IsLogicallyOrdered(details.zero.identity,
                                   info.identity,

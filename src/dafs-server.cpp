@@ -26,7 +26,7 @@ CreateReplicatedFile(
     std::fstream replicated_file_stream(
         replicated_file.string(),
         std::ios::in | std::ios::out | std::ios::trunc);
-    replicated_file_stream << content << std::endl;
+    replicated_file_stream << content;
 }
 
 
@@ -58,7 +58,7 @@ SetupReplicatedFiles(
         CreateReplicatedFile(
             directory,
             Constant::BlockListName,
-            " " // Empty BlockIndex
+            dafs::serialize(dafs::BlockIndex{})
         );
     }
 }
