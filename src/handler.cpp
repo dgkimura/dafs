@@ -260,6 +260,26 @@ namespace dafs
         auto p_zero = node.GetPartition(dafs::Node::Slot::Zero);
         auto p_plus = node.GetPartition(dafs::Node::Slot::Plus);
 
+        if (p_minus->GetNodeSetDetails().zero.fault_domain == endpoints.zero.fault_domain ||
+            p_zero->GetNodeSetDetails().zero.fault_domain == endpoints.zero.fault_domain ||
+            p_plus->GetNodeSetDetails().zero.fault_domain == endpoints.zero.fault_domain)
+        {
+            //
+            // Replica breaks fault-domain rules.
+            //
+            sender->Send(
+                endpoints.zero.management,
+                dafs::Message
+                {
+                    dafs::MessageType::Failure,
+                    std::vector<dafs::MetaData>
+                    {
+                    }
+                }
+            );
+            return;
+        }
+
         if (p_minus->IsActive() &&
             (!IsLogicallyOrdered(p_minus->GetIdentity(),
                                  identity,

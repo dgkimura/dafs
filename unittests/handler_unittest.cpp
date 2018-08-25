@@ -18,19 +18,23 @@ class HandlerTest: public testing::Test
                 {
                     dafs::Address("1.1.1.1", 1000),
                     dafs::Address("1.1.1.1", 1111),
-                    dafs::Identity("11111111-1111-1111-1111-111111111111")
+                    dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                    "fault-domain-1"
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("3.3.3.3", 3000),
                     dafs::Address("3.3.3.3", 3333),
-                    dafs::Identity("33333333-3333-3333-3333-333333333333")
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-3"
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("5.5.5.5", 5000),
                     dafs::Address("5.5.5.5", 5555),
-                    dafs::Identity("55555555-5555-5555-5555-555555555555")
+                    dafs::Identity("55555555-5555-5555-5555-555555555555"),
+                    "fault-domain-5"
+
                 }
             ),
             std::make_shared<MockPartition>(
@@ -38,19 +42,24 @@ class HandlerTest: public testing::Test
                 {
                     dafs::Address("5.5.5.5", 5000),
                     dafs::Address("5.5.5.5", 5555),
-                    dafs::Identity("55555555-5555-5555-5555-555555555555")
+                    dafs::Identity("55555555-5555-5555-5555-555555555555"),
+                    "fault-domain-5"
+
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("1.1.1.1", 1000),
                     dafs::Address("1.1.1.1", 1111),
-                    dafs::Identity("11111111-1111-1111-1111-111111111111")
+                    dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                    "fault-domain-1"
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("3.3.3.3", 3000),
                     dafs::Address("3.3.3.3", 3333),
-                    dafs::Identity("33333333-3333-3333-3333-333333333333")
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-3"
+
                 }
             ),
             std::make_shared<MockPartition>(
@@ -58,19 +67,25 @@ class HandlerTest: public testing::Test
                 {
                     dafs::Address("3.3.3.3", 3000),
                     dafs::Address("3.3.3.3", 3333),
-                    dafs::Identity("33333333-3333-3333-3333-333333333333")
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-3"
+
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("5.5.5.5", 5000),
                     dafs::Address("5.5.5.5", 5555),
-                    dafs::Identity("55555555-5555-5555-5555-555555555555")
+                    dafs::Identity("55555555-5555-5555-5555-555555555555"),
+                    "fault-domain-5"
+
                 },
                 dafs::Endpoint
                 {
                     dafs::Address("7.7.7.7", 7000),
                     dafs::Address("7.7.7.7", 7777),
-                    dafs::Identity("77777777-7777-7777-7777-777777777777")
+                    dafs::Identity("77777777-7777-7777-7777-777777777777"),
+                    "fault-domain-7"
+
                 }
             )
         );
