@@ -3,6 +3,9 @@
 #include <gtest/gtest.h>
 
 #include "dafs/delta.hpp"
+#include "dafs/identity.hpp"
+#include "dafs/blocks.hpp"
+#include "dafs/serialization.hpp"
 
 
 TEST(DeltaTest, testCreateDeltaBasic)
@@ -26,4 +29,29 @@ TEST(DeltaTest, testApplyDeltaBasic)
     {
         ASSERT_EQ(expect[i], actual[i]);
     }
+}
+
+
+TEST(DeltaTest, testCreateDeltaAndApplyDeltaOnBlockIndex)
+{
+    dafs::BlockIndex prev
+    {
+        {
+            dafs::BlockInfo{"10000001-0000-0000-0000-000000000000", dafs::Identity("10000001-0000-0000-0000-000000000000"), 1}
+        }
+    };
+    dafs::BlockIndex next
+    {
+        {
+            dafs::BlockInfo{"10000001-0000-0000-0000-000000000000", dafs::Identity("10000001-0000-0000-0000-000000000000"), 1},
+            dafs::BlockInfo{"10000001-0000-0000-0000-000000000001", dafs::Identity("10000001-0000-0000-0000-000000000001"), 1},
+        }
+    };
+
+    auto delta = dafs::CreateDelta(dafs::serialize(prev), dafs::serialize(next));
+    std::stringstream ss;
+    ss << dafs::serialize(prev);
+    std::string updated_content = dafs::ApplyDelta(delta, ss);
+    dafs::BlockIndex updated_blockindex = dafs::deserialize<dafs::BlockIndex>(updated_content);
+    ASSERT_EQ(2, updated_blockindex.items.size());
 }
