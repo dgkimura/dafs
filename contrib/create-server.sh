@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# $ sh setup.sh 1
-# $ sh setup.sh 2
-# $ sh setup.sh 3
+# $ sh create-server.sh 1
+# $ sh create-server.sh 2
+# $ sh create-server.sh 3
 
 NODE_NUMBER=$1
 IDENTITY="$((10000000+${1}))-0000-0000-0000-000000000000"
