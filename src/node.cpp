@@ -2,7 +2,7 @@
 
 namespace dafs
 {
-    Node::Node(
+    ReplicatedNode::ReplicatedNode(
         std::shared_ptr<dafs::Partition> pminus,
         std::shared_ptr<dafs::Partition> pzero,
         std::shared_ptr<dafs::Partition> pplus
@@ -17,19 +17,19 @@ namespace dafs
 
 
     std::shared_ptr<dafs::Partition>
-    Node::GetPartition(Slot slot)
+    ReplicatedNode::GetPartition(Node::Slot slot)
     {
         switch (slot)
         {
-            case Slot::Minus:
+            case Node::Slot::Minus:
             {
                 return slot_minus;
             }
-            case Slot::Zero:
+            case Node::Slot::Zero:
             {
                 return slot_zero;
             }
-            case Slot::Plus:
+            case Node::Slot::Plus:
             {
                 return slot_plus;
             }
@@ -38,7 +38,7 @@ namespace dafs
 
 
     std::shared_ptr<dafs::Partition>
-    Node::GetPartition(Identity identity)
+    ReplicatedNode::GetPartition(Identity identity)
     {
         auto minus_detail = slot_minus->GetNodeSetDetails();
         auto zero_detail = slot_zero->GetNodeSetDetails();

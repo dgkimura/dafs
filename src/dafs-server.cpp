@@ -255,7 +255,7 @@ int main(int argc, char** argv)
     //
     // Start node and server.
     //
-    dafs::Node n(pminus, pzero, pplus);
+    dafs::ReplicatedNode n(pminus, pzero, pplus);
     dafs::Dispatcher dispatcher(n);
 
     auto server = boost::make_shared<dafs::Server>(

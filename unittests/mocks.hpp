@@ -1,8 +1,66 @@
 #include <gmock/gmock.h>
 
+#include <dafs/node.hpp>
 #include <dafs/replication.hpp>
 #include <dafs/partition.hpp>
 
+
+class MockNode : public dafs::Node
+{
+public:
+
+    MOCK_METHOD1(GetPartition, std::shared_ptr<dafs::Partition>(dafs::Node::Slot slot));
+
+    MOCK_METHOD1(GetPartition, std::shared_ptr<dafs::Partition>(dafs::Identity identity));
+};
+
+class _MockPartition : public dafs::Partition
+{
+public:
+
+    MOCK_METHOD0(GetIdentity, dafs::Identity());
+
+    MOCK_METHOD0(GetNodeSetDetails, dafs::ReplicatedEndpoints());
+
+    MOCK_METHOD1(IsAddressResponsive, bool(dafs::Address address));
+
+    MOCK_METHOD0(AllocateBlock, dafs::BlockInfo());
+
+    MOCK_METHOD1(DeleteBlock, void(dafs::BlockInfo block));
+
+    MOCK_METHOD1(ReadBlock, dafs:: BlockFormat(dafs::BlockInfo block));
+
+    MOCK_METHOD2(WriteBlock, void(dafs::BlockInfo block, dafs::BlockFormat format));
+
+    MOCK_METHOD0(GetIndex, dafs::BlockIndex());
+
+    MOCK_METHOD5(SetMinus, void(
+        dafs::Address management,
+        dafs::Address replication,
+        dafs::Identity identity,
+        std::string fault_domain,
+        std::string location));
+
+    MOCK_METHOD5(SetZero, void(
+        dafs::Address management,
+        dafs::Address replication,
+        dafs::Identity identity,
+        std::string fault_domain,
+        std::string location));
+
+    MOCK_METHOD5(SetPlus, void(
+        dafs::Address management,
+        dafs::Address replication,
+        dafs::Identity identity,
+        std::string fault_domain,
+        std::string location));
+
+    MOCK_METHOD0(IsActive, bool());
+
+    MOCK_METHOD0(Acquire, bool());
+
+    MOCK_METHOD0(Release, void());
+};
 
 class MockReplication : public dafs::Replication
 {

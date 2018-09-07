@@ -18,15 +18,27 @@ namespace dafs
             Plus
         };
 
-        Node(
+        virtual std::shared_ptr<dafs::Partition> GetPartition(
+            Node::Slot slot) = 0;
+
+        virtual std::shared_ptr<dafs::Partition> GetPartition(
+            dafs::Identity identity) = 0;
+    };
+
+
+    class ReplicatedNode : public Node
+    {
+    public:
+
+        ReplicatedNode(
             std::shared_ptr<dafs::Partition> pminus,
             std::shared_ptr<dafs::Partition> pzero,
             std::shared_ptr<dafs::Partition> pplus
         );
 
-        std::shared_ptr<dafs::Partition> GetPartition(Node::Slot slot);
+        virtual std::shared_ptr<dafs::Partition> GetPartition(Node::Slot slot) override;
 
-        std::shared_ptr<dafs::Partition> GetPartition(dafs::Identity identity);
+        virtual std::shared_ptr<dafs::Partition> GetPartition(dafs::Identity identity) override;
 
     private:
 

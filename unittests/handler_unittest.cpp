@@ -12,7 +12,7 @@ class HandlerTest: public testing::Test
 {
     virtual void SetUp()
     {
-        node_under_test = std::make_shared<dafs::Node>(
+        node_under_test = std::make_shared<dafs::ReplicatedNode>(
             std::make_shared<MockPartition>(
                 dafs::Endpoint
                 {
@@ -91,11 +91,11 @@ class HandlerTest: public testing::Test
         );
     }
 
-    std::shared_ptr<dafs::Node> node_under_test;
+    std::shared_ptr<dafs::ReplicatedNode> node_under_test;
 
 public:
 
-    dafs::Node& GetNode()
+    dafs::ReplicatedNode& GetNode()
     {
         return *node_under_test;
     }
@@ -497,10 +497,7 @@ TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
 {
     dafs::Message message
     {
-        dafs::MessageType::_PlusExitCluster,
-        std::vector<dafs::MetaData>
-        {
-        }
+        dafs::MessageType::_PlusExitCluster
     };
     auto mock_sender = std::make_shared<MockSender>();
     HandleExitCluster(GetNode(), message, mock_sender);

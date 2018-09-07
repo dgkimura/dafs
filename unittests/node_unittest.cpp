@@ -72,8 +72,8 @@ class NodeTest: public testing::Test
             }
         );
 
-        node = std::unique_ptr<dafs::Node>(
-            new dafs::Node(
+        node = std::unique_ptr<dafs::ReplicatedNode>(
+            new dafs::ReplicatedNode(
                 partition_minus, partition_zero, partition_plus
             )
         );
@@ -82,7 +82,7 @@ class NodeTest: public testing::Test
 
 public:
 
-    std::unique_ptr<dafs::Node> node;
+    std::unique_ptr<dafs::ReplicatedNode> node;
 };
 
 

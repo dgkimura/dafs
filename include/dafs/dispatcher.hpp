@@ -31,7 +31,7 @@ namespace dafs
     {
     public:
 
-        Dispatcher(dafs::Node& node);
+        Dispatcher(dafs::ReplicatedNode& node);
 
         void Process(const dafs::Message& message,
                      std::shared_ptr<dafs::Sender> sender);
@@ -45,6 +45,6 @@ namespace dafs
             dafs::MessageTypeHash
         > registered_map;
 
-        dafs::Node& node;
+        dafs::ReplicatedNode& node;
     };
 }

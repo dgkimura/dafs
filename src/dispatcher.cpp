@@ -6,7 +6,7 @@
 
 namespace dafs
 {
-    Dispatcher::Dispatcher(dafs::Node& node)
+    Dispatcher::Dispatcher(dafs::ReplicatedNode& node)
         : registered_map {
               {
                   dafs::MessageType::ReadBlock,
