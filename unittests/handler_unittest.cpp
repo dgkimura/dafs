@@ -4,6 +4,7 @@
 #include <dafs/node.hpp>
 #include <gtest/gtest.h>
 
+#include "mocks.hpp"
 #include "mock_partition.hpp"
 #include "mock_sender.hpp"
 
@@ -495,12 +496,27 @@ TEST_F(HandlerTest, testHandleMinusInitiationWithActivePartition)
 
 TEST_F(HandlerTest, testHandleExitClusterWithActivePartition)
 {
-    dafs::Message message
-    {
-        dafs::MessageType::_PlusExitCluster
-    };
     auto mock_sender = std::make_shared<MockSender>();
-    HandleExitCluster(GetNode(), message, mock_sender);
+    MockNode mock_node;
+    auto mock_minus_partition = std::make_shared<_MockPartition>();
+    auto mock_zero_partition = std::make_shared<_MockPartition>();
+
+    EXPECT_CALL(mock_node, GetPartition(dafs::Node::Slot::Minus))
+        .Times(1)
+        .WillRepeatedly(testing::Return(mock_minus_partition));
+    EXPECT_CALL(mock_node, GetPartition(dafs::Node::Slot::Zero))
+        .Times(1)
+        .WillRepeatedly(testing::Return(mock_zero_partition));
+    EXPECT_CALL(*mock_minus_partition, GetNodeSetDetails())
+        .Times(1);
+    EXPECT_CALL(*mock_zero_partition, GetIdentity())
+        .Times(1)
+        .WillOnce(testing::Return(dafs::Identity("11111111-1111-1111-1111-111111111111")));
+
+    HandleExitCluster(
+        mock_node,
+        dafs::Message { dafs::MessageType::_PlusExitCluster },
+        mock_sender);
 
     dafs::Message sent_message = mock_sender->sentMessages()[0];
 
