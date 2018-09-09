@@ -490,6 +490,16 @@ namespace dafs
         dafs::Message message,
         std::shared_ptr<dafs::Sender> sender)
     {
+        //
+        //  Handle another node's proposal to remove plus node.
+        //
+        //  Check whether the plus node (n+1) address is still correct and determine
+        //  if it appears to be unresponsive from current node (n+0) point of view.
+        //
+        //   +-----+   +-----+   +-----+   +-----+   +-----+
+        //   | n-2 |<=>| n-1 |<=>| n+0 |<=>| n+1 |<=>| n+2 |
+        //   +-----+   +-----+   +-----+   +-----+   +-----+
+        //
         dafs::MetaDataParser metadata(message.metadata);
         auto address = metadata.GetValue<dafs::Address>(dafs::AddressKey);
 
@@ -531,6 +541,18 @@ namespace dafs
         dafs::Message message,
         std::shared_ptr<dafs::Sender> sender)
     {
+        //
+        // Handle node's decision to update plus node.
+        //
+        // Set the current node's (n+0) next node to skip over to the next plus
+        // node (n+2). Also move the blocks that used to be owned by plus node.
+        //
+        //                              +-----+
+        //                              | n+1 |<====x
+        //  +-----+   +-----+   +-----+ +-----+  +-----+
+        //  | n-2 |<=>| n-1 |<=>| n+0 |=========>| n+2 |
+        //  +-----+   +-----+   +-----+          +-----+
+        //
         dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
 
@@ -597,6 +619,19 @@ namespace dafs
         dafs::Message message,
         std::shared_ptr<dafs::Sender> sender)
     {
+        //
+        // Handle second half actions to remove node.
+        //
+        // Set the current node's (n+0) previous node to new previous node (n-2)
+        // and release pending locks. Then check whether any fault domains have
+        // been violated and take appropriate actions.
+        //
+        //                    +-----+
+        //                    | n-1 |
+        //  +-----+   +-----+ +-----+ +-----+   +-----+
+        //  | n-3 |<=>| n-2 |<=======>| n+0 |<=>| n+1 |
+        //  +-----+   +-----+         +-----+   +-----+
+        //
         dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
 
