@@ -662,7 +662,19 @@ namespace dafs
             p_zero->Release();
         }
 
-        // TODO: Check whether any fault domains have been violated. If so then
-        //       determine who should commit suicide.
+        //
+        // Check whether any fault domains have been violated. If so, then
+        // determine who should commit suicide.
+        //
+        for (dafs::Endpoint endpoint : GetFaultDomainViolationEndpoints(node))
+        {
+            sender->Send(
+                endpoint.management,
+                dafs::Message
+                {
+                    dafs::MessageType::ExitCluster
+                }
+            );
+        }
     }
 }

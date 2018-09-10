@@ -86,4 +86,41 @@ namespace dafs
         }
         return slot_empty;
     }
+
+
+    std::vector<dafs::Endpoint>
+    GetFaultDomainViolationEndpoints(dafs::Node& node)
+    {
+        std::vector<dafs::Endpoint> endpoints;
+
+        auto p_minus = node.GetPartition(dafs::Node::Slot::Minus)->GetNodeSetDetails();
+        auto p_zero = node.GetPartition(dafs::Node::Slot::Zero)->GetNodeSetDetails();
+        auto p_plus = node.GetPartition(dafs::Node::Slot::Plus)->GetNodeSetDetails();
+
+        if (p_minus.zero.identity == p_plus.zero.identity)
+        {
+            //
+            // If there are only 2 nodes in the system then it is technically a
+            // fault domain violation, but there is no action that can be taken
+            // besides add another node.
+            //
+            return endpoints;
+        }
+
+        if (p_zero.zero.fault_domain == p_minus.minus.fault_domain &&
+            p_minus.zero.fault_domain == p_plus.zero.fault_domain)
+        {
+            endpoints.push_back(p_zero.zero);
+            endpoints.push_back(p_plus.zero);
+        }
+        else if (p_zero.zero.fault_domain == p_minus.minus.fault_domain)
+        {
+            endpoints.push_back(p_zero.zero);
+        }
+        else if (p_minus.zero.fault_domain == p_plus.zero.fault_domain)
+        {
+            endpoints.push_back(p_plus.zero);
+        }
+        return endpoints;
+    }
 }

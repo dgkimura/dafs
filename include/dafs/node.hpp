@@ -50,4 +50,7 @@ namespace dafs
 
         std::shared_ptr<dafs::Partition> slot_empty;
     };
+
+
+    std::vector<dafs::Endpoint> GetFaultDomainViolationEndpoints(dafs::Node& node);
 }
