@@ -141,7 +141,7 @@ TEST_F(NodeTest, testGetPartitionWithApproximateIdentity)
 }
 
 
-TEST_F(NodeTest, x)
+TEST_F(NodeTest, testGetFaultDomainViolationEndpointsWithFiveUniqueFaultDomains)
 {
     auto mock_minus_partition = std::make_shared<_MockPartition>();
     auto mock_zero_partition = std::make_shared<_MockPartition>();
@@ -157,24 +157,27 @@ TEST_F(NodeTest, x)
         .WillRepeatedly(testing::Return(
             dafs::ReplicatedEndpoints
             {
+                // Node 1
                 dafs::Endpoint
                 {
-                    dafs::Address("1.1", 11),
+                    dafs::Address("1", 1),
                     dafs::Address("1.1.1.1", 1111),
                     dafs::Identity("11111111-1111-1111-1111-111111111111"),
                     "fault-domain-1"
                 },
+                // Node 2
                 dafs::Endpoint
                 {
-                    dafs::Address("2.2", 22),
-                    dafs::Address("2.2.2.2", 2222),
+                    dafs::Address("2", 2),
+                    dafs::Address("2.2.2", 2222),
                     dafs::Identity("22222222-2222-2222-2222-222222222222"),
                     "fault-domain-2"
                 },
+                // Node 3
                 dafs::Endpoint
                 {
-                    dafs::Address("3.3", 33),
-                    dafs::Address("3.3.3.3", 3333),
+                    dafs::Address("3", 3),
+                    dafs::Address("3.3", 3333),
                     dafs::Identity("33333333-3333-3333-3333-333333333333"),
                     "fault-domain-3"
                 }
@@ -184,26 +187,29 @@ TEST_F(NodeTest, x)
         .WillRepeatedly(testing::Return(
             dafs::ReplicatedEndpoints
             {
+                // Node 2
                 dafs::Endpoint
                 {
-                    dafs::Address("4.4", 44),
-                    dafs::Address("4.4.4.4", 4444),
+                    dafs::Address("2", 2),
+                    dafs::Address("2.2.2.2", 2222),
+                    dafs::Identity("22222222-2222-2222-2222-222222222222"),
+                    "fault-domain-2"
+                },
+                // Node 3
+                dafs::Endpoint
+                {
+                    dafs::Address("3", 3),
+                    dafs::Address("3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-3"
+                },
+                // Node 4
+                dafs::Endpoint
+                {
+                    dafs::Address("4", 4),
+                    dafs::Address("4.4", 4444),
                     dafs::Identity("44444444-4444-4444-4444-444444444444"),
                     "fault-domain-4"
-                },
-                dafs::Endpoint
-                {
-                    dafs::Address("5.5", 55),
-                    dafs::Address("5.5.5.5", 5555),
-                    dafs::Identity("55555555-5555-5555-5555-555555555555"),
-                    "fault-domain-5"
-                },
-                dafs::Endpoint
-                {
-                    dafs::Address("6.6", 66),
-                    dafs::Address("6.6.6.6", 6666),
-                    dafs::Identity("66666666-6666-6666-6666-666666666666"),
-                    "fault-domain-6"
                 }
             }));
     EXPECT_CALL(*mock_plus_partition, GetNodeSetDetails())
@@ -211,26 +217,29 @@ TEST_F(NodeTest, x)
         .WillRepeatedly(testing::Return(
             dafs::ReplicatedEndpoints
             {
+                // Node 3
                 dafs::Endpoint
                 {
-                    dafs::Address("7.7", 77),
-                    dafs::Address("7.7.7.7", 7777),
-                    dafs::Identity("77777777-7777-7777-7777-777777777777"),
-                    "fault-domain-7"
+                    dafs::Address("3", 3),
+                    dafs::Address("3.3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-3"
                 },
+                // Node 4
                 dafs::Endpoint
                 {
-                    dafs::Address("8.8", 88),
-                    dafs::Address("8.8.8.8", 8888),
-                    dafs::Identity("88888888-8888-8888-8888-888888888888"),
-                    "fault-domain-8"
+                    dafs::Address("4", 4),
+                    dafs::Address("4.4.4", 4444),
+                    dafs::Identity("44444444-4444-4444-4444-444444444444"),
+                    "fault-domain-4"
                 },
+                // Node 5
                 dafs::Endpoint
                 {
-                    dafs::Address("9.9", 99),
-                    dafs::Address("9.9.9.9", 9999),
-                    dafs::Identity("99999999-9999-9999-9999-999999999999"),
-                    "fault-domain-9"
+                    dafs::Address("5", 5),
+                    dafs::Address("5.5", 5555),
+                    dafs::Identity("55555555-5555-5555-5555-555555555555"),
+                    "fault-domain-5"
                 }
             }));
 
