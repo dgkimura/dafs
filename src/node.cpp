@@ -110,8 +110,8 @@ namespace dafs
         if (p_zero.zero.fault_domain == p_minus.minus.fault_domain &&
             p_minus.zero.fault_domain == p_plus.zero.fault_domain)
         {
-            endpoints.push_back(p_zero.zero);
             endpoints.push_back(p_plus.zero);
+            endpoints.push_back(p_zero.zero);
         }
         else if (p_zero.zero.fault_domain == p_minus.minus.fault_domain)
         {

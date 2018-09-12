@@ -245,3 +245,116 @@ TEST_F(NodeTest, testGetFaultDomainViolationEndpointsWithFiveUniqueFaultDomains)
 
     ASSERT_EQ(0, GetFaultDomainViolationEndpoints(node).size());
 }
+
+
+TEST_F(NodeTest, testGetFaultDomainViolationEndpointsWithTwoFaultDomainViolationss)
+{
+    auto mock_minus_partition = std::make_shared<_MockPartition>();
+    auto mock_zero_partition = std::make_shared<_MockPartition>();
+    auto mock_plus_partition = std::make_shared<_MockPartition>();
+
+    dafs::ReplicatedNode node(
+        mock_minus_partition,
+        mock_zero_partition,
+        mock_plus_partition);
+
+    EXPECT_CALL(*mock_minus_partition, GetNodeSetDetails())
+        .Times(1)
+        .WillRepeatedly(testing::Return(
+            dafs::ReplicatedEndpoints
+            {
+                // Node 1
+                dafs::Endpoint
+                {
+                    dafs::Address("1", 1),
+                    dafs::Address("1.1.1.1", 1111),
+                    dafs::Identity("11111111-1111-1111-1111-111111111111"),
+                    "fault-domain-1" // 1st fault domain violation: Node-1/Node-3
+                },
+                // Node 2
+                dafs::Endpoint
+                {
+                    dafs::Address("2", 2),
+                    dafs::Address("2.2.2", 2222),
+                    dafs::Identity("22222222-2222-2222-2222-222222222222"),
+                    "fault-domain-2" // 2nd fault domain violation: Node-4/Node-2
+                },
+                // Node 3
+                dafs::Endpoint
+                {
+                    dafs::Address("3", 3),
+                    dafs::Address("3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-3"
+                }
+            }));
+    EXPECT_CALL(*mock_zero_partition, GetNodeSetDetails())
+        .Times(1)
+        .WillRepeatedly(testing::Return(
+            dafs::ReplicatedEndpoints
+            {
+                // Node 2
+                dafs::Endpoint
+                {
+                    dafs::Address("2", 2),
+                    dafs::Address("2.2.2.2", 2222),
+                    dafs::Identity("22222222-2222-2222-2222-222222222222"),
+                    "fault-domain-2"
+                },
+                // Node 3
+                dafs::Endpoint
+                {
+                    dafs::Address("3", 3),
+                    dafs::Address("3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-1" // 1st fault domain violation: Node-1/Node-3
+                },
+                // Node 4
+                dafs::Endpoint
+                {
+                    dafs::Address("4", 4),
+                    dafs::Address("4.4", 4444),
+                    dafs::Identity("44444444-4444-4444-4444-444444444444"),
+                    "fault-domain-4"
+                }
+            }));
+    EXPECT_CALL(*mock_plus_partition, GetNodeSetDetails())
+        .Times(1)
+        .WillRepeatedly(testing::Return(
+            dafs::ReplicatedEndpoints
+            {
+                // Node 3
+                dafs::Endpoint
+                {
+                    dafs::Address("3", 3),
+                    dafs::Address("3.3.3.3", 3333),
+                    dafs::Identity("33333333-3333-3333-3333-333333333333"),
+                    "fault-domain-3"
+                },
+                // Node 4
+                dafs::Endpoint
+                {
+                    dafs::Address("4", 4),
+                    dafs::Address("4.4.4", 4444),
+                    dafs::Identity("44444444-4444-4444-4444-444444444444"),
+                    "fault-domain-2" // 2nd fault domain violation: Node-4/Node-2
+                },
+                // Node 5
+                dafs::Endpoint
+                {
+                    dafs::Address("5", 5),
+                    dafs::Address("5.5", 5555),
+                    dafs::Identity("55555555-5555-5555-5555-555555555555"),
+                    "fault-domain-5"
+                }
+            }));
+
+    auto violations = GetFaultDomainViolationEndpoints(node);
+    ASSERT_EQ(2, violations.size());
+    ASSERT_EQ("4", violations[0].management.ip);
+    ASSERT_EQ(4, violations[0].management.port);
+
+    // current node must be last in list, else subsequent remove nodes will be ignored.
+    ASSERT_EQ("3", violations[1].management.ip);
+    ASSERT_EQ(3, violations[1].management.port);
+}
