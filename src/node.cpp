@@ -107,19 +107,21 @@ namespace dafs
             return endpoints;
         }
 
-        if (p_zero.zero.fault_domain == p_minus.minus.fault_domain &&
-            p_minus.zero.fault_domain == p_plus.zero.fault_domain)
+        //        -p      -p 0p   -p 0p +p   0p +p      +p
+        // [__,__,--] [__,-0,+-] [-+,00,+-] [0+,+0,__] [++,__,__]
+        //   node-1     node-2     node-3     node-4     node-5
+        //
+        if (p_zero.zero.fault_domain == p_plus.plus.fault_domain)
+        {
+            endpoints.push_back(p_plus.plus);
+        }
+        if (p_minus.zero.fault_domain == p_plus.zero.fault_domain)
         {
             endpoints.push_back(p_plus.zero);
-            endpoints.push_back(p_zero.zero);
         }
-        else if (p_zero.zero.fault_domain == p_minus.minus.fault_domain)
+        if (p_minus.minus.fault_domain == p_zero.zero.fault_domain)
         {
             endpoints.push_back(p_zero.zero);
-        }
-        else if (p_minus.zero.fault_domain == p_plus.zero.fault_domain)
-        {
-            endpoints.push_back(p_plus.zero);
         }
         return endpoints;
     }
