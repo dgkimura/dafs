@@ -422,6 +422,7 @@ namespace dafs
                   << std::left << std::setw(20) << "Minus Interface"
                   << std::left << std::setw(20) << "Zero Interface"
                   << std::left << std::setw(20) << "Plus Interface"
+                  << std::left << std::setw(20) << "Fault-Domain"
                   << std::left << std::setw(40) << "Identity" << std::endl;
 
         dafs::Address current = address;
@@ -447,6 +448,7 @@ namespace dafs
             std::cout << std::left << std::setw(20) << p_minus.plus.replication.ip + ":" + std::to_string(p_minus.plus.replication.port);
             std::cout << std::left << std::setw(20) << p_zero.zero.replication.ip + ":" + std::to_string(p_zero.zero.replication.port);
             std::cout << std::left << std::setw(20) << p_plus.minus.replication.ip + ":" + std::to_string(p_plus.minus.replication.port);
+            std::cout << std::left << std::setw(20) << p_zero.zero.fault_domain;
             std::cout << std::left << std::setw(40) << p_zero.zero.identity.id << std::endl;
 
             current = p_plus.zero.management;
