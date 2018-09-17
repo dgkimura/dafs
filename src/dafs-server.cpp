@@ -172,14 +172,14 @@ int main(int argc, char** argv)
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
                 dafs::Identity("00000000-0000-0000-0000-000000000000"),
-                ""
+                "invalid_faultdomain"
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
                 dafs::Identity("00000000-0000-0000-0000-000000000000"),
-                ""
+                "invalid_faultdomain"
             },
             dafs::Endpoint
             {
@@ -201,7 +201,7 @@ int main(int argc, char** argv)
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
                 dafs::Identity("00000000-0000-0000-0000-000000000000"),
-                ""
+                "invalid_faultdomain"
             },
             dafs::Endpoint
             {
@@ -215,7 +215,7 @@ int main(int argc, char** argv)
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
                 dafs::Identity("00000000-0000-0000-0000-000000000000"),
-                ""
+                "invalid_faultdomain"
             }
         },
         std::chrono::seconds(options.zero_ping_interval)
@@ -237,14 +237,14 @@ int main(int argc, char** argv)
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
                 dafs::Identity("00000000-0000-0000-0000-000000000000"),
-                ""
+                "invalid_faultdomain"
             },
             dafs::Endpoint
             {
                 dafs::Address(options.address, options.port),
                 dafs::EmptyAddress(),
                 dafs::Identity("00000000-0000-0000-0000-000000000000"),
-                ""
+                "invalid_faultdomain"
             }
         },
         std::chrono::seconds(options.plus_ping_interval)

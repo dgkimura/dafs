@@ -109,7 +109,7 @@ namespace dafs
     struct EmptyAddress : public Address
     {
         EmptyAddress()
-            : Address("", 0)
+            : Address("invalid_ip", 1)
         {
         }
     };

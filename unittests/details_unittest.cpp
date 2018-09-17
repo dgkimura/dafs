@@ -99,7 +99,7 @@ TEST(DetailsTest, testGetFailoverWithUnknownAddress)
     };
 
     ASSERT_EQ(
-        "",
+        "invalid_ip",
         GetFailover(
             endpoints,
             dafs::Address("UNKNOWN", 404),
