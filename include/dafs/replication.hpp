@@ -25,6 +25,8 @@ namespace dafs
         virtual void RemoveReplica(dafs::Address address) = 0;
 
         virtual std::vector<dafs::Address> GetMissingReplicas() = 0;
+
+        virtual int GetReplicaCount() = 0;
     };
 
 
@@ -46,6 +48,11 @@ namespace dafs
         void RemoveReplica(dafs::Address address) override;
 
         std::vector<dafs::Address> GetMissingReplicas() override;
+
+        int GetReplicaCount() override
+        {
+            return parliament.GetLegislators()->GetSize();
+        }
 
     private:
 

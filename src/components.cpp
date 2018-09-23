@@ -224,7 +224,7 @@ namespace dafs
             auto sender = std::make_shared<dafs::NetworkSender>();
             while (should_continue)
             {
-                if (IsReplicatedPartition(get_endpoints()) && !is_partition_locked())
+                if (replication.GetReplicaCount() > 1 && !is_partition_locked())
                 {
                     SendPing(sender);
                 }

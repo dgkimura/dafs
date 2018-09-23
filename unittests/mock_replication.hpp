@@ -38,6 +38,11 @@ public:
         return missing_replicas;
     }
 
+    int GetReplicaCount() override
+    {
+        return 3;
+    }
+
     bool WasEntryWritten(std::string entry)
     {
         for (auto e : entries)

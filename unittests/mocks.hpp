@@ -73,6 +73,8 @@ public:
     MOCK_METHOD1(RemoveReplica, void(dafs::Address address));
 
     MOCK_METHOD0(GetMissingReplicas, std::vector<dafs::Address>());
+
+    MOCK_METHOD0(GetReplicaCount, int());
 };
 
 class MockStorage : public dafs::Storage
