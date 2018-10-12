@@ -251,6 +251,16 @@ namespace dafs
         dafs::Message message,
         std::shared_ptr<dafs::Sender> sender)
     {
+        //
+        //  Handle a node's request to join cluster.
+        //
+        //  The new node's identity must logically fit between n-1 and n+0.
+        //
+        //           V
+        //   +-----+   +-----+   +-----+
+        //   | n-1 |<=>| n+0 |<=>| n+1 |
+        //   +-----+   +-----+   +-----+
+        //
         dafs::MetaDataParser metadata(message.metadata);
         auto identity = metadata.GetValue<dafs::Identity>(dafs::IdentityKey);
         auto endpoints = metadata.GetValue<dafs::ReplicatedEndpoints>(
