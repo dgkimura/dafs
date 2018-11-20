@@ -766,7 +766,7 @@ int main(int argc, char** argv)
         std::exit(EXIT_SUCCESS);
     }
 
-    while (std::cout << "dafs> " && std::getline(std::cin, input) && input != "quit")
+    while (std::cout << "dafs@" << creds.address.ip << ":" << creds.address.port << "> " && std::getline(std::cin, input) && input != "quit")
     {
         std::vector<std::string> tokens;
         boost::split(tokens, input, boost::is_any_of("\t "));
